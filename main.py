@@ -10,6 +10,8 @@ if __name__ == '__main__':
     screen1 = mapping.Screen(size)
     board = mapping.Board(18, 10, size)
     running = True
+    fps = 120
+    clock = pygame.time.Clock()
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -18,5 +20,7 @@ if __name__ == '__main__':
                 board.get_click(event.pos, event.button)
         screen1.sc.fill((0, 0, 0))
         screen1.render(board)
+
+        clock.tick(fps)
         pygame.display.flip()
     pygame.quit()

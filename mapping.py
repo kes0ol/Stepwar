@@ -41,7 +41,7 @@ class Board:
         self.set_view()
 
         self.board = [[0] * width for _ in range(height)]
-
+        self.landscape = [[0] * width for _ in range(height)]
         self.choosen_unit = None
 
         for i in range(len(self.board)):
@@ -63,8 +63,9 @@ class Board:
                 y = i * self.cell_size + self.top
 
                 pygame.draw.rect(screen, 'white', (x, y, self.cell_size, self.cell_size), 1)
-
-                landscapes.Grass(x, y, self.cell_size, landscapes.grasses)
+                if self.landscape[i][j] == 0:
+                    landscapes.Grass(x, y, self.cell_size, landscapes.grasses)
+                    self.landscape[i][j] = 1
 
     def get_cell(self, mouse_pos):
         xmax = self.left + self.width * self.cell_size
@@ -78,6 +79,7 @@ class Board:
 
     def on_click(self, cell_coords, mouse_button):
         x, y = cell_coords
+        print(mouse_button)
         if mouse_button == 1:
             if self.choosen_unit == 'swordsman' and self.board[y][x] == 0 and swordsman.stock > 0:
                 swordsman.Swordsman(x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
