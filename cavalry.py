@@ -1,11 +1,11 @@
 import pygame
 
 
-class Swordsman(pygame.sprite.Sprite):
+class Cavalry(pygame.sprite.Sprite):
 
     def __init__(self, x, y, image_size, group):
         super().__init__(group)
-        self.image = pygame.image.load('images/swordsman.jpeg')
+        self.image = pygame.image.load('images/cavalry.jpeg')
         self.image = pygame.transform.scale(self.image, (image_size, image_size))
         self.image.set_colorkey((255, 255, 255))
         self.rect = self.image.get_rect()
@@ -13,7 +13,7 @@ class Swordsman(pygame.sprite.Sprite):
         self.rect.y = y
 
 
-stock = 10
+stock = 5
 
 
 def set_view_stock(screen, coords):
@@ -22,4 +22,4 @@ def set_view_stock(screen, coords):
     screen.blit(text, (coords[0], coords[1]))
 
 
-swordsmans = pygame.sprite.Group()
+cavalrys = pygame.sprite.Group()

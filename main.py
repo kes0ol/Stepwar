@@ -8,14 +8,14 @@ if __name__ == '__main__':
 
     size = 1400, 800
     screen1 = mapping.Screen(size)
-    board = mapping.Board(18, 11, size)
+    board = mapping.Board(18, 10, size)
     running = True
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
-                board.get_click(event.pos)
+                board.get_click(event.pos, event.button)
         screen1.sc.fill((0, 0, 0))
         screen1.render(board)
         pygame.display.flip()
