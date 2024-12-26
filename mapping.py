@@ -3,6 +3,7 @@ import pygame
 import swordsman
 import castle
 import cavalry
+import landscapes
 
 
 class Screen:
@@ -23,6 +24,7 @@ class Screen:
         return self.choose_unit
 
     def render(self, board):
+        landscapes.grasses.draw(self.sc)
         board.render(self.sc)
         castle.castles.draw(self.sc)
         swordsman.swordsmans.draw(self.sc)
@@ -61,6 +63,8 @@ class Board:
                 y = i * self.cell_size + self.top
 
                 pygame.draw.rect(screen, 'white', (x, y, self.cell_size, self.cell_size), 1)
+
+                landscapes.Grass(x, y, self.cell_size, landscapes.grasses)
 
     def get_cell(self, mouse_pos):
         xmax = self.left + self.width * self.cell_size
