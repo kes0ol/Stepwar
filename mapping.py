@@ -10,6 +10,8 @@ class Screen:
     def __init__(self, size):
         self.sc = pygame.display.set_mode(size)
         self.choose_unit = None
+        self.board = Board(18, 10)
+        self.button_start_game = Button(38, 200, 26, 1100, 700)
         self.icon_swordsman = swordsman.Swordsman(125, 25, 80,
                                                   swordsman.swordsmans)
         self.icon_cavalry = cavalry.Cavalry(125, 125, 80, cavalry.cavalrys)
@@ -23,7 +25,7 @@ class Screen:
             self.choose_unit = 'cavalry'
         return self.choose_unit
 
-    def render(self, board, button_start_game, rect_width, rect_height):
+    def render(self, board, button_start_game):
         landscapes.grasses.draw(self.sc)
         board.render(self.sc)
         castle.castles.draw(self.sc)
@@ -32,19 +34,27 @@ class Screen:
         cavalry.cavalrys.draw(self.sc)
         cavalry.set_view_stock(self.sc, (50, 150))
 
-        button_start_game.render(self.sc, rect_width, rect_height)
+        button_start_game.render(self.sc)
+
+    def get_click(self, mouse_pos, mouse_button):
+        Board.get_click(self.board, mouse_pos, mouse_button, self)
+        if (self.button_start_game.button_rect.left <= mouse_pos[0] <= self.button_start_game.button_rect.right
+                and
+                self.button_start_game.button_rect.top <= mouse_pos[1] <= self.button_start_game.button_rect.bottom):
+            self.button_start_game.gameplay = True
 
 
 class Board:
-    def __init__(self, width, height, size):
-        self.sc = Screen(size)
+    def __init__(self, width, height):
         self.width = width
         self.height = height
-        self.set_view()
+
+        self.cell_size = 60
+        self.left = 250
+        self.top = 50
 
         self.board = [[0] * width for _ in range(height)]
         self.landscape = [[0] * width for _ in range(height)]
-        self.choosen_unit = None
 
         for i in range(len(self.board)):
             for j in range(len(self.board[i])):
@@ -52,11 +62,6 @@ class Board:
                     castle.add_start_castle(i * self.cell_size + self.left, j * self.cell_size + self.top,
                                             self.cell_size)
                     self.board[j][i], self.board[j][i + 1], self.board[j + 1][i], self.board[j + 1][i + 1] = 1, 1, 1, 1
-
-    def set_view(self):
-        self.cell_size = 60
-        self.left = 250
-        self.top = 50
 
     def render(self, screen):
         for i in range(len(self.board)):
@@ -96,30 +101,32 @@ class Board:
         elif mouse_button == 3:
             pass  # правой кнопкой мыши - удалить и вернуть единицу в инвентарь
 
-    def get_click(self, mouse_pos, mouse_button):
+    def get_click(self, mouse_pos, mouse_button, screen):
         cell = self.get_cell(mouse_pos)
+        self.choosen_unit = Screen.choose_unit(screen, mouse_pos)
         if cell[0] >= 0 and cell[1] >= 0:
             self.on_click(cell, mouse_button)
-        self.choosen_unit = Screen.choose_unit(self.sc, mouse_pos)
 
 
 class Button:
-    def __init__(self, size, size_font, surface_x, surface_y, rect_x, rect_y, rect_width, rect_height):
-        self.sc = Screen(size)
+    def __init__(self, size_font, surface_x, surface_y, rect_x, rect_y):
+        self.gameplay = False
         self.font = pygame.font.Font(None, size_font)
         self.button_surface = pygame.Surface((surface_x, surface_y))
-        self.text = self.font.render("Следущий ход", True, (255, 255, 255))
+        self.text = self.font.render("Начать игру", True, (255, 255, 255))
         self.text_rect = self.text.get_rect()
-        self.button_rect = pygame.Rect(rect_x, rect_y, rect_width, rect_height)
+        self.rect_width = self.text_rect.width
+        self.rect_height = self.text_rect.height
+        self.button_rect = pygame.Rect(rect_x, rect_y, self.rect_width, self.rect_height)
 
-    def check_click(self, rect_width, rect_height):
+    def check_collidepoint(self, rect_width, rect_height):
         if self.button_rect.collidepoint(pygame.mouse.get_pos()):
             pygame.draw.rect(self.button_surface, (0, 200, 0), (0, 0, rect_width, rect_height))
         else:
             pygame.draw.rect(self.button_surface, (0, 150, 0), (0, 0, rect_width, rect_height))
 
-    def render(self, sc, rect_width, rect_height):
+    def render(self, sc):
         self.button_surface.blit(self.text, self.text_rect)
         sc.blit(self.button_surface, (self.button_rect.x, self.button_rect.y))
 
-        self.check_click(rect_width, rect_height)
+        self.check_collidepoint(self.rect_width, self.rect_height)
