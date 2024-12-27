@@ -23,7 +23,7 @@ class Screen:
             self.choose_unit = 'cavalry'
         return self.choose_unit
 
-    def render(self, board):
+    def render(self, board, button_start_game, rect_width, rect_height):
         landscapes.grasses.draw(self.sc)
         board.render(self.sc)
         castle.castles.draw(self.sc)
@@ -31,6 +31,8 @@ class Screen:
         swordsman.set_view_stock(self.sc, (50, 50))
         cavalry.cavalrys.draw(self.sc)
         cavalry.set_view_stock(self.sc, (50, 150))
+
+        button_start_game.render(self.sc, rect_width, rect_height)
 
 
 class Board:
@@ -79,7 +81,6 @@ class Board:
 
     def on_click(self, cell_coords, mouse_button):
         x, y = cell_coords
-        print(mouse_button)
         if mouse_button == 1:
             if self.choosen_unit == 'swordsman' and self.board[y][x] == 0 and swordsman.stock > 0:
                 swordsman.Swordsman(x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
@@ -100,3 +101,25 @@ class Board:
         if cell[0] >= 0 and cell[1] >= 0:
             self.on_click(cell, mouse_button)
         self.choosen_unit = Screen.choose_unit(self.sc, mouse_pos)
+
+
+class Button:
+    def __init__(self, size, size_font, surface_x, surface_y, rect_x, rect_y, rect_width, rect_height):
+        self.sc = Screen(size)
+        self.font = pygame.font.Font(None, size_font)
+        self.button_surface = pygame.Surface((surface_x, surface_y))
+        self.text = self.font.render("Следущий ход", True, (255, 255, 255))
+        self.text_rect = self.text.get_rect()
+        self.button_rect = pygame.Rect(rect_x, rect_y, rect_width, rect_height)
+
+    def check_click(self, rect_width, rect_height):
+        if self.button_rect.collidepoint(pygame.mouse.get_pos()):
+            pygame.draw.rect(self.button_surface, (0, 200, 0), (0, 0, rect_width, rect_height))
+        else:
+            pygame.draw.rect(self.button_surface, (0, 150, 0), (0, 0, rect_width, rect_height))
+
+    def render(self, sc, rect_width, rect_height):
+        self.button_surface.blit(self.text, self.text_rect)
+        sc.blit(self.button_surface, (self.button_rect.x, self.button_rect.y))
+
+        self.check_click(rect_width, rect_height)
