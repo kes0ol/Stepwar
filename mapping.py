@@ -11,7 +11,7 @@ class Screen:
         self.sc = pygame.display.set_mode(size)
         self.choose_unit = None
         self.board = Board(18, 10)
-        self.button_start_game = Button(38, 200, 26, 1100, 700)
+        self.button_start_game = Button('Начать игру', 38, 200, 26, 1100, 700)
         self.icon_swordsman = swordsman.Swordsman(125, 25, 80,
                                                   swordsman.swordsmans)
         self.icon_cavalry = cavalry.Cavalry(125, 125, 80, cavalry.cavalrys)
@@ -110,11 +110,11 @@ class Board:
 
 
 class Button:
-    def __init__(self, size_font, surface_x, surface_y, rect_x, rect_y):
+    def __init__(self, text, size_font, surface_x, surface_y, rect_x, rect_y):
         self.gameplay = False
         self.font = pygame.font.Font(None, size_font)
         self.button_surface = pygame.Surface((surface_x, surface_y))
-        self.text = self.font.render("Начать игру", True, (255, 255, 255))
+        self.text = self.font.render(text, True, (255, 255, 255))
         self.text_rect = self.text.get_rect()
         self.rect_width = self.text_rect.width
         self.rect_height = self.text_rect.height

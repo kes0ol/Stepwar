@@ -3,7 +3,7 @@ import pygame
 import mapping
 import start_game
 
-if __name__ == '__main__':
+def start():
     pygame.init()
     pygame.display.set_caption('StepWar')
 
