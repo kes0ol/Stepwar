@@ -12,12 +12,12 @@ def render(screen):
 def check_click(mouse_pos, lst):
     global running
     for button in lst:
-        if button.button_rect.left <= mouse_pos[0] <= button.button_rect.right and button.button_rect.top <= mouse_pos[
-            1] <= button.button_rect.bottom:
+        if (button.button_rect.left <= mouse_pos[0] <= button.button_rect.right and
+                button.button_rect.top <= mouse_pos[1] <= button.button_rect.bottom):
             if button == play_game_button:
                 main.start()
             if button == setting_button:
-                pass # настройки игры
+                pass  # настройки игры
             if button == exit_button:
                 running = False
 
@@ -42,8 +42,12 @@ if __name__ == '__main__':
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 check_click(event.pos, lst_buttons)
-        screen.fill((0, 0, 0))
-        render(screen)
-        clock.tick(fps)
-        pygame.display.flip()
+        try:
+            screen.fill((0, 0, 0))
+            render(screen)
+            clock.tick(fps)
+            pygame.display.flip()
+        except Exception:
+            running = False
+            pygame.quit()
     pygame.quit()
