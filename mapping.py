@@ -38,7 +38,8 @@ class Screen:
 
     def get_click(self, mouse_pos, mouse_button):
         Board.get_click(self.board, mouse_pos, mouse_button, self)
-        if (self.button_start_game.button_rect.left <= mouse_pos[0] <= self.button_start_game.button_rect.right
+        if not self.button_start_game.gameplay and (
+                self.button_start_game.button_rect.left <= mouse_pos[0] <= self.button_start_game.button_rect.right
                 and
                 self.button_start_game.button_rect.top <= mouse_pos[1] <= self.button_start_game.button_rect.bottom):
             self.button_start_game.gameplay = True
