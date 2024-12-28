@@ -100,8 +100,20 @@ class Board:
                                 cavalry.cavalrys)
                 cavalry.stock -= 1
                 self.board[y][x] = 1
-        elif mouse_button == 3:
-            pass  # правой кнопкой мыши - удалить и вернуть единицу в инвентарь
+        if mouse_button == 3:
+            if self.board[y][x] == 1:
+                coords = x * self.cell_size + self.left, y * self.cell_size + self.top
+
+                for sword in swordsman.swordsmans:
+                    if (sword.rect.x, sword.rect.y) == coords:
+                        swordsman.swordsmans.remove(sword)
+                        swordsman.stock += 1
+
+                for cav in cavalry.cavalrys:
+                    if (cav.rect.x, cav.rect.y) == coords:
+                        cavalry.cavalrys.remove(cav)
+                        cavalry.stock += 1
+                self.board[y][x] = 0
 
     def get_click(self, mouse_pos, mouse_button, screen):
         cell = self.get_cell(mouse_pos)

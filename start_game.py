@@ -1,6 +1,5 @@
 import pygame
 
-import mapping
 import swordsman
 import cavalry
 
@@ -15,9 +14,9 @@ def start(screen):
                 screen.board.gameplay = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 cell_coords = screen.board.get_cell(event.pos)
-                unit = choose_unit(screen, cell_coords)
+                unit, is_chose_unit = choose_unit(screen, cell_coords)
                 if unit != -1:
-                    choose_step(screen, lst_surfaces, unit, cell_coords)
+                    choose_step(screen, lst_surfaces, unit, cell_coords, is_chose_unit)
         screen.sc.fill((0, 0, 0))
         screen.render()
         render(screen, lst_surfaces)
@@ -32,23 +31,28 @@ def choose_unit(screen, cell_coords):
     for sword in swordsman.swordsmans:
         if (sword.rect.x, sword.rect.y) == coords:
             unit = sword, coords
-            return unit
+            return unit, True
     for cav in cavalry.cavalrys:
         if (cav.rect.x, cav.rect.y) == coords:
             unit = cav, coords
-            return unit
-    return -1
+            return unit, True
+    return -1, -1
 
 
-def choose_step(screen, lst_surfaces, unit, cell_coords):
+def choose_step(screen, lst_surfaces, unit, cell_coords, is_chose_unit):
+    how_choose_unit = None
+    lst_steps = []
     type_unit, coords = unit
     x, y = coords
     cell_x, cell_y = cell_coords
     lst_surfaces.clear()
     if type_unit in swordsman.swordsmans:
-        for dx in (-1, 0, 1):
-            for dy in (-1, 0, 1):
+        for dx in range(-1, 2):
+            for dy in range(-1, 2):
                 if (dx, dy) != (0, 0) and screen.board.board[cell_y + dy][cell_x + dx] == 0:
+                    how_choose_unit = 'swordsman'
+                    lst_steps.append((cell_y + dy, cell_x + dx))
+
                     surface_coords_x = x + dx * screen.board.cell_size
                     surface_coords_y = y + dy * screen.board.cell_size
                     surface_size = screen.board.cell_size, screen.board.cell_size
@@ -61,6 +65,9 @@ def choose_step(screen, lst_surfaces, unit, cell_coords):
         for dx in range(-2, 3):
             for dy in range(-2, 3):
                 if (dx, dy) != (0, 0) and screen.board.board[cell_y + dy][cell_x + dx] == 0:
+                    how_choose_unit = 'cavalry'
+                    lst_steps.append((cell_y + dy, cell_x + dx))
+
                     surface_coords_x = x + dx * screen.board.cell_size
                     surface_coords_y = y + dy * screen.board.cell_size
                     surface_size = screen.board.cell_size, screen.board.cell_size
@@ -68,6 +75,34 @@ def choose_step(screen, lst_surfaces, unit, cell_coords):
                     lst_surfaces.append(
                         (surface, (surface_coords_x, surface_coords_y),
                          (screen.board.cell_size, screen.board.cell_size)))
+
+    while is_chose_unit:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                screen.board.gameplay = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                choose_cell = tuple(reversed(list(screen.board.get_cell(event.pos))))
+                for coords in lst_steps:
+                    if coords == choose_cell:
+                        if how_choose_unit == 'swordsman':
+                            lst_surfaces.clear()
+                            swordsman.Swordsman.update(unit[0], cell_coords, choose_cell, screen)
+                            is_chose_unit = False
+                            break
+                        if how_choose_unit == 'cavalry':
+                            lst_surfaces.clear()
+                            cavalry.Cavalry.update(unit[0], cell_coords, choose_cell, screen)
+                            is_chose_unit = False
+                            break
+                else:
+                    lst_surfaces.clear()
+                    is_chose_unit = False
+                    break
+
+        screen.sc.fill((0, 0, 0))
+        screen.render()
+        render(screen, lst_surfaces)
+        pygame.display.flip()
 
 
 def render(screen, lst_surfaces):
