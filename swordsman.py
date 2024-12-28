@@ -22,14 +22,11 @@ class Swordsman(pygame.sprite.Sprite):
         self.screen.board.board[self.y_now][self.x_now] = 0
         self.screen.board.board[self.select_y][self.select_x] = 1
 
-        print(self.x_now, self.y_now)
-        print(self.select_x, self.select_y)
         self.x = (self.select_x - self.x_now) * self.screen.board.cell_size
         self.y = (self.select_y - self.y_now) * self.screen.board.cell_size
 
         self.rect = self.rect.move(self.x, self.y)
         mapping.Screen.render(self.screen)
-
 
 
 stock = 10

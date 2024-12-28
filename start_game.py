@@ -1,3 +1,5 @@
+import sys
+
 import pygame
 
 import swordsman
@@ -12,6 +14,8 @@ def start(screen):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 screen.board.gameplay = False
+                pygame.quit()
+                sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 cell_coords = screen.board.get_cell(event.pos)
                 unit, is_chose_unit = choose_unit(screen, cell_coords)
@@ -49,37 +53,45 @@ def choose_step(screen, lst_surfaces, unit, cell_coords, is_chose_unit):
     if type_unit in swordsman.swordsmans:
         for dx in range(-1, 2):
             for dy in range(-1, 2):
-                if (dx, dy) != (0, 0) and screen.board.board[cell_y + dy][cell_x + dx] == 0:
-                    how_choose_unit = 'swordsman'
-                    lst_steps.append((cell_y + dy, cell_x + dx))
+                if ((dx, dy) != (0, 0) and
+                        0 <= cell_x + dx < len(screen.board.board[0]) and
+                        0 <= cell_y + dy < len(screen.board.board)):
+                    if screen.board.board[cell_y + dy][cell_x + dx] == 0:
+                        how_choose_unit = 'swordsman'
+                        lst_steps.append((cell_y + dy, cell_x + dx))
 
-                    surface_coords_x = x + dx * screen.board.cell_size
-                    surface_coords_y = y + dy * screen.board.cell_size
-                    surface_size = screen.board.cell_size, screen.board.cell_size
-                    surface = pygame.surface.Surface(surface_size)
-                    lst_surfaces.append(
-                        (surface, (surface_coords_x, surface_coords_y),
-                         (screen.board.cell_size, screen.board.cell_size)))
+                        surface_coords_x = x + dx * screen.board.cell_size
+                        surface_coords_y = y + dy * screen.board.cell_size
+                        surface_size = screen.board.cell_size, screen.board.cell_size
+                        surface = pygame.surface.Surface(surface_size)
+                        lst_surfaces.append(
+                            (surface, (surface_coords_x, surface_coords_y),
+                             (screen.board.cell_size, screen.board.cell_size)))
 
     if type_unit in cavalry.cavalrys:
         for dx in range(-2, 3):
             for dy in range(-2, 3):
-                if (dx, dy) != (0, 0) and screen.board.board[cell_y + dy][cell_x + dx] == 0:
-                    how_choose_unit = 'cavalry'
-                    lst_steps.append((cell_y + dy, cell_x + dx))
+                if ((dx, dy) != (0, 0) and
+                        0 <= cell_x + dx < len(screen.board.board[0]) and
+                        0 <= cell_y + dy < len(screen.board.board)):
+                    if screen.board.board[cell_y + dy][cell_x + dx] == 0:
+                        how_choose_unit = 'cavalry'
+                        lst_steps.append((cell_y + dy, cell_x + dx))
 
-                    surface_coords_x = x + dx * screen.board.cell_size
-                    surface_coords_y = y + dy * screen.board.cell_size
-                    surface_size = screen.board.cell_size, screen.board.cell_size
-                    surface = pygame.surface.Surface(surface_size)
-                    lst_surfaces.append(
-                        (surface, (surface_coords_x, surface_coords_y),
-                         (screen.board.cell_size, screen.board.cell_size)))
+                        surface_coords_x = x + dx * screen.board.cell_size
+                        surface_coords_y = y + dy * screen.board.cell_size
+                        surface_size = screen.board.cell_size, screen.board.cell_size
+                        surface = pygame.surface.Surface(surface_size)
+                        lst_surfaces.append(
+                            (surface, (surface_coords_x, surface_coords_y),
+                             (screen.board.cell_size, screen.board.cell_size)))
 
     while is_chose_unit:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 screen.board.gameplay = False
+                pygame.quit()
+                sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 choose_cell = tuple(reversed(list(screen.board.get_cell(event.pos))))
                 for coords in lst_steps:
