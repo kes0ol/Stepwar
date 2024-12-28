@@ -12,8 +12,8 @@ class Screen:
         self.choose_unit = None
         self.board = Board(18, 10)
         self.button_start_game = Button('Начать игру', 38, 200, 26, 1100, 700)
-        self.icon_swordsman = swordsman.Swordsman(125, 25, 80,
-                                                  swordsman.swordsmans)
+        self.back_button = Button('Вернуться в главное меню', 40, 400, 26, 100, 700)
+        self.icon_swordsman = swordsman.Swordsman(125, 25, 80, swordsman.swordsmans)
         self.icon_cavalry = cavalry.Cavalry(125, 125, 80, cavalry.cavalrys)
 
     def choose_unit(self, mouse_pos):
@@ -25,7 +25,7 @@ class Screen:
             self.choose_unit = 'cavalry'
         return self.choose_unit
 
-    def render(self, board, button_start_game):
+    def render(self, board, button_start_game, back_button):
         landscapes.grasses.draw(self.sc)
         board.render(self.sc)
         castle.castles.draw(self.sc)
@@ -34,6 +34,7 @@ class Screen:
         cavalry.cavalrys.draw(self.sc)
         cavalry.set_view_stock(self.sc, (50, 150))
 
+        back_button.render(self.sc)
         button_start_game.render(self.sc)
 
     def get_click(self, mouse_pos, mouse_button):
@@ -43,10 +44,14 @@ class Screen:
                 and
                 self.button_start_game.button_rect.top <= mouse_pos[1] <= self.button_start_game.button_rect.bottom):
             self.button_start_game.gameplay = True
-
+        if not self.board.back_to_menu and (self.back_button.button_rect.left <= mouse_pos[0] <= self.back_button.button_rect.right
+                               and
+                               self.back_button.button_rect.top <= mouse_pos[1] <= self.back_button.button_rect.bottom):
+            self.board.back_to_menu = True
 
 class Board:
     def __init__(self, width, height):
+        self.back_to_menu = False
         self.width = width
         self.height = height
 

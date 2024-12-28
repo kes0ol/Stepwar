@@ -29,8 +29,8 @@ class Settings_window:
         for button in lst:
             if (button.button_rect.left <= mouse_pos[0] <= button.button_rect.right and
                     button.button_rect.top <= mouse_pos[1] <= button.button_rect.bottom):
-                if self.volume_button:
-                    pass
+                if button == self.back_button:
+                    self.running = False
                 elif self.off_volume_button:
                     pass
                 elif self.twenty_volume_button:
@@ -43,8 +43,10 @@ class Settings_window:
                     pass
                 elif self.hundred_volume_button:
                     pass
-                elif button == self.back_button:
-                    self.running = False
+                elif self.volume_button:
+                    pass
+
+
 
     def render(self):
         for button in self.lst_buttons:
