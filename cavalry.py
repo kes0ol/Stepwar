@@ -11,6 +11,7 @@ class Cavalry(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+        self.step = 4
 
 
 stock = 5
