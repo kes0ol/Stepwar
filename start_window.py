@@ -1,12 +1,12 @@
 import pygame
 import mapping
-import main
+import settings
 
 
-def render(screen):
-    play_game_button.render(screen)
-    setting_button.render(screen)
-    exit_button.render(screen)
+def render(screen, lst):
+    lst[0].render(screen)
+    lst[1].render(screen)
+    lst[2].render(screen)
 
 
 def check_click(mouse_pos, lst):
@@ -14,16 +14,15 @@ def check_click(mouse_pos, lst):
     for button in lst:
         if button.button_rect.left <= mouse_pos[0] <= button.button_rect.right and button.button_rect.top <= mouse_pos[
             1] <= button.button_rect.bottom:
-            if button == play_game_button:
-                main.start()
-            if button == setting_button:
-                pass # настройки игры
-            if button == exit_button:
+            if button == lst[0]:
+                running = False
+            if button == lst[1]:
+                settings.open()
+            if button == lst[2]:
                 running = False
 
 
-if __name__ == '__main__':
-    pygame.init()
+def start():
     pygame.display.set_caption('StepWar')
 
     size = width, height = 1400, 800
@@ -43,7 +42,7 @@ if __name__ == '__main__':
             if event.type == pygame.MOUSEBUTTONDOWN:
                 check_click(event.pos, lst_buttons)
         screen.fill((0, 0, 0))
-        render(screen)
+        render(screen, lst_buttons)
         clock.tick(fps)
         pygame.display.flip()
     pygame.quit()
