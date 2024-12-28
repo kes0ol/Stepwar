@@ -3,6 +3,6 @@ import mapping
 
 
 def start(screen):
-    while screen.button_start_game.gameplay:
+    while screen.board.gameplay:
         print("it's work!!")
-        screen.button_start_game.gameplay = False
+        screen.board.gameplay = False

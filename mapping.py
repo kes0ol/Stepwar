@@ -25,28 +25,29 @@ class Screen:
             self.choose_unit = 'cavalry'
         return self.choose_unit
 
-    def render(self, board, button_start_game):
+    def render(self):
         landscapes.grasses.draw(self.sc)
-        board.render(self.sc)
+        self.board.render(self.sc)
         castle.castles.draw(self.sc)
         swordsman.swordsmans.draw(self.sc)
         swordsman.set_view_stock(self.sc, (50, 50))
         cavalry.cavalrys.draw(self.sc)
         cavalry.set_view_stock(self.sc, (50, 150))
 
-        button_start_game.render(self.sc)
+        self.button_start_game.render(self.sc)
 
     def get_click(self, mouse_pos, mouse_button):
         Board.get_click(self.board, mouse_pos, mouse_button, self)
-        if not self.button_start_game.gameplay and (
+        if not self.board.gameplay and (
                 self.button_start_game.button_rect.left <= mouse_pos[0] <= self.button_start_game.button_rect.right
                 and
                 self.button_start_game.button_rect.top <= mouse_pos[1] <= self.button_start_game.button_rect.bottom):
-            self.button_start_game.gameplay = True
+            self.board.gameplay = True
 
 
 class Board:
     def __init__(self, width, height):
+        self.gameplay = False
         self.width = width
         self.height = height
 
@@ -111,7 +112,6 @@ class Board:
 
 class Button:
     def __init__(self, text, size_font, surface_x, surface_y, rect_x, rect_y):
-        self.gameplay = False
         self.font = pygame.font.Font(None, size_font)
         self.button_surface = pygame.Surface((surface_x, surface_y))
         self.text = self.font.render(text, True, (255, 255, 255))
