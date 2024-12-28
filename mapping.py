@@ -35,6 +35,7 @@ class Screen:
         cavalry.set_view_stock(self.sc, (50, 150))
 
         self.button_start_game.render(self.sc)
+        self.back_button.render(self.sc)
 
     def get_click(self, mouse_pos, mouse_button):
         Board.get_click(self.board, mouse_pos, mouse_button, self)
@@ -43,10 +44,12 @@ class Screen:
                 and
                 self.button_start_game.button_rect.top <= mouse_pos[1] <= self.button_start_game.button_rect.bottom):
             self.button_start_game.gameplay = True
-        if not self.board.back_to_menu and (self.back_button.button_rect.left <= mouse_pos[0] <= self.back_button.button_rect.right
-                               and
-                               self.back_button.button_rect.top <= mouse_pos[1] <= self.back_button.button_rect.bottom):
+        if not self.board.back_to_menu and (
+                self.back_button.button_rect.left <= mouse_pos[0] <= self.back_button.button_rect.right
+                and
+                self.back_button.button_rect.top <= mouse_pos[1] <= self.back_button.button_rect.bottom):
             self.board.back_to_menu = True
+
 
 class Board:
     def __init__(self, width, height):

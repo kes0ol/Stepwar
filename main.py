@@ -25,7 +25,7 @@ if __name__ == '__main__':
             start_screen.running = True
             start_screen.start()
             main_screen.board.back_to_menu = False
-        if button_start_game.gameplay:
+        if main_screen.board.gameplay:
             start_game.start(main_screen)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
