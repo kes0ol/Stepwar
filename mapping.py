@@ -3,6 +3,8 @@ import pygame
 import swordsman
 import castle
 import cavalry
+import archer
+import dragon
 import landscapes
 
 
@@ -12,17 +14,25 @@ class Screen:
         self.choose_unit = None
         self.board = Board(18, 10)
         self.button_start_game = Button('Начать игру', 38, 200, 26, 1100, 700)
-        self.icon_swordsman = swordsman.Swordsman(125, 25, 80,
-                                                  swordsman.swordsmans)
-        self.icon_cavalry = cavalry.Cavalry(125, 125, 80, cavalry.cavalrys)
+        self.icon_swordsman = swordsman.Swordsman(125, 25, 80, swordsman.swordsmans)
+        self.icon_archer = archer.Archer(125, 125, 80, archer.archers)
+        self.icon_cavalry = cavalry.Cavalry(125, 225, 80, cavalry.cavalrys)
+        self.icon_dragon = dragon.Dragon(125, 325, 80, dragon.dragons)
 
     def choose_unit(self, mouse_pos):
         if (self.icon_swordsman.rect.left <= mouse_pos[0] <= self.icon_swordsman.rect.right and
                 self.icon_swordsman.rect.top <= mouse_pos[1] <= self.icon_swordsman.rect.bottom):
             self.choose_unit = 'swordsman'
+        if (self.icon_archer.rect.left <= mouse_pos[0] <= self.icon_archer.rect.right and
+                self.icon_archer.rect.top <= mouse_pos[1] <= self.icon_archer.rect.bottom):
+            self.choose_unit = 'archer'
         if (self.icon_cavalry.rect.left <= mouse_pos[0] <= self.icon_cavalry.rect.right and
                 self.icon_cavalry.rect.top <= mouse_pos[1] <= self.icon_cavalry.rect.bottom):
             self.choose_unit = 'cavalry'
+        if (self.icon_dragon.rect.left <= mouse_pos[0] <= self.icon_dragon.rect.right and
+                self.icon_dragon.rect.top <= mouse_pos[1] <= self.icon_dragon.rect.bottom):
+            self.choose_unit = 'dragon'
+
         return self.choose_unit
 
     def render(self):
@@ -31,8 +41,12 @@ class Screen:
         castle.castles.draw(self.sc)
         swordsman.swordsmans.draw(self.sc)
         swordsman.set_view_stock(self.sc, (50, 50))
+        archer.archers.draw(self.sc)
+        archer.set_view_stock(self.sc, (50, 150))
         cavalry.cavalrys.draw(self.sc)
-        cavalry.set_view_stock(self.sc, (50, 150))
+        cavalry.set_view_stock(self.sc, (50, 250))
+        dragon.dragons.draw(self.sc)
+        dragon.set_view_stock(self.sc, (50, 350))
 
         self.button_start_game.render(self.sc)
 
@@ -94,12 +108,23 @@ class Board:
                                     swordsman.swordsmans)
                 swordsman.stock -= 1
                 self.board[y][x] = 1
+            if self.choosen_unit == 'archer' and self.board[y][x] == 0 and archer.stock > 0:
+                archer.Archer(x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
+                              archer.archers)
+                archer.stock -= 1
+                self.board[y][x] = 1
 
             if self.choosen_unit == 'cavalry' and self.board[y][x] == 0 and cavalry.stock > 0:
                 cavalry.Cavalry(x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
                                 cavalry.cavalrys)
                 cavalry.stock -= 1
                 self.board[y][x] = 1
+            if self.choosen_unit == 'dragon' and self.board[y][x] == 0 and dragon.stock > 0:
+                dragon.Dragon(x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
+                              dragon.dragons)
+                dragon.stock -= 1
+                self.board[y][x] = 1
+
         if mouse_button == 3:
             if self.board[y][x] == 1:
                 coords = x * self.cell_size + self.left, y * self.cell_size + self.top
@@ -109,10 +134,21 @@ class Board:
                         swordsman.swordsmans.remove(sword)
                         swordsman.stock += 1
 
+                for arc in archer.archers:
+                    if (arc.rect.x, arc.rect.y) == coords:
+                        archer.archers.remove(arc)
+                        archer.stock += 1
+
                 for cav in cavalry.cavalrys:
                     if (cav.rect.x, cav.rect.y) == coords:
                         cavalry.cavalrys.remove(cav)
                         cavalry.stock += 1
+
+                for drg in dragon.dragons:
+                    if (drg.rect.x, drg.rect.y) == coords:
+                        dragon.dragons.remove(drg)
+                        dragon.stock += 1
+
                 self.board[y][x] = 0
 
     def get_click(self, mouse_pos, mouse_button, screen):
