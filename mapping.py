@@ -16,10 +16,11 @@ class Screen:
         self.choose_unit = None
         self.board = Board(18, 10)
         self.button_start_game = Button('Начать игру', 38, 200, 26, 1100, 700)
-        self.icon_swordsman = swordsman.Swordsman(125, 25, 80, swordsman.swordsmans)
-        self.icon_archer = archer.Archer(125, 125, 80, archer.archers)
-        self.icon_cavalry = cavalry.Cavalry(125, 225, 80, cavalry.cavalrys)
-        self.icon_dragon = dragon.Dragon(125, 325, 80, dragon.dragons)
+        self.button_next_step = Button('Следующий ход', 38, 250, 26, 1100, 700)
+        self.icon_swordsman = swordsman.Swordsman(125, 25, self.board.cell_size * 1.5, swordsman.swordsmans)
+        self.icon_archer = archer.Archer(125, 125, self.board.cell_size * 1.5, archer.archers)
+        self.icon_cavalry = cavalry.Cavalry(125, 225, self.board.cell_size * 1.5, cavalry.cavalrys)
+        self.icon_dragon = dragon.Dragon(125, 325, self.board.cell_size * 1.5, dragon.dragons)
 
     def choose_unit(self, mouse_pos):
         if (self.icon_swordsman.rect.left <= mouse_pos[0] <= self.icon_swordsman.rect.right and
@@ -55,7 +56,10 @@ class Screen:
         enemys.cavalrys.draw(self.sc)
         enemys.dragons.draw(self.sc)
 
-        self.button_start_game.render(self.sc)
+        if not self.board.gameplay:
+            self.button_start_game.render(self.sc)
+        else:
+            self.button_next_step.render(self.sc)
 
     def get_click(self, mouse_pos, mouse_button):
         Board.get_click(self.board, mouse_pos, mouse_button, self)
@@ -92,16 +96,17 @@ class Board:
                 for j in range(len(level_lst[i])):
                     x, y = j * self.cell_size + self.left, i * self.cell_size + self.top
                     if level_lst[i][j] == 's':
-                        enemys.Enemy(x, y, 1, 1, 'images/swordsman.jpeg', self.cell_size, enemys.swordsmans)
+                        enemys.Enemy(x, y, 1, 1, 'images/enemy_images/swordsman.jpeg', self.cell_size,
+                                     enemys.swordsmans)
                         self.board[i][j] = 2
                     if level_lst[i][j] == 'a':
-                        enemys.Enemy(x, y, 1, 4, 'images/archer.jpeg', self.cell_size, enemys.swordsmans)
+                        enemys.Enemy(x, y, 1, 4, 'images/enemy_images/archer.jpeg', self.cell_size, enemys.swordsmans)
                         self.board[i][j] = 2
                     if level_lst[i][j] == 'c':
-                        enemys.Enemy(x, y, 3, 1, 'images/cavalry.jpeg', self.cell_size, enemys.swordsmans)
+                        enemys.Enemy(x, y, 3, 1, 'images/enemy_images/cavalry.jpeg', self.cell_size, enemys.swordsmans)
                         self.board[i][j] = 2
                     if level_lst[i][j] == 'd':
-                        enemys.Enemy(x, y, 4, 3, 'images/dragon.jpeg', self.cell_size, enemys.swordsmans)
+                        enemys.Enemy(x, y, 4, 3, 'images/enemy_images/dragon.jpeg', self.cell_size, enemys.swordsmans)
                         self.board[i][j] = 2
                     if level_lst[i][j] == 'X':
                         enemys.Enemy(x, y, 0, 0, 'images/castle.jpeg', self.cell_size * 2, enemys.swordsmans)
@@ -132,7 +137,7 @@ class Board:
     def on_click(self, cell_coords, mouse_button):
         x, y = cell_coords
         if mouse_button == 1:
-            if x <= 5:
+            if x <= 6:
                 if self.choosen_unit == 'swordsman' and self.board[y][x] == 0 and swordsman.stock > 0:
                     swordsman.Swordsman(x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
                                         swordsman.swordsmans)

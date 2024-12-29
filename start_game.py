@@ -10,6 +10,7 @@ import dragon
 
 def start(screen):
     lst_surfaces = []
+    is_new_step = False
     while screen.board.gameplay:
         fps = 120
         clock = pygame.time.Clock()
@@ -19,10 +20,13 @@ def start(screen):
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
+                is_new_step = check_click(screen, event.pos)
+                if is_new_step:
+                    new_step(screen)
                 cell_coords = screen.board.get_cell(event.pos)
                 unit, is_chose_unit = choose_unit(screen, cell_coords)
                 if unit != -1 and event.button == 1:
-                    choose_step(screen, lst_surfaces, unit, cell_coords, is_chose_unit)
+                    choose_step(screen, lst_surfaces, unit, cell_coords, is_chose_unit, is_new_step)
                 if unit != -1 and event.button == 3:
                     choose_attack(screen, unit, cell_coords, is_chose_unit)
         screen.sc.fill((0, 0, 0))
@@ -72,7 +76,7 @@ def add_step_surfaces(screen, lst_steps, lst_surfaces, x, y, cell_x, cell_y, dx,
                  (screen.board.cell_size, screen.board.cell_size)))
 
 
-def choose_step(screen, lst_surfaces, unit, cell_coords, is_chose_unit):
+def choose_step(screen, lst_surfaces, unit, cell_coords, is_chose_unit, is_new_step):
     how_choose_unit = None
     lst_steps = []
     type_unit, coords = unit
@@ -104,26 +108,40 @@ def choose_step(screen, lst_surfaces, unit, cell_coords, is_chose_unit):
                 how_choose_unit = 'dragon'
                 add_step_surfaces(screen, lst_steps, lst_surfaces, x, y, cell_x, cell_y, dx, dy)
 
-    while is_chose_unit:
+    while is_chose_unit and not is_new_step:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 screen.board.gameplay = False
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
+                is_new_step = check_click(screen, event.pos)
                 choose_cell = tuple(reversed(list(screen.board.get_cell(event.pos))))
                 for coords in lst_steps:
                     if coords == choose_cell:
+                        move = abs(cell_coords[0] - choose_cell[1]) + abs(cell_coords[1] - choose_cell[0])
                         if how_choose_unit == 'swordsman':
+                            if abs(cell_coords[0] - choose_cell[1]) != abs(cell_coords[1] - cell_coords[0]):  # неверно
+                                move //= 2 - 1
+                            type_unit.step -= move
                             swordsman.Swordsman.update(unit[0], cell_coords, choose_cell, screen)
                             break
                         if how_choose_unit == 'archer':
+                            if abs(cell_coords[0] - choose_cell[1]) != abs(cell_coords[1] - cell_coords[0]):  # неверно
+                                move //= 2 - 1
+                            type_unit.step -= move
                             archer.Archer.update(unit[0], cell_coords, choose_cell, screen)
                             break
                         if how_choose_unit == 'cavalry':
+                            if abs(cell_coords[0] - choose_cell[1]) != abs(cell_coords[1] - cell_coords[0]):  # неверно
+                                move //= 2 - 1
+                            type_unit.step -= move
                             cavalry.Cavalry.update(unit[0], cell_coords, choose_cell, screen)
                             break
                         if how_choose_unit == 'dragon':
+                            if abs(cell_coords[0] - choose_cell[1]) != abs(cell_coords[1] - cell_coords[0]):  # неверно
+                                move //= 2 - 1
+                            type_unit.step -= move
                             dragon.Dragon.update(unit[0], cell_coords, choose_cell, screen)
                             break
 
@@ -138,7 +156,26 @@ def choose_step(screen, lst_surfaces, unit, cell_coords, is_chose_unit):
 
 def choose_attack(screen, unit, cell_coords, is_chose_unit):
     pass  # атака на вражеского юнита
-    
+
+
+def check_click(screen, mouse_pos):
+    if (screen.button_next_step.button_rect.left <= mouse_pos[0] <= screen.button_next_step.button_rect.right
+            and screen.button_next_step.button_rect.top <= mouse_pos[1] <= screen.button_next_step.button_rect.bottom):
+        return True
+    return False
+
+
+def new_step(screen):
+    for sword in swordsman.swordsmans:
+        sword.step = 1
+    for arc in archer.archers:
+        arc.step = 1
+    for cav in cavalry.cavalrys:
+        cav.step = 3
+    for drg in dragon.dragons:
+        drg.step = 4
+    screen.board.new_step = False
+
 
 def render(screen, lst_surfaces):
     for surf in lst_surfaces:

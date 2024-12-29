@@ -6,7 +6,6 @@ class Enemy(pygame.sprite.Sprite):
         super().__init__(group)
         self.image = pygame.image.load(image)
         self.image = pygame.transform.scale(self.image, (image_size, image_size))
-        self.image = pygame.transform.rotate(self.image, 180)
         self.image.set_colorkey((255, 255, 255))
         self.rect = self.image.get_rect()
         self.rect.x = x
