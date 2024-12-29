@@ -7,6 +7,8 @@ import archer
 import dragon
 import landscapes
 
+import enemys
+
 
 class Screen:
     def __init__(self, size):
@@ -48,6 +50,11 @@ class Screen:
         dragon.dragons.draw(self.sc)
         dragon.set_view_stock(self.sc, (50, 350))
 
+        enemys.swordsmans.draw(self.sc)
+        enemys.archers.draw(self.sc)
+        enemys.cavalrys.draw(self.sc)
+        enemys.dragons.draw(self.sc)
+
         self.button_start_game.render(self.sc)
 
     def get_click(self, mouse_pos, mouse_button):
@@ -79,6 +86,28 @@ class Board:
                                             self.cell_size)
                     self.board[j][i], self.board[j][i + 1], self.board[j + 1][i], self.board[j + 1][i + 1] = 1, 1, 1, 1
 
+        with (open('levels/1.txt', mode='rt', encoding='utf-8') as level):
+            level_lst = [string.strip('\n').split(', ') for string in level]
+            for i in range(len(level_lst)):
+                for j in range(len(level_lst[i])):
+                    x, y = j * self.cell_size + self.left, i * self.cell_size + self.top
+                    if level_lst[i][j] == 's':
+                        enemys.Enemy(x, y, 1, 1, 'images/swordsman.jpeg', self.cell_size, enemys.swordsmans)
+                        self.board[i][j] = 2
+                    if level_lst[i][j] == 'a':
+                        enemys.Enemy(x, y, 1, 4, 'images/archer.jpeg', self.cell_size, enemys.swordsmans)
+                        self.board[i][j] = 2
+                    if level_lst[i][j] == 'c':
+                        enemys.Enemy(x, y, 3, 1, 'images/cavalry.jpeg', self.cell_size, enemys.swordsmans)
+                        self.board[i][j] = 2
+                    if level_lst[i][j] == 'd':
+                        enemys.Enemy(x, y, 4, 3, 'images/dragon.jpeg', self.cell_size, enemys.swordsmans)
+                        self.board[i][j] = 2
+                    if level_lst[i][j] == 'X':
+                        enemys.Enemy(x, y, 0, 0, 'images/castle.jpeg', self.cell_size * 2, enemys.swordsmans)
+                        self.board[i][j], self.board[i + 1][j] = 2, 2
+                        self.board[i][j + 1], self.board[i + 1][j + 1] = 2, 2
+
     def render(self, screen):
         for i in range(len(self.board)):
             for j in range(len(self.board[i])):
@@ -103,27 +132,28 @@ class Board:
     def on_click(self, cell_coords, mouse_button):
         x, y = cell_coords
         if mouse_button == 1:
-            if self.choosen_unit == 'swordsman' and self.board[y][x] == 0 and swordsman.stock > 0:
-                swordsman.Swordsman(x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
-                                    swordsman.swordsmans)
-                swordsman.stock -= 1
-                self.board[y][x] = 1
-            if self.choosen_unit == 'archer' and self.board[y][x] == 0 and archer.stock > 0:
-                archer.Archer(x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
-                              archer.archers)
-                archer.stock -= 1
-                self.board[y][x] = 1
+            if x <= 5:
+                if self.choosen_unit == 'swordsman' and self.board[y][x] == 0 and swordsman.stock > 0:
+                    swordsman.Swordsman(x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
+                                        swordsman.swordsmans)
+                    swordsman.stock -= 1
+                    self.board[y][x] = 1
+                if self.choosen_unit == 'archer' and self.board[y][x] == 0 and archer.stock > 0:
+                    archer.Archer(x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
+                                  archer.archers)
+                    archer.stock -= 1
+                    self.board[y][x] = 1
 
-            if self.choosen_unit == 'cavalry' and self.board[y][x] == 0 and cavalry.stock > 0:
-                cavalry.Cavalry(x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
-                                cavalry.cavalrys)
-                cavalry.stock -= 1
-                self.board[y][x] = 1
-            if self.choosen_unit == 'dragon' and self.board[y][x] == 0 and dragon.stock > 0:
-                dragon.Dragon(x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
-                              dragon.dragons)
-                dragon.stock -= 1
-                self.board[y][x] = 1
+                if self.choosen_unit == 'cavalry' and self.board[y][x] == 0 and cavalry.stock > 0:
+                    cavalry.Cavalry(x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
+                                    cavalry.cavalrys)
+                    cavalry.stock -= 1
+                    self.board[y][x] = 1
+                if self.choosen_unit == 'dragon' and self.board[y][x] == 0 and dragon.stock > 0:
+                    dragon.Dragon(x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
+                                  dragon.dragons)
+                    dragon.stock -= 1
+                    self.board[y][x] = 1
 
         if mouse_button == 3:
             if self.board[y][x] == 1:

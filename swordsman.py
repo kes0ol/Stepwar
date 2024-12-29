@@ -13,6 +13,7 @@ class Swordsman(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         self.step = 1
+        self.distance_attack = 1
 
     def update(self, *args, **kwargs):
         self.x_now, self.y_now = args[0]

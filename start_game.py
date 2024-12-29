@@ -21,8 +21,10 @@ def start(screen):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 cell_coords = screen.board.get_cell(event.pos)
                 unit, is_chose_unit = choose_unit(screen, cell_coords)
-                if unit != -1:
+                if unit != -1 and event.button == 1:
                     choose_step(screen, lst_surfaces, unit, cell_coords, is_chose_unit)
+                if unit != -1 and event.button == 3:
+                    choose_attack(screen, unit, cell_coords, is_chose_unit)
         screen.sc.fill((0, 0, 0))
         screen.render()
         render(screen, lst_surfaces)
@@ -54,7 +56,7 @@ def choose_unit(screen, cell_coords):
     return -1, -1
 
 
-def add_surfaces(screen, lst_steps, lst_surfaces, x, y, cell_x, cell_y, dx, dy):
+def add_step_surfaces(screen, lst_steps, lst_surfaces, x, y, cell_x, cell_y, dx, dy):
     if ((dx, dy) != (0, 0) and
             0 <= cell_x + dx < len(screen.board.board[0]) and
             0 <= cell_y + dy < len(screen.board.board)):
@@ -82,25 +84,25 @@ def choose_step(screen, lst_surfaces, unit, cell_coords, is_chose_unit):
         for dx in range(-type_unit.step, type_unit.step + 1):
             for dy in range(-type_unit.step, type_unit.step + 1):
                 how_choose_unit = 'swordsman'
-                add_surfaces(screen, lst_steps, lst_surfaces, x, y, cell_x, cell_y, dx, dy)
+                add_step_surfaces(screen, lst_steps, lst_surfaces, x, y, cell_x, cell_y, dx, dy)
 
     if type_unit in archer.archers:
         for dx in range(-type_unit.step, type_unit.step + 1):
             for dy in range(-type_unit.step, type_unit.step + 1):
                 how_choose_unit = 'archer'
-                add_surfaces(screen, lst_steps, lst_surfaces, x, y, cell_x, cell_y, dx, dy)
+                add_step_surfaces(screen, lst_steps, lst_surfaces, x, y, cell_x, cell_y, dx, dy)
 
     if type_unit in cavalry.cavalrys:
         for dx in range(-type_unit.step, type_unit.step + 1):
             for dy in range(-type_unit.step, type_unit.step + 1):
                 how_choose_unit = 'cavalry'
-                add_surfaces(screen, lst_steps, lst_surfaces, x, y, cell_x, cell_y, dx, dy)
+                add_step_surfaces(screen, lst_steps, lst_surfaces, x, y, cell_x, cell_y, dx, dy)
 
     if type_unit in dragon.dragons:
         for dx in range(-type_unit.step, type_unit.step + 1):
             for dy in range(-type_unit.step, type_unit.step + 1):
                 how_choose_unit = 'dragon'
-                add_surfaces(screen, lst_steps, lst_surfaces, x, y, cell_x, cell_y, dx, dy)
+                add_step_surfaces(screen, lst_steps, lst_surfaces, x, y, cell_x, cell_y, dx, dy)
 
     while is_chose_unit:
         for event in pygame.event.get():
@@ -113,34 +115,30 @@ def choose_step(screen, lst_surfaces, unit, cell_coords, is_chose_unit):
                 for coords in lst_steps:
                     if coords == choose_cell:
                         if how_choose_unit == 'swordsman':
-                            lst_surfaces.clear()
                             swordsman.Swordsman.update(unit[0], cell_coords, choose_cell, screen)
-                            is_chose_unit = False
                             break
                         if how_choose_unit == 'archer':
-                            lst_surfaces.clear()
                             archer.Archer.update(unit[0], cell_coords, choose_cell, screen)
-                            is_chose_unit = False
                             break
                         if how_choose_unit == 'cavalry':
-                            lst_surfaces.clear()
                             cavalry.Cavalry.update(unit[0], cell_coords, choose_cell, screen)
-                            is_chose_unit = False
                             break
                         if how_choose_unit == 'dragon':
-                            lst_surfaces.clear()
                             dragon.Dragon.update(unit[0], cell_coords, choose_cell, screen)
-                            is_chose_unit = False
                             break
-                else:
-                    lst_surfaces.clear()
-                    is_chose_unit = False
+
+                lst_surfaces.clear()
+                is_chose_unit = False
 
         screen.sc.fill((0, 0, 0))
         screen.render()
         render(screen, lst_surfaces)
         pygame.display.flip()
 
+
+def choose_attack(screen, unit, cell_coords, is_chose_unit):
+    pass  # атака на вражеского юнита
+    
 
 def render(screen, lst_surfaces):
     for surf in lst_surfaces:
