@@ -1,5 +1,4 @@
 import pygame
-import mapping
 
 
 class Swordsman(pygame.sprite.Sprite):
@@ -13,21 +12,25 @@ class Swordsman(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         self.step = 1
+        self.do_damage = True
         self.distance_attack = 1
 
     def update(self, *args, **kwargs):
         self.x_now, self.y_now = args[0]
         self.select_y, self.select_x = args[1]
         self.screen = args[2]
+        self.is_attack = args[3]
 
-        self.screen.board.board[self.y_now][self.x_now] = 0
-        self.screen.board.board[self.select_y][self.select_x] = 1
+        if not self.is_attack:
+            self.screen.board.board[self.y_now][self.x_now] = 0
+            self.screen.board.board[self.select_y][self.select_x] = 1
 
-        self.x = (self.select_x - self.x_now) * self.screen.board.cell_size
-        self.y = (self.select_y - self.y_now) * self.screen.board.cell_size
+            self.x = (self.select_x - self.x_now) * self.screen.board.cell_size
+            self.y = (self.select_y - self.y_now) * self.screen.board.cell_size
 
-        self.rect = self.rect.move(self.x, self.y)
-        mapping.Screen.render(self.screen)
+            self.rect = self.rect.move(self.x, self.y)
+        else:
+            print('дать дамаг')
 
 
 stock = 10
