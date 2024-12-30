@@ -19,6 +19,7 @@ class Start_window:
         self.lst_buttons = [self.play_game_button, self.setting_button, self.exit_button]
 
         self.settings_screen = settings.Settings_window(self.main_screen, self.size)
+
     def check_click(self, mouse_pos, lst):
         for button in lst:
             if (button.button_rect.left <= mouse_pos[0] <= button.button_rect.right and
@@ -26,6 +27,7 @@ class Start_window:
                 if button == self.play_game_button:
                     self.running = False
                 if button == self.setting_button:
+                    print(1)
                     self.settings_screen.start()
                 if button == self.exit_button:
                     pygame.quit()
