@@ -1,11 +1,11 @@
 import pygame
 
 
-class Swordsman(pygame.sprite.Sprite):
+class Archer(pygame.sprite.Sprite):
 
     def __init__(self, x, y, image_size, group):
         super().__init__(group)
-        self.image = pygame.image.load('images/swordsman.jpeg')
+        self.image = pygame.image.load('images/archer.jpeg')
         self.image = pygame.transform.scale(self.image, (image_size, image_size))
         self.image.set_colorkey((255, 255, 255))
         self.rect = self.image.get_rect()
@@ -13,7 +13,7 @@ class Swordsman(pygame.sprite.Sprite):
         self.rect.y = y
         self.step = 1
         self.do_damage = True
-        self.distance_attack = 1
+        self.distance_attack = 3
 
     def update(self, *args, **kwargs):
         self.x_now, self.y_now = args[0]
@@ -33,7 +33,7 @@ class Swordsman(pygame.sprite.Sprite):
             print('дать дамаг')
 
 
-stock = 10
+stock = 8
 
 
 def set_view_stock(screen, coords):
@@ -42,4 +42,4 @@ def set_view_stock(screen, coords):
     screen.blit(text, (coords[0], coords[1]))
 
 
-swordsmans = pygame.sprite.Group()
+archers = pygame.sprite.Group()
