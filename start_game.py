@@ -7,8 +7,10 @@ import archer
 import cavalry
 import dragon
 
+import start_window
 
-def start(screen):
+
+def start(screen, size):
     lst_surfaces = []
     while screen.board.gameplay:
         fps = 120
@@ -19,14 +21,20 @@ def start(screen):
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                is_new_step = check_click(screen, event.pos)
-                if is_new_step:
+                select_button = check_click(screen, event.pos)
+                if select_button == 'new_step':
                     new_step(screen)
+                if select_button == 'back_to_menu':
+                    screen.board.gameplay = False
+                    screen.board.clear_board(screen.icon_swordsman, screen.icon_archer, screen.icon_cavalry,
+                                             screen.icon_dragon)
+                    start_screen = start_window.Start_window(screen, size)
+                    start_window.Start_window.start(start_screen)
                 cell_coords = screen.board.get_cell(event.pos)
                 unit, is_choose_unit = choose_unit(screen, cell_coords)
                 if unit != -1 and event.button == 1:
                     is_attack = False
-                    choose_step(screen, lst_surfaces, unit, cell_coords, is_choose_unit, is_new_step, is_attack)
+                    choose_step(screen, lst_surfaces, unit, cell_coords, is_choose_unit, select_button, is_attack)
                 if unit != -1 and event.button == 3:
                     is_attack = True
                     choose_attack(screen, lst_surfaces, unit, cell_coords, is_choose_unit, is_attack)
@@ -34,6 +42,15 @@ def start(screen):
         screen.render()
         clock.tick(fps)
         pygame.display.flip()
+
+
+def check_click(screen, mouse_pos):
+    if (screen.button_next_step.button_rect.left <= mouse_pos[0] <= screen.button_next_step.button_rect.right
+            and screen.button_next_step.button_rect.top <= mouse_pos[1] <= screen.button_next_step.button_rect.bottom):
+        return 'new_step'
+    if (screen.back_button.button_rect.left <= mouse_pos[0] <= screen.back_button.button_rect.right
+            and screen.back_button.button_rect.top <= mouse_pos[1] <= screen.back_button.button_rect.bottom):
+        return 'back_to_menu'
 
 
 def choose_unit(screen, cell_coords):
@@ -118,17 +135,17 @@ def select_surfaces(screen, unit, cell_coords, lst_surfaces, is_attack):
         return type_unit, lst_steps, how_choose_unit
 
 
-def choose_step(screen, lst_surfaces, unit, cell_coords, is_choose_unit, is_new_step, is_attack):
+def choose_step(screen, lst_surfaces, unit, cell_coords, is_choose_unit, select_button, is_attack):
     type_unit, lst_steps, how_choose_unit = select_surfaces(screen, unit, cell_coords, lst_surfaces, is_attack)
     if type_unit.step > 0:
-        while is_choose_unit and not is_new_step:
+        while is_choose_unit and select_button != 'new_step':
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     screen.board.gameplay = False
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    is_new_step = check_click(screen, event.pos)
+                    select_button = check_click(screen, event.pos)
                     choose_cell = tuple(reversed(list(screen.board.get_cell(event.pos))))
                     for coords in lst_steps:
                         if coords == choose_cell:
@@ -183,13 +200,6 @@ def choose_attack(screen, lst_surfaces, unit, cell_coords, is_chose_unit, is_att
             screen.render()
             render(screen, lst_surfaces, (200, 0, 0))
             pygame.display.flip()
-
-
-def check_click(screen, mouse_pos):
-    if (screen.button_next_step.button_rect.left <= mouse_pos[0] <= screen.button_next_step.button_rect.right
-            and screen.button_next_step.button_rect.top <= mouse_pos[1] <= screen.button_next_step.button_rect.bottom):
-        return True
-    return False
 
 
 def new_step(screen):

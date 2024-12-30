@@ -21,7 +21,7 @@ class Start_window:
 
         self.lst_buttons = [self.play_game_button, self.setting_button, self.exit_button]
 
-        self.settings_screen = settings.Settings_window(self.main_screen, self.size)
+        self.settings_screen = settings.Settings_window(self.main_screen.sc, self.size)
 
     def check_click(self, mouse_pos, lst):
         for button in lst:
@@ -41,7 +41,7 @@ class Start_window:
             self.screen.blit(button.text, button.button_rect)
 
             button.check_collidepoint(button.rect_width, button.rect_height)
-        self.main_screen.blit(self.screen, (0, 0))
+        self.main_screen.sc.blit(self.screen, (0, 0))
 
     def start(self):
         fps = 120

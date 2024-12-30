@@ -14,6 +14,7 @@ class Swordsman(pygame.sprite.Sprite):
         self.step = 1
         self.do_damage = True
         self.distance_attack = 1
+        self.stock = 10
 
     def update(self, *args, **kwargs):
         self.x_now, self.y_now = args[0]
@@ -33,13 +34,11 @@ class Swordsman(pygame.sprite.Sprite):
             print('дать дамаг')
 
 
-stock = 10
-
-
 def set_view_stock(screen, coords):
     font = pygame.font.Font(None, 50)
     text = font.render(f'{stock}', True, 'white')
     screen.blit(text, (coords[0], coords[1]))
 
 
+stock = None
 swordsmans = pygame.sprite.Group()

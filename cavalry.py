@@ -14,6 +14,7 @@ class Cavalry(pygame.sprite.Sprite):
         self.step = 3
         self.do_damage = True
         self.distance_attack = 1
+        self.stock = 5
 
     def update(self, *args, **kwargs):
         self.x_now, self.y_now = args[0]
@@ -33,7 +34,7 @@ class Cavalry(pygame.sprite.Sprite):
             print('дать дамаг')
 
 
-stock = 5
+
 
 
 def set_view_stock(screen, coords):
@@ -42,4 +43,6 @@ def set_view_stock(screen, coords):
     screen.blit(text, (coords[0], coords[1]))
 
 
+stock = None
 cavalrys = pygame.sprite.Group()
+

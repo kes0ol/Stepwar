@@ -2,7 +2,6 @@ import sys
 
 import pygame
 import mapping
-import start_window
 
 
 class Settings_window:

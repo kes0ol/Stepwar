@@ -21,9 +21,13 @@ class Screen:
                                   dark_color=(150, 25, 25))
 
         self.icon_swordsman = swordsman.Swordsman(125, 25, 80, swordsman.swordsmans)
+        swordsman.stock = self.icon_swordsman.stock
         self.icon_archer = archer.Archer(125, 125, self.board.cell_size * 1.5, archer.archers)
+        archer.stock = self.icon_archer.stock
         self.icon_cavalry = cavalry.Cavalry(125, 225, self.board.cell_size * 1.5, cavalry.cavalrys)
+        cavalry.stock = self.icon_cavalry.stock
         self.icon_dragon = dragon.Dragon(125, 325, self.board.cell_size * 1.5, dragon.dragons)
+        dragon.stock = self.icon_dragon.stock
 
     def choose_unit(self, mouse_pos):
         if (self.icon_swordsman.rect.left <= mouse_pos[0] <= self.icon_swordsman.rect.right and
@@ -77,6 +81,7 @@ class Screen:
                 self.back_button.button_rect.left <= mouse_pos[0] <= self.back_button.button_rect.right
                 and
                 self.back_button.button_rect.top <= mouse_pos[1] <= self.back_button.button_rect.bottom):
+            self.board.clear_board(self.icon_swordsman, self.icon_archer, self.icon_cavalry, self.icon_dragon)
             self.board.back_to_menu = True
 
 
@@ -101,7 +106,7 @@ class Board:
                                             self.cell_size)
                     self.board[j][i], self.board[j][i + 1], self.board[j + 1][i], self.board[j + 1][i + 1] = 1, 1, 1, 1
 
-        with (open('levels/1.txt', mode='rt', encoding='utf-8') as level):
+        with open('levels/1.txt', mode='rt', encoding='utf-8') as level:
             level_lst = [string.strip('\n').split(', ') for string in level]
             for i in range(len(level_lst)):
                 for j in range(len(level_lst[i])):
@@ -202,6 +207,20 @@ class Board:
         self.choosen_unit = Screen.choose_unit(screen, mouse_pos)
         if cell[0] >= 0 and cell[1] >= 0:
             self.on_click(cell, mouse_button)
+
+    def clear_board(self, icon_swordsman, icon_archer, icon_cavalry, icon_dragon):
+        swordsman.swordsmans.empty()
+        swordsman.swordsmans.add(icon_swordsman)
+        swordsman.stock = icon_swordsman.stock
+        archer.archers.empty()
+        archer.archers.add(icon_archer)
+        archer.stock = icon_archer.stock
+        cavalry.cavalrys.empty()
+        cavalry.cavalrys.add(icon_cavalry)
+        cavalry.stock = icon_cavalry.stock
+        dragon.dragons.empty()
+        dragon.dragons.add(icon_dragon)
+        dragon.stock = icon_dragon.stock
 
 
 class Button:
