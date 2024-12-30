@@ -25,9 +25,6 @@ class Screen:
         self.icon_dragon = dragon.Dragon(125, 325, self.board.cell_size * 1.5, dragon.dragons)
         self.icon_cavalry = cavalry.Cavalry(125, 125, 80, cavalry.cavalrys)
 
-
-
-
     def choose_unit(self, mouse_pos):
         if (self.icon_swordsman.rect.left <= mouse_pos[0] <= self.icon_swordsman.rect.right and
                 self.icon_swordsman.rect.top <= mouse_pos[1] <= self.icon_swordsman.rect.bottom):
@@ -62,8 +59,6 @@ class Screen:
         enemys.cavalrys.draw(self.sc)
         enemys.dragons.draw(self.sc)
 
-        self.back_button.render(self.sc)
-
         if not self.board.gameplay:
             self.button_start_game.render(self.sc)
         else:
@@ -75,7 +70,7 @@ class Screen:
                 self.button_start_game.button_rect.left <= mouse_pos[0] <= self.button_start_game.button_rect.right
                 and
                 self.button_start_game.button_rect.top <= mouse_pos[1] <= self.button_start_game.button_rect.bottom):
-            self.button_start_game.gameplay = True
+            self.board.gameplay = True
         if not self.board.back_to_menu and (
                 self.back_button.button_rect.left <= mouse_pos[0] <= self.back_button.button_rect.right
                 and
