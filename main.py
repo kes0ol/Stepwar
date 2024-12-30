@@ -4,10 +4,16 @@ import back_to_menu
 import mapping
 import start_game
 import start_window
+import pygame as pg
+import sys
 
 if __name__ == '__main__':
     pygame.init()
     pygame.display.set_caption('StepWar')
+    pg.mixer.music.load('walking.wav')
+    pg.mixer.music.play()
+
+    pg.time.delay(20)
 
     size = 1400, 800
     main_screen = mapping.Screen(size)
