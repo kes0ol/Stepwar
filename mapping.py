@@ -14,7 +14,8 @@ class Screen:
     def __init__(self, size):
         self.sc = pygame.display.set_mode(size)
         self.choose_unit = None
-        self.board = Board(18, 10)
+        self.width, self.height = 18, 10
+        self.board = Board(self.width, self.height)
         self.button_start_game = Button('Начать игру', 38, 200, 26, 1100, 700, True)
         self.button_next_step = Button('Следующий ход', 38, 250, 26, 1100, 700, True)
         self.back_button = Button('Вернуться в главное меню', 40, 400, 26, 100, 700, True, color=(200, 75, 75),
@@ -83,6 +84,8 @@ class Screen:
                 self.back_button.button_rect.top <= mouse_pos[1] <= self.back_button.button_rect.bottom):
             self.board.clear_board(self.icon_swordsman, self.icon_archer, self.icon_cavalry, self.icon_dragon)
             self.board.back_to_menu = True
+            self.board.board = [[0] * self.width for _ in range(self.height)]
+            self.board.landscape = [[0] * self.width for _ in range(self.height)]
 
 
 class Board:
@@ -99,13 +102,7 @@ class Board:
         self.board = [[0] * width for _ in range(height)]
         self.landscape = [[0] * width for _ in range(height)]
 
-        for i in range(len(self.board)):
-            for j in range(len(self.board[i])):
-                if (i, j) == (0, 4):
-                    castle.add_start_castle(i * self.cell_size + self.left, j * self.cell_size + self.top,
-                                            self.cell_size)
-                    self.board[j][i], self.board[j][i + 1], self.board[j + 1][i], self.board[j + 1][i + 1] = 1, 1, 1, 1
-
+    def render(self, screen):
         with open('levels/1.txt', mode='rt', encoding='utf-8') as level:
             level_lst = [string.strip('\n').split(', ') for string in level]
             for i in range(len(level_lst)):
@@ -129,7 +126,13 @@ class Board:
                         self.board[i][j], self.board[i + 1][j] = 2, 2
                         self.board[i][j + 1], self.board[i + 1][j + 1] = 2, 2
 
-    def render(self, screen):
+        for i in range(len(self.board)):
+            for j in range(len(self.board[i])):
+                if (i, j) == (0, 4):
+                    castle.add_start_castle(i * self.cell_size + self.left, j * self.cell_size + self.top,
+                                            self.cell_size)
+                    self.board[j][i], self.board[j][i + 1], self.board[j + 1][i], self.board[j + 1][i + 1] = 1, 1, 1, 1
+
         for i in range(len(self.board)):
             for j in range(len(self.board[i])):
                 x = j * self.cell_size + self.left
@@ -221,6 +224,9 @@ class Board:
         dragon.dragons.empty()
         dragon.dragons.add(icon_dragon)
         dragon.stock = icon_dragon.stock
+
+        self.board = [[0] * self.width for _ in range(self.height)]
+        self.landscape = [[0] * self.width for _ in range(self.height)]
 
 
 class Button:
