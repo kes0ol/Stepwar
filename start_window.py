@@ -12,9 +12,12 @@ class Start_window:
         self.main_screen = screen
         self.screen = pygame.surface.Surface((width, height))
 
-        self.play_game_button = mapping.Button('Запустить игру', 80, 500, height // 2 - 300, 500, height // 2 - 300)
-        self.setting_button = mapping.Button('    Настройки    ', 80, 500, height // 2 - 150, 500, height // 2 - 150)
-        self.exit_button = mapping.Button('        Выйти        ', 80, 500, height // 2, 500, height // 2)
+        self.play_game_button = mapping.Button('Запустить игру', 80, 500, height // 2 - 300, 500, height // 2 - 300,
+                                               True)
+        self.setting_button = mapping.Button('    Настройки    ', 80, 500, height // 2 - 150, 500, height // 2 - 150,
+                                             True, color=(100, 100, 100), dark_color=(50, 50, 50))
+        self.exit_button = mapping.Button('        Выйти        ', 80, 500, height // 2, 500, height // 2, True,
+                                          color=(150, 25, 25), dark_color=(100, 0, 0))
 
         self.lst_buttons = [self.play_game_button, self.setting_button, self.exit_button]
 
@@ -27,7 +30,6 @@ class Start_window:
                 if button == self.play_game_button:
                     self.running = False
                 if button == self.setting_button:
-                    print(1)
                     self.settings_screen.start()
                 if button == self.exit_button:
                     pygame.quit()
@@ -48,6 +50,8 @@ class Start_window:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
+                    pygame.quit()
+                    sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.check_click(event.pos, self.lst_buttons)
 

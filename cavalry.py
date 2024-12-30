@@ -13,7 +13,7 @@ class Cavalry(pygame.sprite.Sprite):
         self.rect.y = y
         self.step = 3
         self.do_damage = True
-        self.distance_attack = 3
+        self.distance_attack = 1
 
     def update(self, *args, **kwargs):
         self.x_now, self.y_now = args[0]

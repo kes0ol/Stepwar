@@ -15,15 +15,15 @@ class Screen:
         self.sc = pygame.display.set_mode(size)
         self.choose_unit = None
         self.board = Board(18, 10)
-        self.button_start_game = Button('Начать игру', 38, 200, 26, 1100, 700)
-        self.button_next_step = Button('Следующий ход', 38, 250, 26, 1100, 700)
-        self.back_button = Button('Вернуться в главное меню', 40, 400, 26, 100, 700)
+        self.button_start_game = Button('Начать игру', 38, 200, 26, 1100, 700, True)
+        self.button_next_step = Button('Следующий ход', 38, 250, 26, 1100, 700, True)
+        self.back_button = Button('Вернуться в главное меню', 40, 400, 26, 100, 700, True, color=(200, 75, 75),
+                                  dark_color=(150, 25, 25))
 
         self.icon_swordsman = swordsman.Swordsman(125, 25, 80, swordsman.swordsmans)
         self.icon_archer = archer.Archer(125, 125, self.board.cell_size * 1.5, archer.archers)
         self.icon_cavalry = cavalry.Cavalry(125, 225, self.board.cell_size * 1.5, cavalry.cavalrys)
         self.icon_dragon = dragon.Dragon(125, 325, self.board.cell_size * 1.5, dragon.dragons)
-        self.icon_cavalry = cavalry.Cavalry(125, 125, 80, cavalry.cavalrys)
 
     def choose_unit(self, mouse_pos):
         if (self.icon_swordsman.rect.left <= mouse_pos[0] <= self.icon_swordsman.rect.right and
@@ -58,6 +58,8 @@ class Screen:
         enemys.archers.draw(self.sc)
         enemys.cavalrys.draw(self.sc)
         enemys.dragons.draw(self.sc)
+
+        self.back_button.render(self.sc)
 
         if not self.board.gameplay:
             self.button_start_game.render(self.sc)
@@ -203,7 +205,8 @@ class Board:
 
 
 class Button:
-    def __init__(self, text, size_font, surface_x, surface_y, rect_x, rect_y):
+    def __init__(self, text, size_font, surface_x, surface_y, rect_x, rect_y, is_change, color=(0, 200, 0),
+                 dark_color=(0, 150, 0)):
         self.font = pygame.font.Font(None, size_font)
         self.button_surface = pygame.Surface((surface_x, surface_y))
         self.text = self.font.render(text, True, (255, 255, 255))
@@ -211,15 +214,18 @@ class Button:
         self.rect_width = self.text_rect.width
         self.rect_height = self.text_rect.height
         self.button_rect = pygame.Rect(rect_x, rect_y, self.rect_width, self.rect_height)
+        self.color = color
+        self.dark_color = dark_color
+        self.is_change = is_change
 
     def check_collidepoint(self, rect_width, rect_height):
         if self.button_rect.collidepoint(pygame.mouse.get_pos()):
-            pygame.draw.rect(self.button_surface, (0, 200, 0), (0, 0, rect_width, rect_height))
+            pygame.draw.rect(self.button_surface, self.color, (0, 0, rect_width, rect_height))
         else:
-            pygame.draw.rect(self.button_surface, (0, 150, 0), (0, 0, rect_width, rect_height))
+            pygame.draw.rect(self.button_surface, self.dark_color, (0, 0, rect_width, rect_height))
 
     def render(self, sc):
         self.button_surface.blit(self.text, self.text_rect)
         sc.blit(self.button_surface, (self.button_rect.x, self.button_rect.y))
-
-        self.check_collidepoint(self.rect_width, self.rect_height)
+        if self.is_change:
+            self.check_collidepoint(self.rect_width, self.rect_height)

@@ -9,7 +9,7 @@ import sys
 if __name__ == '__main__':
     pygame.init()
     pygame.display.set_caption('StepWar')
-    pg.mixer.music.load('walking.wav')
+    pg.mixer.music.load('music/walking.wav')
     pg.mixer.music.play()
 
     pg.time.delay(20)
