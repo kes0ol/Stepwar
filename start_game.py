@@ -118,10 +118,10 @@ def select_surfaces(screen, unit, cell_coords, lst_surfaces, is_attack):
         return type_unit, lst_steps, how_choose_unit
 
 
-def choose_step(screen, lst_surfaces, unit, cell_coords, is_chose_unit, is_new_step, is_attack):
+def choose_step(screen, lst_surfaces, unit, cell_coords, is_choose_unit, is_new_step, is_attack):
     type_unit, lst_steps, how_choose_unit = select_surfaces(screen, unit, cell_coords, lst_surfaces, is_attack)
     if type_unit.step > 0:
-        while is_chose_unit and not is_new_step:
+        while is_choose_unit and not is_new_step:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     screen.board.gameplay = False
@@ -132,34 +132,21 @@ def choose_step(screen, lst_surfaces, unit, cell_coords, is_chose_unit, is_new_s
                     choose_cell = tuple(reversed(list(screen.board.get_cell(event.pos))))
                     for coords in lst_steps:
                         if coords == choose_cell:
-                            move = abs(cell_coords[0] - choose_cell[1]) + abs(cell_coords[1] - choose_cell[0])
                             if how_choose_unit == 'swordsman':
-                                if abs(cell_coords[0] - choose_cell[1]) != abs(
-                                        cell_coords[1] - cell_coords[0]):  # неверно
-                                    move //= 2 - 1
-                                type_unit.step -= move
+                                type_unit.step = 0
                                 swordsman.Swordsman.update(unit[0], cell_coords, choose_cell, screen, is_attack)
                             if how_choose_unit == 'archer':
-                                if abs(cell_coords[0] - choose_cell[1]) != abs(
-                                        cell_coords[1] - cell_coords[0]):  # неверно
-                                    move //= 2 - 1
-                                type_unit.step -= move
+                                type_unit.step = 0
                                 archer.Archer.update(unit[0], cell_coords, choose_cell, screen, is_attack)
                             if how_choose_unit == 'cavalry':
-                                if abs(cell_coords[0] - choose_cell[1]) != abs(
-                                        cell_coords[1] - cell_coords[0]):  # неверно
-                                    move //= 2 - 1
-                                type_unit.step -= move
+                                type_unit.step = 0
                                 cavalry.Cavalry.update(unit[0], cell_coords, choose_cell, screen, is_attack)
                             if how_choose_unit == 'dragon':
-                                if abs(cell_coords[0] - choose_cell[1]) != abs(
-                                        cell_coords[1] - cell_coords[0]):  # неверно
-                                    move //= 2 - 1
-                                type_unit.step -= move
+                                type_unit.step = 0
                                 dragon.Dragon.update(unit[0], cell_coords, choose_cell, screen, is_attack)
 
                     lst_surfaces.clear()
-                    is_chose_unit = False
+                    is_choose_unit = False
 
             screen.sc.fill((0, 0, 0))
             screen.render()
@@ -190,7 +177,7 @@ def choose_attack(screen, lst_surfaces, unit, cell_coords, is_chose_unit, is_att
                                 dragon.Dragon.update(unit[0], cell_coords, choose_cell, screen, is_attack)
                             type_unit.do_damage = False
                     lst_surfaces.clear()
-                    is_chose_unit = False
+                    is_attack = False
 
             screen.sc.fill((0, 0, 0))
             screen.render()
@@ -208,12 +195,16 @@ def check_click(screen, mouse_pos):
 def new_step(screen):
     for sword in swordsman.swordsmans:
         sword.step = 1
+        sword.do_damage = True
     for arc in archer.archers:
         arc.step = 1
+        arc.do_damage = True
     for cav in cavalry.cavalrys:
         cav.step = 3
+        cav.do_damage = True
     for drg in dragon.dragons:
         drg.step = 4
+        drg.do_damage = True
     screen.board.new_step = False
 
 
