@@ -288,6 +288,20 @@ def choose_attack(screen, lst_surfaces, unit, cell_coords, is_chose_unit, is_att
             pygame.display.flip()
 
 
+def give_damage(screen, is_team, select_coords, select_cell, damage_team_unit):
+    if is_team:
+        for group in [enemys.swordsmans, enemys.archers, enemys.cavalrys, enemys.dragons, enemys.castles]:
+            for unit in group:
+                if (unit.rect.x, unit.rect.y) == select_coords:
+                    unit.hp -= damage_team_unit
+                    if unit.hp <= 0:
+                        unit.kill()
+                        screen.board.board[select_cell[1]][select_cell[0]] = 0
+                    break
+    else:
+        pass  # бьёт вражеский юнит
+
+
 def new_step(screen):
     for sword in swordsman.swordsmans:
         sword.step = 1

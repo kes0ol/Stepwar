@@ -1,5 +1,7 @@
 import pygame
 
+import start_game
+
 
 class Dragon(pygame.sprite.Sprite):
 
@@ -33,7 +35,10 @@ class Dragon(pygame.sprite.Sprite):
 
             self.rect = self.rect.move(self.x, self.y)
         else:
-            print('дать дамаг')
+            start_game.give_damage(self.screen, True, (
+                self.select_x * self.screen.board.cell_size + self.screen.board.left,
+                self.select_y * self.screen.board.cell_size + self.screen.board.top), (self.select_x, self.select_y),
+                                   self.damage)
 
 
 def set_view_stock(screen, coords):

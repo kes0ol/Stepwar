@@ -103,7 +103,6 @@ class Board:
         self.board = [[0] * width for _ in range(height)]
         self.landscape = [[0] * width for _ in range(height)]
 
-    def render(self, screen):
         with open('levels/1.txt', mode='rt', encoding='utf-8') as level:
             level_lst = [string.strip('\n').split(', ') for string in level]
             for i in range(len(level_lst)):
@@ -126,11 +125,12 @@ class Board:
                                      enemys.dragons)
                         self.board[i][j] = 2
                     if level_lst[i][j] == 'X':
-                        enemys.Enemy(x, y, 0, 0, 0, 0, 'images/enemy_images/castle.jpeg', self.cell_size * 2,
+                        enemys.Enemy(x, y, 0, 0, 500, 0, 'images/enemy_images/castle.jpeg', self.cell_size * 2,
                                      enemys.castles)
                         self.board[i][j], self.board[i + 1][j] = 2, 2
                         self.board[i][j + 1], self.board[i + 1][j + 1] = 2, 2
 
+    def render(self, screen):
         for i in range(len(self.board)):
             for j in range(len(self.board[i])):
                 if (i, j) == (0, 4):
