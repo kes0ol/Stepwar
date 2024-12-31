@@ -15,6 +15,8 @@ class Dragon(pygame.sprite.Sprite):
         self.do_damage = True
         self.distance_attack = 2
         self.stock = 1
+        self.hp = 150
+        self.damage = 30
 
     def update(self, *args, **kwargs):
         self.x_now, self.y_now = args[0]

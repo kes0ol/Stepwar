@@ -38,6 +38,7 @@ if __name__ == '__main__':
                 main_screen.get_click(event.pos, event.button)
         main_screen.sc.fill((0, 0, 0))
         main_screen.render()
+        start_game.show_stats(main_screen)
         clock.tick(fps)
         pygame.display.flip()
     pygame.quit()

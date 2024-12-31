@@ -2,6 +2,7 @@ import sys
 
 import pygame
 
+import enemys
 import swordsman
 import archer
 import cavalry
@@ -40,8 +41,93 @@ def start(screen, size):
                     choose_attack(screen, lst_surfaces, unit, cell_coords, is_choose_unit, is_attack)
         screen.sc.fill((0, 0, 0))
         screen.render()
+        show_stats(screen)
         clock.tick(fps)
         pygame.display.flip()
+
+
+def show_stats(screen):
+    stats_surface = pygame.Surface((200, 100))
+    font = pygame.font.Font(None, 25)
+    stats = []
+
+    for sword in swordsman.swordsmans:
+        if sword.rect.collidepoint(pygame.mouse.get_pos()):
+            stats = [
+                f'Тип юнита: Рыцарь',
+                f'Здоровье: {sword.hp}',
+                f'Урон: {sword.damage}',
+                f'Передвижение: {sword.step}',
+                f'Дистанция атаки: {sword.distance_attack}'
+            ]
+    for arc in archer.archers:
+        if arc.rect.collidepoint(pygame.mouse.get_pos()):
+            stats = [
+                f'Тип юнита: Лучник',
+                f'Здоровье: {arc.hp}',
+                f'Урон: {arc.damage}',
+                f'Передвижение: {arc.step}',
+                f'Дистанция атаки: {arc.distance_attack}'
+            ]
+    for cav in cavalry.cavalrys:
+        if cav.rect.collidepoint(pygame.mouse.get_pos()):
+            stats = [
+                f'Тип юнита: Кавалерия',
+                f'Здоровье: {cav.hp}',
+                f'Урон: {cav.damage}',
+                f'Передвижение: {cav.step}',
+                f'Дистанция атаки: {cav.distance_attack}'
+            ]
+    for drg in dragon.dragons:
+        if drg.rect.collidepoint(pygame.mouse.get_pos()):
+            stats = [
+                f'Тип юнита: Дракон',
+                f'Здоровье: {drg.hp}',
+                f'Урон: {drg.damage}',
+                f'Передвижение: {drg.step}',
+                f'Дистанция атаки: {drg.distance_attack}'
+            ]
+    for sword in enemys.swordsmans:
+        if sword.rect.collidepoint(pygame.mouse.get_pos()):
+            stats = [
+                f'Тип юнита: Рыцарь',
+                f'Здоровье: {sword.hp}',
+                f'Урон: {sword.damage}',
+                f'Передвижение: {sword.step}',
+                f'Дистанция атаки: {sword.distance_attack}'
+            ]
+    for arc in enemys.archers:
+        if arc.rect.collidepoint(pygame.mouse.get_pos()):
+            stats = [
+                f'Тип юнита: Лучник',
+                f'Здоровье: {arc.hp}',
+                f'Урон: {arc.damage}',
+                f'Передвижение: {arc.step}',
+                f'Дистанция атаки: {arc.distance_attack}'
+            ]
+    for cav in enemys.cavalrys:
+        if cav.rect.collidepoint(pygame.mouse.get_pos()):
+            stats = [
+                f'Тип юнита: Кавалерия',
+                f'Здоровье: {cav.hp}',
+                f'Урон: {cav.damage}',
+                f'Передвижение: {cav.step}',
+                f'Дистанция атаки: {cav.distance_attack}'
+            ]
+    for drg in enemys.dragons:
+        if drg.rect.collidepoint(pygame.mouse.get_pos()):
+            stats = [
+                f'Тип юнита: Дракон',
+                f'Здоровье: {drg.hp}',
+                f'Урон: {drg.damage}',
+                f'Передвижение: {drg.step}',
+                f'Дистанция атаки: {drg.distance_attack}'
+            ]
+
+    for i in range(len(stats)):
+        text = font.render(stats[i], True, (255, 255, 255))
+        stats_surface.blit(text, (0, i * 20, 100, 100))
+    screen.sc.blit(stats_surface, (screen.board.left // 2 - 100, 500))
 
 
 def check_click(screen, mouse_pos):

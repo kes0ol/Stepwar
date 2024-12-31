@@ -15,6 +15,8 @@ class Archer(pygame.sprite.Sprite):
         self.do_damage = True
         self.distance_attack = 3
         self.stock = 8
+        self.hp = 40
+        self.damage = 30
 
     def update(self, *args, **kwargs):
         self.x_now, self.y_now = args[0]
