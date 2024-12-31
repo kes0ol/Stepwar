@@ -103,29 +103,37 @@ class Board:
         self.board = [[0] * width for _ in range(height)]
         self.landscape = [[0] * width for _ in range(height)]
 
+        self.set_enemys()
+
+    def set_enemys(self):
         with open('levels/1.txt', mode='rt', encoding='utf-8') as level:
             level_lst = [string.strip('\n').split(', ') for string in level]
             for i in range(len(level_lst)):
                 for j in range(len(level_lst[i])):
                     x, y = j * self.cell_size + self.left, i * self.cell_size + self.top
                     if level_lst[i][j] == 's':
-                        enemys.Enemy(x, y, 1, 1, 100, 20, 'images/enemy_images/swordsman.jpeg', self.cell_size,
+                        enemys.Enemy('Рыцарь', x, y, 1, 1, 100, 20, 'images/enemy_images/swordsman.jpeg',
+                                     self.cell_size,
                                      enemys.swordsmans)
                         self.board[i][j] = 2
                     if level_lst[i][j] == 'a':
-                        enemys.Enemy(x, y, 1, 3, 40, 30, 'images/enemy_images/archer.jpeg', self.cell_size,
+                        enemys.Enemy('Лучник', x, y, 1, 3, 40, 30, 'images/enemy_images/archer.jpeg',
+                                     self.cell_size,
                                      enemys.archers)
                         self.board[i][j] = 2
                     if level_lst[i][j] == 'c':
-                        enemys.Enemy(x, y, 3, 1, 70, 25, 'images/enemy_images/cavalry.jpeg', self.cell_size,
+                        enemys.Enemy('Кавалерия', x, y, 3, 1, 70, 25, 'images/enemy_images/cavalry.jpeg',
+                                     self.cell_size,
                                      enemys.cavalrys)
                         self.board[i][j] = 2
                     if level_lst[i][j] == 'd':
-                        enemys.Enemy(x, y, 4, 2, 150, 30, 'images/enemy_images/dragon.jpeg', self.cell_size,
+                        enemys.Enemy('Дракон', x, y, 4, 2, 150, 30, 'images/enemy_images/dragon.jpeg',
+                                     self.cell_size,
                                      enemys.dragons)
                         self.board[i][j] = 2
                     if level_lst[i][j] == 'X':
-                        enemys.Enemy(x, y, 0, 0, 500, 0, 'images/enemy_images/castle.jpeg', self.cell_size * 2,
+                        enemys.Enemy('Замок', x, y, 0, 0, 500, 0, 'images/enemy_images/castle.jpeg',
+                                     self.cell_size * 2,
                                      enemys.castles)
                         self.board[i][j], self.board[i + 1][j] = 2, 2
                         self.board[i][j + 1], self.board[i + 1][j + 1] = 2, 2
@@ -229,6 +237,14 @@ class Board:
         dragon.dragons.empty()
         dragon.dragons.add(icon_dragon)
         dragon.stock = icon_dragon.stock
+
+        enemys.swordsmans.empty()
+        enemys.archers.empty()
+        enemys.cavalrys.empty()
+        enemys.dragons.empty()
+        enemys.castles.empty()
+
+        self.set_enemys()
 
         self.board = [[0] * self.width for _ in range(self.height)]
         self.landscape = [[0] * self.width for _ in range(self.height)]

@@ -2,7 +2,7 @@ import pygame
 
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, x, y, step, distance_attack, hp, damage, image, image_size, group):
+    def __init__(self, name_unit, x, y, step, distance_attack, hp, damage, image, image_size, group):
         super().__init__(group)
         self.image = pygame.image.load(image)
         self.image = pygame.transform.scale(self.image, (image_size, image_size))
@@ -14,6 +14,7 @@ class Enemy(pygame.sprite.Sprite):
         self.distance_attack = distance_attack
         self.hp = hp
         self.damage = damage
+        self.name = name_unit
 
 
 swordsmans = pygame.sprite.Group()
