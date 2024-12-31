@@ -12,7 +12,7 @@ import enemys
 
 class Screen:
     def __init__(self, size):
-        self.sc = pygame.display.set_mode(size)
+        self.sc = pygame.display.set_mode(size, pygame.FULLSCREEN)
         self.choose_unit = None
         self.board = Board(18, 10)
         self.button_start_game = Button('Начать игру', 38, 200, 26, 1100, 700, True)
@@ -24,6 +24,7 @@ class Screen:
         self.icon_archer = archer.Archer(125, 125, self.board.cell_size * 1.5, archer.archers)
         self.icon_cavalry = cavalry.Cavalry(125, 225, self.board.cell_size * 1.5, cavalry.cavalrys)
         self.icon_dragon = dragon.Dragon(125, 325, self.board.cell_size * 1.5, dragon.dragons)
+
 
     def choose_unit(self, mouse_pos):
         if (self.icon_swordsman.rect.left <= mouse_pos[0] <= self.icon_swordsman.rect.right and
@@ -87,12 +88,13 @@ class Board:
         self.width = width
         self.height = height
 
-        self.cell_size = 60
+        self.cell_size = 80
         self.left = 250
         self.top = 50
 
         self.board = [[0] * width for _ in range(height)]
         self.landscape = [[0] * width for _ in range(height)]
+
 
         for i in range(len(self.board)):
             for j in range(len(self.board[i])):
@@ -111,7 +113,7 @@ class Board:
                                      enemys.swordsmans)
                         self.board[i][j] = 2
                     if level_lst[i][j] == 'a':
-                        enemys.Enemy(x, y, 1, 4, 'images/enemy_images/archer.jpeg', self.cell_size, enemys.swordsmans)
+                        enemys.Enemy(x, y, 1, 4, 'images/enemy_images/archer.png', self.cell_size, enemys.swordsmans)
                         self.board[i][j] = 2
                     if level_lst[i][j] == 'c':
                         enemys.Enemy(x, y, 3, 1, 'images/enemy_images/cavalry.jpeg', self.cell_size, enemys.swordsmans)
@@ -120,7 +122,7 @@ class Board:
                         enemys.Enemy(x, y, 4, 3, 'images/enemy_images/dragon.jpeg', self.cell_size, enemys.swordsmans)
                         self.board[i][j] = 2
                     if level_lst[i][j] == 'X':
-                        enemys.Enemy(x, y, 0, 0, 'images/castle.jpeg', self.cell_size * 2, enemys.swordsmans)
+                        enemys.Enemy(x, y, 0, 0, 'images/castle.jpg', self.cell_size * 2, enemys.swordsmans)
                         self.board[i][j], self.board[i + 1][j] = 2, 2
                         self.board[i][j + 1], self.board[i + 1][j + 1] = 2, 2
 
@@ -208,24 +210,11 @@ class Button:
     def __init__(self, text, size_font, surface_x, surface_y, rect_x, rect_y, is_change, color=(0, 200, 0),
                  dark_color=(0, 150, 0)):
         self.font = pygame.font.Font(None, size_font)
-        self.button_surface = pygame.Surface((surface_x, surface_y))
-        self.text = self.font.render(text, True, (255, 255, 255))
-        self.text_rect = self.text.get_rect()
-        self.rect_width = self.text_rect.width
-        self.rect_height = self.text_rect.height
-        self.button_rect = pygame.Rect(rect_x, rect_y, self.rect_width, self.rect_height)
-        self.color = color
-        self.dark_color = dark_color
-        self.is_change = is_change
+        self.surfaces = [self.font.render(text, True, color), self.font.render(text, True, dark_color)]
+        self.button_rect = pygame.Rect(rect_x, rect_y, *self.surfaces[0].get_rect().size)
 
-    def check_collidepoint(self, rect_width, rect_height):
-        if self.button_rect.collidepoint(pygame.mouse.get_pos()):
-            pygame.draw.rect(self.button_surface, self.color, (0, 0, rect_width, rect_height))
-        else:
-            pygame.draw.rect(self.button_surface, self.dark_color, (0, 0, rect_width, rect_height))
+    def check_collidepoint(self):
+        return self.button_rect.collidepoint(pygame.mouse.get_pos())
 
     def render(self, sc):
-        self.button_surface.blit(self.text, self.text_rect)
-        sc.blit(self.button_surface, (self.button_rect.x, self.button_rect.y))
-        if self.is_change:
-            self.check_collidepoint(self.rect_width, self.rect_height)
+        sc.blit(self.surfaces[self.check_collidepoint()], self.button_rect)
