@@ -135,8 +135,8 @@ class Board:
                         enemys.Enemy('Замок', x, y, 0, 0, 500, 0, 'images/enemy_images/castle.jpeg',
                                      self.cell_size * 2,
                                      enemys.castles)
-                        self.board[i][j], self.board[i + 1][j] = 2, 2
-                        self.board[i][j + 1], self.board[i + 1][j + 1] = 2, 2
+                        self.board[i][j], self.board[i + 1][j] = 3, 3
+                        self.board[i][j + 1], self.board[i + 1][j + 1] = 3, 3
 
     def render(self, screen):
         for i in range(len(self.board)):
@@ -225,6 +225,9 @@ class Board:
             self.on_click(cell, mouse_button)
 
     def clear_board(self, icon_swordsman, icon_archer, icon_cavalry, icon_dragon):
+        self.board = [[0] * self.width for _ in range(self.height)]
+        self.landscape = [[0] * self.width for _ in range(self.height)]
+
         swordsman.swordsmans.empty()
         swordsman.swordsmans.add(icon_swordsman)
         swordsman.stock = icon_swordsman.stock
@@ -245,9 +248,6 @@ class Board:
         enemys.castles.empty()
 
         self.set_enemys()
-
-        self.board = [[0] * self.width for _ in range(self.height)]
-        self.landscape = [[0] * self.width for _ in range(self.height)]
 
 
 class Button:

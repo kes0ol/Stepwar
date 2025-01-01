@@ -7,6 +7,7 @@ import swordsman
 import archer
 import cavalry
 import dragon
+import castle
 
 import start_window
 
@@ -26,6 +27,7 @@ def start(screen, size):
                 if select_button == 'new_step':
                     new_step(screen)
                 if select_button == 'back_to_menu':
+                    new_step(screen)
                     screen.board.gameplay = False
                     screen.board.clear_board(screen.icon_swordsman, screen.icon_archer, screen.icon_cavalry,
                                              screen.icon_dragon)
@@ -88,6 +90,17 @@ def show_stats(screen):
                 f'Передвижение: {drg.step}',
                 f'Дистанция атаки: {drg.distance_attack}'
             ]
+
+    for cas in castle.castles:
+        if cas.rect.collidepoint(pygame.mouse.get_pos()):
+            stats = [
+                f'Тип юнита: Замок',
+                f'Здоровье: {cas.hp}',
+                f'Урон: {cas.damage}',
+                f'Передвижение: {cas.step}',
+                f'Дистанция атаки: {cas.distance_attack}'
+            ]
+
     for group in [enemys.swordsmans, enemys.archers, enemys.cavalrys, enemys.dragons, enemys.castles]:
         for unit in group:
             if unit.rect.collidepoint(pygame.mouse.get_pos()):
@@ -142,7 +155,7 @@ def add_step_surfaces(screen, lst_steps, lst_surfaces, x, y, cell_x, cell_y, dx,
             0 <= cell_x + dx < len(screen.board.board[0]) and
             0 <= cell_y + dy < len(screen.board.board)):
         if (screen.board.board[cell_y + dy][cell_x + dx] == 0 and not is_attack or
-                screen.board.board[cell_y + dy][cell_x + dx] == 2 and is_attack):
+                screen.board.board[cell_y + dy][cell_x + dx] in [2, 3] and is_attack):
             lst_steps.append((cell_y + dy, cell_x + dx))
 
             surface_coords_x = x + dx * screen.board.cell_size
@@ -263,15 +276,27 @@ def choose_attack(screen, lst_surfaces, unit, cell_coords, is_chose_unit, is_att
 
 
 def give_damage(screen, is_team, select_coords, select_cell, damage_team_unit):
+    damage_at_enemy_castle = True
     if is_team:
         for group in [enemys.swordsmans, enemys.archers, enemys.cavalrys, enemys.dragons, enemys.castles]:
             for unit in group:
+                if screen.board.board[select_cell[1]][select_cell[0]] == 3 and damage_at_enemy_castle:  # проверка башни
+                    for enemy_castle in enemys.castles:
+                        enemy_castle.hp -= damage_team_unit
+                        if unit.hp <= 0:
+                            unit.kill()
+                            screen.board.board[select_cell[1]][select_cell[0]] = 0
+                        damage_at_enemy_castle = False
+                        break
+                    break
+
                 if (unit.rect.x, unit.rect.y) == select_coords:
                     unit.hp -= damage_team_unit
                     if unit.hp <= 0:
                         unit.kill()
                         screen.board.board[select_cell[1]][select_cell[0]] = 0
                     break
+
     else:
         pass  # бьёт вражеский юнит
 
@@ -295,6 +320,6 @@ def new_step(screen):
 def render(screen, lst_surfaces, color):
     for surf in lst_surfaces:
         surface, surface_coords, surface_size = surf
-
-        pygame.draw.rect(surface, color, (0, 0, *surface_size))
+        surface.fill(color)
+        surface.set_alpha(80)
         screen.sc.blit(surface, surface_coords)

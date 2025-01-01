@@ -10,6 +10,11 @@ class Castle(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+        self.step = 0
+        self.do_damage = True
+        self.distance_attack = 0
+        self.hp = 500
+        self.damage = 0
 
 
 def add_start_castle(x, y, cell_size):
