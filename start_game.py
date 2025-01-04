@@ -283,9 +283,13 @@ def give_damage(screen, is_team, select_coords, select_cell, damage_team_unit):
                 if screen.board.board[select_cell[1]][select_cell[0]] == 3 and damage_at_enemy_castle:  # проверка башни
                     for enemy_castle in enemys.castles:
                         enemy_castle.hp -= damage_team_unit
-                        if unit.hp <= 0:
-                            unit.kill()
+                        if enemy_castle.hp <= 0:
+                            enemy_castle.kill()
                             screen.board.board[select_cell[1]][select_cell[0]] = 0
+                            for i in range(len(screen.board.board)):
+                                for j in range(len(screen.board.board[i])):
+                                    if screen.board.board[i][j] == 3:
+                                        screen.board.board[i][j] = 0
                         damage_at_enemy_castle = False
                         break
                     break

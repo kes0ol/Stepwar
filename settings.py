@@ -44,7 +44,6 @@ class Settings_window:
                     # pygame.mixer.music.unpause()
                     pygame.mixer.music.set_volume(self.volume)
 
-
     def render(self):
         self.screen.blit(self.fon, (0, 0))
         pygame.draw.rect(self.screen, (255, 0, 0), (820, 430, 90, 80), 1)
@@ -52,7 +51,7 @@ class Settings_window:
         for button in self.lst_buttons:
             button.render(self.screen)
         self.procent_view.render(self.screen)
-        self.main_screen.blit(self.screen, (0, 0))
+        self.main_screen.sc.blit(self.screen, (0, 0))
 
     def start(self):
         fps = 120

@@ -45,7 +45,7 @@ class Start_window:
         self.screen.blit(self.fon, (0, 0))
         for button in self.lst_buttons:
             button.render(self.screen)
-        self.main_screen.blit(self.screen, (0, 0))
+        self.main_screen.sc.blit(self.screen, (0, 0))
 
     def start(self):
         fps = 120
@@ -57,7 +57,7 @@ class Start_window:
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.MOUSEMOTION:
-                    self.main_screen.blit(self.cursor, (event.pos[0], event.pos[1]))
+                    self.main_screen.sc.blit(self.cursor, (event.pos[0], event.pos[1]))
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.check_click(event.pos, self.lst_buttons)
 
