@@ -12,7 +12,7 @@ import enemys
 
 class Screen:
     def __init__(self, size):
-        self.sc = pygame.display.set_mode(size, pygame.FULLSCREEN)
+        self.sc = pygame.display.set_mode(size)
         self.choose_unit = None
         self.board = Board(18, 10)
         self.button_start_game = Button('Начать игру', 38, 200, 26, 1100, 700, True)
@@ -87,7 +87,7 @@ class Board:
         self.width = width
         self.height = height
 
-        self.cell_size = 80
+        self.cell_size = 60
         self.left = 250
         self.top = 50
 

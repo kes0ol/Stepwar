@@ -14,7 +14,7 @@ class Start_window:
 
         self.play_game_button = mapping.Button('Запустить игру', 80, 800, height // 2 - 200, 800, height // 2 - 170,
                                                True, color=(255, 255, 0), dark_color=(0, 255, 0))
-        self.setting_button = mapping.Button('    Настройки    ', 80, 800, height // 2 - 40 , 800, height // 2 - 40,
+        self.setting_button = mapping.Button('    Настройки    ', 80, 800, height // 2 - 40, 800, height // 2 - 40,
                                              True, color=(255, 255, 0), dark_color=(50, 50, 50))
         self.exit_button = mapping.Button('        Выйти        ', 80, 800, height // 2 + 100, 800, height // 2 + 100,
                                           True,
@@ -24,7 +24,7 @@ class Start_window:
 
         self.settings_screen = settings.Settings_window(self.main_screen, self.size)
         self.fon = pygame.image.load('images/fon.PNG')
-        self.fon = pygame.transform.scale(self.fon, (size[0], size[1]))
+        self.fon = pygame.transform.scale(self.fon, (self.size[0], self.size[1]))
 
         self.cursor = pygame.image.load('images/cursor.PNG')
         self.cursor.set_colorkey((255, 255, 255))
