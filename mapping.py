@@ -25,7 +25,6 @@ class Screen:
         self.icon_cavalry = cavalry.Cavalry(125, 225, self.board.cell_size * 1.5, cavalry.cavalrys)
         self.icon_dragon = dragon.Dragon(125, 325, self.board.cell_size * 1.5, dragon.dragons)
 
-
     def choose_unit(self, mouse_pos):
         if (self.icon_swordsman.rect.left <= mouse_pos[0] <= self.icon_swordsman.rect.right and
                 self.icon_swordsman.rect.top <= mouse_pos[1] <= self.icon_swordsman.rect.bottom):
@@ -95,7 +94,6 @@ class Board:
         self.board = [[0] * width for _ in range(height)]
         self.landscape = [[0] * width for _ in range(height)]
 
-
         for i in range(len(self.board)):
             for j in range(len(self.board[i])):
                 if (i, j) == (0, 4):
@@ -109,7 +107,7 @@ class Board:
                 for j in range(len(level_lst[i])):
                     x, y = j * self.cell_size + self.left, i * self.cell_size + self.top
                     if level_lst[i][j] == 's':
-                        enemys.Enemy(x, y, 1, 1, 'images/enemy_images/swordsman.jpeg', self.cell_size,
+                        enemys.Enemy(x, y, 1, 1, 'images/enemy_images/swordsman.xcf', self.cell_size,
                                      enemys.swordsmans)
                         self.board[i][j] = 2
                     if level_lst[i][j] == 'a':
@@ -218,3 +216,20 @@ class Button:
 
     def render(self, sc):
         sc.blit(self.surfaces[self.check_collidepoint()], self.button_rect)
+
+
+class View:
+    def __init__(self, text, size_font, x, y, color=(0, 200, 0)):
+        self.font = pygame.font.Font(None, size_font)
+        self.x = x
+        self.y = y
+        self.color = color
+        self.set_text(text)
+
+    def set_text(self, text):
+        self.surface = self.font.render(text, True, self.color)
+        self.rect = pygame.Rect(0, 0, *self.surface.get_rect().size)
+        self.rect.midtop = (self.x, self.y)
+
+    def render(self, sc):
+        sc.blit(self.surface, self.rect)

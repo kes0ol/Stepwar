@@ -21,6 +21,7 @@ class Settings_window:
                                             color=(255, 255, 0), dark_color=(255, 255, 0))
         self.back_button = mapping.Button('      Назад      ', 80, 850, height // 2, 850, height // 2, True,
                                           color=(255, 255, 0), dark_color=(100, 100, 0))
+        self.procent_view = mapping.View(f'{self.volume * 100}%', 80, width / 2, height / 2 - 160, color=(255, 255, 0))
 
         self.lst_buttons = [self.volume_button, self.plus_button, self.minus_button, self.back_button]
         self.fon = pygame.image.load('images/settingsfon.jpg')
@@ -33,20 +34,25 @@ class Settings_window:
                     button.button_rect.top <= mouse_pos[1] <= button.button_rect.bottom):
                 if button == self.back_button:
                     self.running = False
-                if button == self.plus_button and self.volume < 1:
+                if button == self.plus_button and self.volume + 0.2 <= 1:
                     self.volume += 0.2
+                    self.procent_view.set_text(f'{int(self.volume * 100)}%')
                     # pygame.mixer.music.unpause()
                     pygame.mixer.music.set_volume(self.volume)
-                if button == self.minus_button and self.volume > 0:
+                if button == self.minus_button and self.volume - 0.2 >= 0:
                     self.volume -= 0.2
+                    self.procent_view.set_text(f'{int(self.volume * 100)}%')
                     # pygame.mixer.music.unpause()
                     pygame.mixer.music.set_volume(self.volume)
 
 
     def render(self):
         self.screen.blit(self.fon, (0, 0))
+        pygame.draw.rect(self.screen, (255, 0, 0), (820, 430, 90, 80), 1)
+        pygame.draw.rect(self.screen, (0, 255, 0), (1149, 430, 80, 85), 1)
         for button in self.lst_buttons:
             button.render(self.screen)
+        self.procent_view.render(self.screen)
         self.main_screen.blit(self.screen, (0, 0))
 
     def start(self):
