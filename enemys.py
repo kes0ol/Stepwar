@@ -6,8 +6,10 @@ class Enemy(pygame.sprite.Sprite):
         super().__init__(group)
         self.image = pygame.image.load(image)
         self.image = pygame.transform.scale(self.image, (image_size, image_size))
-        self.image.set_colorkey((255, 255, 255))
+        self.image = pygame.transform.flip(self.image, True, False)
+        self.image.set_colorkey((0xb3, 0x22, 0xb7))
         self.rect = self.image.get_rect()
+        # self.image = pygame.transform.rotate(self.image, -360)
         self.rect.x = x
         self.rect.y = y
         self.step = step

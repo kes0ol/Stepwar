@@ -12,16 +12,22 @@ class Start_window:
         self.main_screen = screen
         self.screen = pygame.surface.Surface((width, height))
 
-        self.play_game_button = mapping.Button('Запустить игру', 80, 500, height // 2 - 300, 500, height // 2 - 300,
-                                               True)
-        self.setting_button = mapping.Button('    Настройки    ', 80, 500, height // 2 - 150, 500, height // 2 - 150,
-                                             True, color=(100, 100, 100), dark_color=(50, 50, 50))
-        self.exit_button = mapping.Button('        Выйти        ', 80, 500, height // 2, 500, height // 2, True,
-                                          color=(150, 25, 25), dark_color=(100, 0, 0))
+        self.play_game_button = mapping.Button('Запустить игру', 80, 800, height // 2 - 200, 800, height // 2 - 170,
+                                               True, color=(255, 255, 0), dark_color=(0, 255, 0))
+        self.setting_button = mapping.Button('    Настройки    ', 80, 800, height // 2 - 40, 800, height // 2 - 40,
+                                             True, color=(255, 255, 0), dark_color=(50, 50, 50))
+        self.exit_button = mapping.Button('        Выйти        ', 80, 800, height // 2 + 100, 800, height // 2 + 100,
+                                          True,
+                                          color=(255, 255, 0), dark_color=(100, 0, 0))
 
         self.lst_buttons = [self.play_game_button, self.setting_button, self.exit_button]
 
-        self.settings_screen = settings.Settings_window(self.main_screen.sc, self.size)
+        self.settings_screen = settings.Settings_window(self.main_screen, self.size)
+        self.fon = pygame.image.load('images/fon.PNG')
+        self.fon = pygame.transform.scale(self.fon, (self.size[0], self.size[1]))
+
+        self.cursor = pygame.image.load('images/cursor.PNG')
+        self.cursor.set_colorkey((255, 255, 255))
 
     def check_click(self, mouse_pos, lst):
         for button in lst:
@@ -36,12 +42,10 @@ class Start_window:
                     sys.exit()
 
     def render(self):
+        self.screen.blit(self.fon, (0, 0))
         for button in self.lst_buttons:
-            self.screen.blit(button.button_surface, (button.button_rect.x, button.button_rect.y))
-            self.screen.blit(button.text, button.button_rect)
-
-            button.check_collidepoint(button.rect_width, button.rect_height)
-        self.main_screen.sc.blit(self.screen, (0, 0))
+            button.render(self.screen)
+        self.main_screen.blit(self.screen, (0, 0))
 
     def start(self):
         fps = 120
@@ -52,6 +56,8 @@ class Start_window:
                     self.running = False
                     pygame.quit()
                     sys.exit()
+                if event.type == pygame.MOUSEMOTION:
+                    self.main_screen.blit(self.cursor, (event.pos[0], event.pos[1]))
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.check_click(event.pos, self.lst_buttons)
 

@@ -254,24 +254,28 @@ class Button:
     def __init__(self, text, size_font, surface_x, surface_y, rect_x, rect_y, is_change, color=(0, 200, 0),
                  dark_color=(0, 150, 0)):
         self.font = pygame.font.Font(None, size_font)
-        self.button_surface = pygame.Surface((surface_x, surface_y))
-        self.text = self.font.render(text, True, (255, 255, 255))
-        self.text_rect = self.text.get_rect()
-        self.rect_width = self.text_rect.width
-        self.rect_height = self.text_rect.height
-        self.button_rect = pygame.Rect(rect_x, rect_y, self.rect_width, self.rect_height)
-        self.color = color
-        self.dark_color = dark_color
-        self.is_change = is_change
+        self.surfaces = [self.font.render(text, True, color), self.font.render(text, True, dark_color)]
+        self.button_rect = pygame.Rect(rect_x, rect_y, *self.surfaces[0].get_rect().size)
 
-    def check_collidepoint(self, rect_width, rect_height):
-        if self.button_rect.collidepoint(pygame.mouse.get_pos()):
-            pygame.draw.rect(self.button_surface, self.color, (0, 0, rect_width, rect_height))
-        else:
-            pygame.draw.rect(self.button_surface, self.dark_color, (0, 0, rect_width, rect_height))
+    def check_collidepoint(self):
+        return self.button_rect.collidepoint(pygame.mouse.get_pos())
 
     def render(self, sc):
-        self.button_surface.blit(self.text, self.text_rect)
-        sc.blit(self.button_surface, (self.button_rect.x, self.button_rect.y))
-        if self.is_change:
-            self.check_collidepoint(self.rect_width, self.rect_height)
+        sc.blit(self.surfaces[self.check_collidepoint()], self.button_rect)
+
+
+class View:
+    def __init__(self, text, size_font, x, y, color=(0, 200, 0)):
+        self.font = pygame.font.Font(None, size_font)
+        self.x = x
+        self.y = y
+        self.color = color
+        self.set_text(text)
+
+    def set_text(self, text):
+        self.surface = self.font.render(text, True, self.color)
+        self.rect = pygame.Rect(0, 0, *self.surface.get_rect().size)
+        self.rect.midtop = (self.x, self.y)
+
+    def render(self, sc):
+        sc.blit(self.surface, self.rect)
