@@ -8,18 +8,20 @@ import dragon
 import landscapes
 
 import enemys
+from global_vars import FILL_TYPE_NONE, FILL_TYPE_BORDER
+from widgets import Button
 
 
 class Screen:
     def __init__(self, size):
-        self.sc = pygame.display.set_mode(size)
+        self.sc = pygame.display.set_mode(size, pygame.FULLSCREEN)
+        self.size = width, height = size
         self.choose_unit = None
-        self.width, self.height = 18, 10
-        self.board = Board(self.width, self.height)
-        self.button_start_game = Button('Начать игру', 38, 200, 26, 1100, 700, True)
-        self.button_next_step = Button('Следующий ход', 38, 250, 26, 1100, 700, True)
-        self.back_button = Button('Вернуться в главное меню', 40, 400, 26, 100, 700, True, color=(200, 75, 75),
-                                  dark_color=(150, 25, 25))
+        self.board = Board(18, 10)
+        self.button_start_game = Button('Начать игру', 38, 20, height - 20, coord_type="bottomleft")
+        self.button_next_step = Button('Следующий ход', 38, 20, height - 20, coord_type="midbottom")
+        self.back_button = Button('Вернуться в главное меню', 40, width - 20, height - 20, color=(200, 75, 75),
+                                  dark_color=(150, 25, 25), coord_type="bottomright")
 
         self.icon_swordsman = swordsman.Swordsman(125, 25, 80, swordsman.swordsmans)
         swordsman.stock = self.icon_swordsman.stock
@@ -74,19 +76,10 @@ class Screen:
 
     def get_click(self, mouse_pos, mouse_button):
         Board.get_click(self.board, mouse_pos, mouse_button, self)
-        if not self.board.gameplay and (
-                self.button_start_game.button_rect.left <= mouse_pos[0] <= self.button_start_game.button_rect.right
-                and
-                self.button_start_game.button_rect.top <= mouse_pos[1] <= self.button_start_game.button_rect.bottom):
+        if not self.board.gameplay and self.button_start_game.check_click(mouse_pos):
             self.board.gameplay = True
-        if not self.board.back_to_menu and (
-                self.back_button.button_rect.left <= mouse_pos[0] <= self.back_button.button_rect.right
-                and
-                self.back_button.button_rect.top <= mouse_pos[1] <= self.back_button.button_rect.bottom):
-            self.board.clear_board(self.icon_swordsman, self.icon_archer, self.icon_cavalry, self.icon_dragon)
+        if not self.board.back_to_menu and self.back_button.check_click(mouse_pos):
             self.board.back_to_menu = True
-            self.board.board = [[0] * self.width for _ in range(self.height)]
-            self.board.landscape = [[0] * self.width for _ in range(self.height)]
 
 
 class Board:
@@ -96,7 +89,7 @@ class Board:
         self.width = width
         self.height = height
 
-        self.cell_size = 60
+        self.cell_size = 80
         self.left = 250
         self.top = 50
 
@@ -248,20 +241,6 @@ class Board:
         enemys.castles.empty()
 
         self.set_enemys()
-
-
-class Button:
-    def __init__(self, text, size_font, surface_x, surface_y, rect_x, rect_y, is_change, color=(0, 200, 0),
-                 dark_color=(0, 150, 0)):
-        self.font = pygame.font.Font(None, size_font)
-        self.surfaces = [self.font.render(text, True, color), self.font.render(text, True, dark_color)]
-        self.button_rect = pygame.Rect(rect_x, rect_y, *self.surfaces[0].get_rect().size)
-
-    def check_collidepoint(self):
-        return self.button_rect.collidepoint(pygame.mouse.get_pos())
-
-    def render(self, sc):
-        sc.blit(self.surfaces[self.check_collidepoint()], self.button_rect)
 
 
 class View:

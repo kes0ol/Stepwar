@@ -118,11 +118,11 @@ def show_stats(screen):
 
 
 def check_click(screen, mouse_pos):
-    if (screen.button_next_step.button_rect.left <= mouse_pos[0] <= screen.button_next_step.button_rect.right
-            and screen.button_next_step.button_rect.top <= mouse_pos[1] <= screen.button_next_step.button_rect.bottom):
+    if (screen.button_next_step.rect.left <= mouse_pos[0] <= screen.button_next_step.rect.right
+            and screen.button_next_step.rect.top <= mouse_pos[1] <= screen.button_next_step.rect.bottom):
         return 'new_step'
-    if (screen.back_button.button_rect.left <= mouse_pos[0] <= screen.back_button.button_rect.right
-            and screen.back_button.button_rect.top <= mouse_pos[1] <= screen.back_button.button_rect.bottom):
+    if (screen.back_button.rect.left <= mouse_pos[0] <= screen.back_button.rect.right
+            and screen.back_button.rect.top <= mouse_pos[1] <= screen.back_button.rect.bottom):
         return 'back_to_menu'
 
 

@@ -1,7 +1,9 @@
 import sys
 
 import pygame
-import mapping
+
+from global_vars import FILL_TYPE_BORDER
+from widgets import Button, View
 
 
 class Settings_window:
@@ -12,25 +14,23 @@ class Settings_window:
         self.main_screen = screen
         self.screen = pygame.surface.Surface((width, height))
 
-        self.plus_button = mapping.Button('  +  ', 150, 800, height // 2 - 160, 1100, height // 2 - 160, 1100,
-                                          color=(0, 255, 0), dark_color=(0, 100, 0))
-        self.minus_button = mapping.Button('  -  ', 150, 800, height // 2 - 160, 790, height // 2 - 160, 790,
-                                           color=(255, 0, 0), dark_color=(100, 0, 0))
-        self.volume_button = mapping.Button('  Громкость  ', 80, 850, height // 2 - 320, 850, height // 2 - 320, False,
+        self.volume_button = Button('Громкость', 80, width // 2, height // 2 - 400,
                                             color=(255, 255, 0), dark_color=(255, 255, 0))
-        self.back_button = mapping.Button('      Назад      ', 80, 850, height // 2, 850, height // 2, True,
-                                          color=(255, 255, 0), dark_color=(100, 100, 0))
-        self.procent_view = mapping.View(f'{self.volume * 100}%', 80, width / 2, height / 2 - 160, color=(255, 255, 0))
+        self.plus_button = Button('+', 150, width // 2 + 200, height // 2 - 200, color=(0, 255, 0),
+                                          dark_color=(0, 100, 0), fill_type=FILL_TYPE_BORDER)
+        self.minus_button = Button('-', 150, width // 2 - 200, height // 2 - 200,
+                                           color=(255, 0, 0), dark_color=(100, 0, 0), fill_type=FILL_TYPE_BORDER)
+        self.procent_view = View(f'{self.volume * 100}%', 80, width // 2, height / 2 - 200, color=(255, 255, 0))
+        self.back_button = Button('Назад', 80, width // 2, height // 2, color=(255, 255, 0),
+                                          dark_color=(100, 100, 0))
 
         self.lst_buttons = [self.volume_button, self.plus_button, self.minus_button, self.back_button]
         self.fon = pygame.image.load('images/settingsfon.jpg')
         self.fon = pygame.transform.scale(self.fon, (size[0], size[1]))
 
     def check_click(self, mouse_pos, lst):
-        p = False
         for button in lst:
-            if (button.button_rect.left <= mouse_pos[0] <= button.button_rect.right and
-                    button.button_rect.top <= mouse_pos[1] <= button.button_rect.bottom):
+            if button.check_click(mouse_pos):
                 if button == self.back_button:
                     self.running = False
                 if button == self.plus_button and self.volume + 0.2 <= 1:
@@ -46,8 +46,6 @@ class Settings_window:
 
     def render(self):
         self.screen.blit(self.fon, (0, 0))
-        pygame.draw.rect(self.screen, (255, 0, 0), (820, 430, 90, 80), 1)
-        pygame.draw.rect(self.screen, (0, 255, 0), (1149, 430, 80, 85), 1)
         for button in self.lst_buttons:
             button.render(self.screen)
         self.procent_view.render(self.screen)
