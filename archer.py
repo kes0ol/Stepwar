@@ -2,6 +2,7 @@ import pygame
 
 import start_game
 
+
 class Archer(pygame.sprite.Sprite):
 
     def __init__(self, x, y, image_size, group):

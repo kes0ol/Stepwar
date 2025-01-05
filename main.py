@@ -3,24 +3,19 @@ import pygame
 import mapping
 import start_game
 import start_window
-import pygame as pg
-import sys
-
 
 if __name__ == '__main__':
-    SIZE = 1920, 1080
     pygame.init()
     pygame.display.set_caption('StepWar')
-    pg.mixer.music.load('music/walking.wav')
-    pg.mixer.music.play()
 
-    pg.time.delay(20)
-    a = pygame.display.get_desktop_sizes()
+    SIZE = pygame.display.get_desktop_sizes()[0]
+
+    pygame.mixer.music.load('music/walking.wav')
+    pygame.mixer.music.play()
+    pygame.time.delay(20)
 
     main_screen = mapping.Screen(SIZE)
     board = main_screen.board
-    # button_start_game = main_screen.button_start_game
-    # back_button = main_screen.back_button
 
     start_screen = start_window.Start_window(main_screen, SIZE)
 
@@ -40,8 +35,10 @@ if __name__ == '__main__':
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 main_screen.get_click(event.pos, event.button)
+
         main_screen.sc.fill((0, 0, 0))
         main_screen.render()
+        start_game.show_stats(main_screen)
         clock.tick(fps)
         pygame.display.flip()
     pygame.quit()

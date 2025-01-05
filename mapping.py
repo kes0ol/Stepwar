@@ -1,5 +1,6 @@
 import pygame
 
+import enemys
 import swordsman
 import castle
 import cavalry
@@ -7,8 +8,6 @@ import archer
 import dragon
 import landscapes
 
-import enemys
-from global_vars import FILL_TYPE_NONE, FILL_TYPE_BORDER
 from widgets import Button
 
 
@@ -17,13 +16,13 @@ class Screen:
         self.sc = pygame.display.set_mode(size, pygame.FULLSCREEN)
         self.size = width, height = size
         self.choose_unit = None
-        self.board = Board(18, 10)
+        self.board = Board(18, 10, size)
         self.button_start_game = Button('Начать игру', 38, 20, height - 20, coord_type="bottomleft")
         self.button_next_step = Button('Следующий ход', 38, 20, height - 20, coord_type="midbottom")
         self.back_button = Button('Вернуться в главное меню', 40, width - 20, height - 20, color=(200, 75, 75),
                                   dark_color=(150, 25, 25), coord_type="bottomright")
 
-        self.icon_swordsman = swordsman.Swordsman(125, 25, 80, swordsman.swordsmans)
+        self.icon_swordsman = swordsman.Swordsman(125, 25, self.board.cell_size * 1.5, swordsman.swordsmans)
         swordsman.stock = self.icon_swordsman.stock
         self.icon_archer = archer.Archer(125, 125, self.board.cell_size * 1.5, archer.archers)
         archer.stock = self.icon_archer.stock
@@ -80,16 +79,17 @@ class Screen:
             self.board.gameplay = True
         if not self.board.back_to_menu and self.back_button.check_click(mouse_pos):
             self.board.back_to_menu = True
+            self.board.clear_board(self.icon_swordsman, self.icon_archer, self.icon_cavalry, self.icon_dragon)
 
 
 class Board:
-    def __init__(self, width, height):
+    def __init__(self, width, height, size):
         self.gameplay = False
         self.back_to_menu = False
         self.width = width
         self.height = height
 
-        self.cell_size = 80
+        self.cell_size = round(size[0] / 22)
         self.left = 250
         self.top = 50
 
@@ -241,20 +241,3 @@ class Board:
         enemys.castles.empty()
 
         self.set_enemys()
-
-
-class View:
-    def __init__(self, text, size_font, x, y, color=(0, 200, 0)):
-        self.font = pygame.font.Font(None, size_font)
-        self.x = x
-        self.y = y
-        self.color = color
-        self.set_text(text)
-
-    def set_text(self, text):
-        self.surface = self.font.render(text, True, self.color)
-        self.rect = pygame.Rect(0, 0, *self.surface.get_rect().size)
-        self.rect.midtop = (self.x, self.y)
-
-    def render(self, sc):
-        sc.blit(self.surface, self.rect)

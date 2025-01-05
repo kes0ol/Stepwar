@@ -12,18 +12,20 @@ class Start_window:
         self.main_screen = screen
         self.screen = screen
 
-        self.play_game_button = Button('Запустить игру', 80, width // 2, height // 2 - 200,
-                                               color=(255, 255, 0), dark_color=(0, 255, 0))
-        self.setting_button = Button('Настройки', 80, width // 2, height // 2,
-                                             color=(255, 255, 0), dark_color=(50, 50, 50))
-        self.exit_button = Button('Выйти', 80, width // 2, height // 2 + 200,
-                                          color=(255, 255, 0), dark_color=(100, 0, 0))
+        self.play_game_button = Button('Запустить игру', 80, width // 2, height // 2 - 200, color=(255, 255, 0),
+                                       dark_color=(0, 255, 0))
+        self.setting_button = Button('Настройки', 80, width // 2, height // 2, color=(255, 255, 0),
+                                     dark_color=(50, 50, 50))
+        self.exit_button = Button('Выйти', 80, width // 2, height // 2 + 200, color=(255, 255, 0),
+                                  dark_color=(100, 0, 0))
 
         self.lst_buttons = [self.play_game_button, self.setting_button, self.exit_button]
 
         self.settings_screen = settings.Settings_window(self.main_screen, self.size)
+
         self.fon = pygame.image.load('images/fon.png')
-        self.fon = pygame.transform.scale(self.fon, (size[0], size[1]))
+        self.fon = pygame.transform.scale(self.fon, (self.size[0], self.size[1]))
+
         self.cursor = pygame.image.load('images/cursor.PNG')
         self.cursor.set_colorkey((255, 255, 255))
 
@@ -43,8 +45,6 @@ class Start_window:
         for button in self.lst_buttons:
             button.render(self.screen.sc)
 
-        # self.main_screen.blit(self.screen, (0, 0))
-
     def start(self):
         fps = 120
         clock = pygame.time.Clock()
@@ -58,6 +58,7 @@ class Start_window:
                     self.main_screen.sc.blit(self.cursor, (event.pos[0], event.pos[1]))
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.check_click(event.pos, self.lst_buttons)
+
             self.main_screen.sc.fill((0, 0, 0))
             self.render()
 

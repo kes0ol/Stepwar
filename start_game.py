@@ -2,14 +2,14 @@ import sys
 
 import pygame
 
+import start_window
+
 import enemys
 import swordsman
 import archer
 import cavalry
 import dragon
 import castle
-
-import start_window
 
 
 def start(screen, size):
