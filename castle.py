@@ -5,7 +5,7 @@ class Castle(pygame.sprite.Sprite):
 
     def __init__(self, x, y, cell_size, group):
         super().__init__(group)
-        self.image = pygame.image.load('images/castle.jpeg')
+        self.image = pygame.image.load('images/castle.jpg')
         self.image = pygame.transform.scale(self.image, (cell_size * 2, cell_size * 2))
         self.rect = self.image.get_rect()
         self.rect.x = x

@@ -12,6 +12,9 @@ class Start_window:
         self.main_screen = screen
         self.screen = screen
 
+        self.choose_level = Button('Уровни', 80, width // 2, height // 2 - 400, color=(255, 255, 0),
+                                       dark_color=(0, 255, 0))
+
         self.play_game_button = Button('Запустить игру', 80, width // 2, height // 2 - 200, color=(255, 255, 0),
                                        dark_color=(0, 255, 0))
         self.setting_button = Button('Настройки', 80, width // 2, height // 2, color=(255, 255, 0),
@@ -19,7 +22,7 @@ class Start_window:
         self.exit_button = Button('Выйти', 80, width // 2, height // 2 + 200, color=(255, 255, 0),
                                   dark_color=(100, 0, 0))
 
-        self.lst_buttons = [self.play_game_button, self.setting_button, self.exit_button]
+        self.lst_buttons = [self.play_game_button, self.setting_button, self.exit_button, self.choose_level]
 
         self.settings_screen = settings.Settings_window(self.main_screen, self.size)
 
