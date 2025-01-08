@@ -18,7 +18,7 @@ class Screen:
         self.choose_unit = None
         self.board = Board(18, 10, size)
         self.button_start_game = Button('Начать игру', 38, 20, height - 20, coord_type="bottomleft")
-        self.button_next_step = Button('Следующий ход', 38, 20, height - 20, coord_type="midbottom")
+        self.button_next_step = Button('Следующий ход', 38, 120, height - 20, coord_type="midbottom")
         self.back_button = Button('Вернуться в главное меню', 40, width - 20, height - 20, color=(200, 75, 75),
                                   dark_color=(150, 25, 25), coord_type="bottomright")
 
@@ -109,27 +109,27 @@ class Board:
                 for j in range(len(level_lst[i])):
                     x, y = j * self.cell_size + self.left, i * self.cell_size + self.top
                     if level_lst[i][j] == 's':
-                        enemys.Enemy('Рыцарь', x, y, 1, 1, 100, 20, 'images/enemy_images/swordsman.jpeg',
+                        enemys.Enemy('Рыцарь', x, y, 1, 1, 100, 20, 'images/enemy_images/swordsman2.png',
                                      self.cell_size,
                                      enemys.swordsmans)
                         self.board[i][j] = 2
                     if level_lst[i][j] == 'a':
-                        enemys.Enemy('Лучник', x, y, 1, 3, 40, 30, 'images/enemy_images/archer.jpeg',
+                        enemys.Enemy('Лучник', x, y, 1, 3, 40, 30, 'images/enemy_images/archer.png',
                                      self.cell_size,
                                      enemys.archers)
                         self.board[i][j] = 2
                     if level_lst[i][j] == 'c':
-                        enemys.Enemy('Кавалерия', x, y, 3, 1, 70, 25, 'images/enemy_images/cavalry.jpeg',
+                        enemys.Enemy('Кавалерия', x, y, 3, 1, 70, 25, 'images/enemy_images/cavalry.png',
                                      self.cell_size,
                                      enemys.cavalrys)
                         self.board[i][j] = 2
                     if level_lst[i][j] == 'd':
-                        enemys.Enemy('Дракон', x, y, 4, 2, 150, 1, 'images/enemy_images/dragon.jpeg',
+                        enemys.Enemy('Дракон', x, y, 4, 2, 150, 30, 'images/enemy_images/dragon.png',
                                      self.cell_size,
                                      enemys.dragons)
                         self.board[i][j] = 2
                     if level_lst[i][j] == 'X':
-                        enemys.Enemy('Замок', x, y, 0, 0, 500, 0, 'images/enemy_images/castle.jpeg',
+                        enemys.Enemy('Замок', x, y, 0, 0, 500, 0, 'images/enemy_images/castle.jpg',
                                      self.cell_size * 2,
                                      enemys.castles)
                         self.board[i][j], self.board[i + 1][j] = 3, 3
