@@ -9,7 +9,7 @@ class Enemy(pygame.sprite.Sprite):
         self.image = pygame.transform.flip(self.image, True, False)
         self.image.set_colorkey((0xb3, 0x22, 0xb7))
         self.rect = self.image.get_rect()
-        # self.image = pygame.transform.rotate(self.image, -360)
+
         self.rect.x = x
         self.rect.y = y
         self.step = step

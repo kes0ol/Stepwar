@@ -41,9 +41,9 @@ class Start_window:
                     sys.exit()
 
     def render(self):
-        self.screen.sc.blit(self.fon, (0, 0))
+        self.main_screen.sc.blit(self.fon, (0, 0))
         for button in self.lst_buttons:
-            button.render(self.screen.sc)
+            button.render(self.main_screen.sc)
 
     def start(self):
         fps = 120

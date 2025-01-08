@@ -35,7 +35,7 @@ class Archer(pygame.sprite.Sprite):
 
             self.rect = self.rect.move(self.x, self.y)
         else:
-            start_game.give_damage(self.screen, True, (
+            start_game.give_damage(self.screen, (
                 self.select_x * self.screen.board.cell_size + self.screen.board.left,
                 self.select_y * self.screen.board.cell_size + self.screen.board.top), (self.select_x, self.select_y),
                                    self.damage)

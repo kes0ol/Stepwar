@@ -1,5 +1,5 @@
 import sys
-
+import random
 import pygame
 
 import start_window
@@ -14,6 +14,8 @@ import castle
 
 def start(screen, size):
     lst_surfaces = []
+
+    enemys_move(screen)
     while screen.board.gameplay:
         fps = 120
         clock = pygame.time.Clock()
@@ -26,6 +28,7 @@ def start(screen, size):
                 select_button = check_click(screen, event.pos)
                 if select_button == 'new_step':
                     new_step(screen)
+                    enemys_move(screen)
                 if select_button == 'back_to_menu':
                     new_step(screen)
                     screen.board.gameplay = False
@@ -33,6 +36,7 @@ def start(screen, size):
                                              screen.icon_dragon)
                     start_screen = start_window.Start_window(screen, size)
                     start_window.Start_window.start(start_screen)
+
                 cell_coords = screen.board.get_cell(event.pos)
                 unit, is_choose_unit = choose_unit(screen, cell_coords)
                 if unit != -1 and event.button == 1:
@@ -47,6 +51,74 @@ def start(screen, size):
         show_stats(screen)
         clock.tick(fps)
         pygame.display.flip()
+
+
+def enemys_move(screen):
+    width, height = screen.board.width * screen.board.cell_size, screen.board.height * screen.board.cell_size
+    moves = [(-screen.board.cell_size, 0), (-screen.board.cell_size, 0),
+             (-screen.board.cell_size, -screen.board.cell_size),
+             (0, -screen.board.cell_size), (screen.board.cell_size, -screen.board.cell_size),
+             (screen.board.cell_size, 0), (screen.board.cell_size, screen.board.cell_size), (0, screen.board.cell_size),
+             (-screen.board.cell_size, screen.board.cell_size)]
+    for group in [enemys.swordsmans, enemys.archers, enemys.cavalrys, enemys.dragons]:
+        for unit in group:
+            now_cell = screen.board.get_cell((unit.rect.x, unit.rect.y))
+
+            choise_move = random.choice(moves)
+            distance_move = random.randint(0, unit.step)
+            select_coords = (unit.rect.x + choise_move[0] * distance_move,
+                             unit.rect.y + choise_move[1] * distance_move)
+            select_cell = screen.board.get_cell(select_coords)
+
+            if (screen.board.left <= select_coords[0] <= width and screen.board.top <= select_coords[1] <= height and
+                    screen.board.board[select_cell[1]][select_cell[0]] == 0 and select_cell != (-1, -1)):
+                screen.board.board[now_cell[1]][now_cell[0]] = 0
+                screen.board.board[select_cell[1]][select_cell[0]] = 2
+                unit.rect.x, unit.rect.y = select_coords
+
+            enemys_attack(screen, unit, now_cell)
+
+
+def enemys_attack(screen, unit, now_cell):
+    can_attack = []
+    for dx in range(-unit.distance_attack, unit.distance_attack + 1):
+        for dy in range(-unit.distance_attack, unit.distance_attack + 1):
+            n_x, n_y = now_cell[0] + dx, now_cell[1] + dy
+
+            if (0 <= n_x <= screen.board.width - unit.distance_attack and
+                    0 <= n_y <= screen.board.height - unit.distance_attack):
+                if screen.board.board[n_y][n_x] in [1, 4]:
+                    can_attack.append((n_x, n_y))
+
+    if len(can_attack) > 0:
+        select_attack = random.choice(can_attack)
+        damage_castle = True
+
+        for group in [swordsman.swordsmans, archer.archers, cavalry.cavalrys, dragon.dragons, castle.castles]:
+            for un in group:
+                if screen.board.board[select_attack[1]][select_attack[0]] == 4 and damage_castle:
+                    for cas in castle.castles:
+                        cas.hp -= unit.damage
+
+                        if cas.hp <= 0:
+                            cas.kill()
+                            screen.board.board[select_attack[1]][select_attack[0]] = 0
+
+                            for i in range(len(screen.board.board)):
+                                for j in range(len(screen.board.board[i])):
+                                    if screen.board.board[i][j] == 4:
+                                        screen.board.board[i][j] = 0
+                        damage_castle = False
+                        break
+                    break
+
+                elif ((select_attack[0] * screen.board.cell_size + screen.board.left,
+                       select_attack[1] * screen.board.cell_size + screen.board.top) == (un.rect.x, un.rect.y)):
+                    un.hp -= unit.damage
+                    if un.hp <= 0:
+                        un.kill()
+                        screen.board.board[select_attack[1]][select_attack[0]] = 0
+                    break
 
 
 def show_stats(screen):
@@ -275,34 +347,31 @@ def choose_attack(screen, lst_surfaces, unit, cell_coords, is_chose_unit, is_att
             pygame.display.flip()
 
 
-def give_damage(screen, is_team, select_coords, select_cell, damage_team_unit):
+def give_damage(screen, select_coords, select_cell, damage_team_unit):
     damage_at_enemy_castle = True
-    if is_team:
-        for group in [enemys.swordsmans, enemys.archers, enemys.cavalrys, enemys.dragons, enemys.castles]:
-            for unit in group:
-                if screen.board.board[select_cell[1]][select_cell[0]] == 3 and damage_at_enemy_castle:  # проверка башни
-                    for enemy_castle in enemys.castles:
-                        enemy_castle.hp -= damage_team_unit
-                        if enemy_castle.hp <= 0:
-                            enemy_castle.kill()
-                            screen.board.board[select_cell[1]][select_cell[0]] = 0
-                            for i in range(len(screen.board.board)):
-                                for j in range(len(screen.board.board[i])):
-                                    if screen.board.board[i][j] == 3:
-                                        screen.board.board[i][j] = 0
-                        damage_at_enemy_castle = False
-                        break
-                    break
 
-                if (unit.rect.x, unit.rect.y) == select_coords:
-                    unit.hp -= damage_team_unit
-                    if unit.hp <= 0:
-                        unit.kill()
+    for group in [enemys.swordsmans, enemys.archers, enemys.cavalrys, enemys.dragons, enemys.castles]:
+        for unit in group:
+            if screen.board.board[select_cell[1]][select_cell[0]] == 3 and damage_at_enemy_castle:  # проверка башни
+                for enemy_castle in enemys.castles:
+                    enemy_castle.hp -= damage_team_unit
+                    if enemy_castle.hp <= 0:
+                        enemy_castle.kill()
                         screen.board.board[select_cell[1]][select_cell[0]] = 0
+                        for i in range(len(screen.board.board)):
+                            for j in range(len(screen.board.board[i])):
+                                if screen.board.board[i][j] == 3:
+                                    screen.board.board[i][j] = 0
+                    damage_at_enemy_castle = False
                     break
+                break
 
-    else:
-        pass  # бьёт вражеский юнит
+            if (unit.rect.x, unit.rect.y) == select_coords:
+                unit.hp -= damage_team_unit
+                if unit.hp <= 0:
+                    unit.kill()
+                    screen.board.board[select_cell[1]][select_cell[0]] = 0
+                break
 
 
 def new_step(screen):

@@ -49,8 +49,9 @@ class Screen:
 
     def render(self):
         landscapes.grasses.draw(self.sc)
+
         self.board.render(self.sc)
-        castle.castles.draw(self.sc)
+
         swordsman.swordsmans.draw(self.sc)
         swordsman.set_view_stock(self.sc, (50, 50))
         archer.archers.draw(self.sc)
@@ -59,6 +60,7 @@ class Screen:
         cavalry.set_view_stock(self.sc, (50, 250))
         dragon.dragons.draw(self.sc)
         dragon.set_view_stock(self.sc, (50, 350))
+        castle.castles.draw(self.sc)
 
         enemys.swordsmans.draw(self.sc)
         enemys.archers.draw(self.sc)
@@ -90,13 +92,15 @@ class Board:
         self.height = height
 
         self.cell_size = round(size[0] / 22)
-        self.left = 250
-        self.top = 50
+        self.left = self.cell_size * 4
+        self.top = self.cell_size // 2
 
         self.board = [[0] * width for _ in range(height)]
         self.landscape = [[0] * width for _ in range(height)]
 
+        self.set_team()
         self.set_enemys()
+        self.set_landscapes()
 
     def set_enemys(self):
         with open('levels/1.txt', mode='rt', encoding='utf-8') as level:
@@ -120,7 +124,7 @@ class Board:
                                      enemys.cavalrys)
                         self.board[i][j] = 2
                     if level_lst[i][j] == 'd':
-                        enemys.Enemy('Дракон', x, y, 4, 2, 150, 30, 'images/enemy_images/dragon.jpeg',
+                        enemys.Enemy('Дракон', x, y, 4, 2, 150, 1, 'images/enemy_images/dragon.jpeg',
                                      self.cell_size,
                                      enemys.dragons)
                         self.board[i][j] = 2
@@ -131,23 +135,31 @@ class Board:
                         self.board[i][j], self.board[i + 1][j] = 3, 3
                         self.board[i][j + 1], self.board[i + 1][j + 1] = 3, 3
 
-    def render(self, screen):
+    def set_team(self):
         for i in range(len(self.board)):
             for j in range(len(self.board[i])):
                 if (i, j) == (0, 4):
                     castle.add_start_castle(i * self.cell_size + self.left, j * self.cell_size + self.top,
                                             self.cell_size)
-                    self.board[j][i], self.board[j][i + 1], self.board[j + 1][i], self.board[j + 1][i + 1] = 1, 1, 1, 1
+                    self.board[j][i], self.board[j][i + 1], self.board[j + 1][i], self.board[j + 1][i + 1] = 4, 4, 4, 4
 
+    def set_landscapes(self):
+        for i in range(len(self.board)):
+            for j in range(len(self.board[i])):
+                x = j * self.cell_size + self.left
+                y = i * self.cell_size + self.top
+
+                if self.landscape[i][j] == 0:
+                    landscapes.Grass(x, y, self.cell_size, landscapes.grasses)
+                    self.landscape[i][j] = 1
+
+    def render(self, screen):
         for i in range(len(self.board)):
             for j in range(len(self.board[i])):
                 x = j * self.cell_size + self.left
                 y = i * self.cell_size + self.top
 
                 pygame.draw.rect(screen, 'white', (x, y, self.cell_size, self.cell_size), 1)
-                if self.landscape[i][j] == 0:
-                    landscapes.Grass(x, y, self.cell_size, landscapes.grasses)
-                    self.landscape[i][j] = 1
 
     def get_cell(self, mouse_pos):
         xmax = self.left + self.width * self.cell_size
@@ -240,4 +252,6 @@ class Board:
         enemys.dragons.empty()
         enemys.castles.empty()
 
+        self.set_team()
         self.set_enemys()
+        self.set_landscapes()
