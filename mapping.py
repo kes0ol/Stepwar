@@ -13,10 +13,14 @@ from widgets import Button
 
 class Screen:
     def __init__(self, size):
-        self.sc = pygame.display.set_mode(size, pygame.FULLSCREEN)
-        self.size = width, height = size
+        self.gameplay = False
+        self.back_to_menu = False
         self.choose_unit = None
-        self.board = Board(18, 10, size)
+
+        self.size = width, height = size
+        self.sc = pygame.display.set_mode(self.size, pygame.FULLSCREEN)
+
+        self.board = Board(18, 10, self.size)
         self.button_start_game = Button('Начать игру', 38, 20, height - 20, coord_type="bottomleft")
         self.button_next_step = Button('Следующий ход', 38, 120, height - 20, coord_type="midbottom")
         self.back_button = Button('Вернуться в главное меню', 40, width - 20, height - 20, color=(200, 75, 75),
@@ -70,24 +74,22 @@ class Screen:
 
         self.back_button.render(self.sc)
 
-        if not self.board.gameplay:
+        if not self.gameplay:
             self.button_start_game.render(self.sc)
         else:
             self.button_next_step.render(self.sc)
 
     def get_click(self, mouse_pos, mouse_button):
         Board.get_click(self.board, mouse_pos, mouse_button, self)
-        if not self.board.gameplay and self.button_start_game.check_click(mouse_pos):
-            self.board.gameplay = True
-        if not self.board.back_to_menu and self.back_button.check_click(mouse_pos):
-            self.board.back_to_menu = True
+        if not self.gameplay and self.button_start_game.check_click(mouse_pos):
+            self.gameplay = True
+        if not self.back_to_menu and self.back_button.check_click(mouse_pos):
+            self.back_to_menu = True
             self.board.clear_board(self.icon_swordsman, self.icon_archer, self.icon_cavalry, self.icon_dragon)
 
 
 class Board:
     def __init__(self, width, height, size):
-        self.gameplay = False
-        self.back_to_menu = False
         self.width = width
         self.height = height
 

@@ -13,7 +13,7 @@ class Start_window:
         self.screen = screen
 
         self.choose_level = Button('Уровни', 80, width // 2, height // 2 - 400, color=(255, 255, 0),
-                                       dark_color=(0, 255, 0))
+                                   dark_color=(0, 255, 0))
 
         self.play_game_button = Button('Запустить игру', 80, width // 2, height // 2 - 200, color=(255, 255, 0),
                                        dark_color=(0, 255, 0))

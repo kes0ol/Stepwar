@@ -16,7 +16,7 @@ def start(screen, size):
     lst_surfaces = []
 
     enemys_move(screen)
-    while screen.board.gameplay:
+    while screen.gameplay:
         fps = 120
         clock = pygame.time.Clock()
         for event in pygame.event.get():
@@ -31,7 +31,7 @@ def start(screen, size):
                     enemys_move(screen)
                 if select_button == 'back_to_menu':
                     new_step(screen)
-                    screen.board.gameplay = False
+                    screen.gameplay = False
                     screen.board.clear_board(screen.icon_swordsman, screen.icon_archer, screen.icon_cavalry,
                                              screen.icon_dragon)
                     start_screen = start_window.Start_window(screen, size)
@@ -65,7 +65,7 @@ def enemys_move(screen):
             now_cell = screen.board.get_cell((unit.rect.x, unit.rect.y))
 
             choise_move = random.choice(moves)
-            distance_move = random.randint(0, unit.step)
+            distance_move = random.randint(1, unit.step)
             select_coords = (unit.rect.x + choise_move[0] * distance_move,
                              unit.rect.y + choise_move[1] * distance_move)
             select_cell = screen.board.get_cell(select_coords)
@@ -286,7 +286,7 @@ def choose_step(screen, lst_surfaces, unit, cell_coords, is_choose_unit, select_
         while is_choose_unit and select_button != 'new_step':
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    screen.board.gameplay = False
+                    screen.gameplay = False
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
@@ -322,7 +322,7 @@ def choose_attack(screen, lst_surfaces, unit, cell_coords, is_chose_unit, is_att
         while is_chose_unit and is_attack:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    screen.board.gameplay = False
+                    screen.gameplay = False
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
@@ -387,7 +387,6 @@ def new_step(screen):
     for drg in dragon.dragons:
         drg.step = 4
         drg.do_damage = True
-    screen.board.new_step = False
 
 
 def render(screen, lst_surfaces, color):
