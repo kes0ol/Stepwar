@@ -43,7 +43,7 @@ if __name__ == '__main__':
     pygame.display.set_caption('StepWar')
 
     pygame.mixer.music.load('music/walking.wav')
-    pygame.mixer.music.play()
+    pygame.mixer.music.play(-1)
     pygame.time.delay(20)
 
     fps = 120
