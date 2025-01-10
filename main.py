@@ -11,7 +11,7 @@ if __name__ == '__main__':
     SIZE = pygame.display.get_desktop_sizes()[0]
 
     pygame.mixer.music.load('music/walking.wav')
-    pygame.mixer.music.play()
+    pygame.mixer.music.play(-1)
     pygame.time.delay(20)
 
     main_screen = mapping.Screen(SIZE)

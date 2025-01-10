@@ -2,6 +2,7 @@ import sys
 
 import pygame
 import settings
+import levels
 from widgets import Button
 
 
@@ -12,7 +13,7 @@ class Start_window:
         self.main_screen = screen
         self.screen = screen
 
-        self.choose_level = Button('Уровни', 80, width // 2, height // 2 - 400, color=(255, 255, 0),
+        self.choose_level_button = Button('Уровни', 80, width // 2, height // 2 - 400, color=(255, 255, 0),
                                        dark_color=(0, 255, 0))
 
         self.play_game_button = Button('Запустить игру', 80, width // 2, height // 2 - 200, color=(255, 255, 0),
@@ -22,9 +23,10 @@ class Start_window:
         self.exit_button = Button('Выйти', 80, width // 2, height // 2 + 200, color=(255, 255, 0),
                                   dark_color=(100, 0, 0))
 
-        self.lst_buttons = [self.play_game_button, self.setting_button, self.exit_button, self.choose_level]
+        self.lst_buttons = [self.play_game_button, self.setting_button, self.exit_button, self.choose_level_button]
 
         self.settings_screen = settings.Settings_window(self.main_screen, self.size)
+        self.levels_menu = levels.Levels_menu(self.main_screen, self.size)
 
         self.fon = pygame.image.load('images/fon.png')
         self.fon = pygame.transform.scale(self.fon, (self.size[0], self.size[1]))
@@ -35,6 +37,8 @@ class Start_window:
     def check_click(self, mouse_pos, lst):
         for button in lst:
             if button.check_click(mouse_pos):
+                if button == self.choose_level_button:
+                    self.levels_menu.start()
                 if button == self.play_game_button:
                     self.running = False
                 if button == self.setting_button:
