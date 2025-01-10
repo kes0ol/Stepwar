@@ -31,6 +31,7 @@ class Main:
 
             self.screen.sc.fill((0, 0, 0))
             self.screen.render()
+
             start_game.show_stats(self.screen)
             clock.tick(fps)
             pygame.display.flip()
@@ -48,5 +49,4 @@ if __name__ == '__main__':
     fps = 120
     clock = pygame.time.Clock()
 
-    main_screen = Main()
-    main_screen.start()
+    Main().start()

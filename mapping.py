@@ -17,13 +17,14 @@ class Screen:
         self.back_to_menu = False
         self.choose_unit = None
 
-        self.size = width, height = size
+        self.size = self.width, self.height = size
         self.sc = pygame.display.set_mode(self.size, pygame.FULLSCREEN)
 
         self.board = Board(18, 10, self.size)
-        self.button_start_game = Button('Начать игру', 38, 20, height - 20, coord_type="bottomleft")
-        self.button_next_step = Button('Следующий ход', 38, 120, height - 20, coord_type="midbottom")
-        self.back_button = Button('Вернуться в главное меню', 40, width - 20, height - 20, color=(200, 75, 75),
+        self.button_start_game = Button('Начать игру', 38, 20, self.height - 20, coord_type="bottomleft")
+        self.button_next_step = Button('Следующий ход', 38, 120, self.height - 20, coord_type="midbottom")
+        self.back_button = Button('Вернуться в главное меню', 40, self.width - 20, self.height - 20,
+                                  color=(200, 75, 75),
                                   dark_color=(150, 25, 25), coord_type="bottomright")
 
         self.icon_swordsman = swordsman.Swordsman(125, 25, self.board.cell_size * 1.5, swordsman.swordsmans)
@@ -34,6 +35,10 @@ class Screen:
         cavalry.stock = self.icon_cavalry.stock
         self.icon_dragon = dragon.Dragon(125, 325, self.board.cell_size * 1.5, dragon.dragons)
         dragon.stock = self.icon_dragon.stock
+
+        self.cursor = pygame.image.load('images/cursor.PNG')
+        self.cursor.set_colorkey((255, 255, 255))
+        self.cursor = pygame.transform.scale(self.cursor, (10, 10))
 
     def choose_unit(self, mouse_pos):
         if (self.icon_swordsman.rect.left <= mouse_pos[0] <= self.icon_swordsman.rect.right and
@@ -50,6 +55,10 @@ class Screen:
             self.choose_unit = 'dragon'
 
         return self.choose_unit
+
+    def render_cursor(self):
+        pygame.mouse.set_visible(False)
+        self.sc.blit(self.cursor, pygame.mouse.get_pos())
 
     def render(self):
         landscapes.grasses.draw(self.sc)
@@ -78,6 +87,8 @@ class Screen:
             self.button_start_game.render(self.sc)
         else:
             self.button_next_step.render(self.sc)
+
+        self.render_cursor()
 
     def get_click(self, mouse_pos, mouse_button):
         Board.get_click(self.board, mouse_pos, mouse_button, self)

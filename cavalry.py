@@ -44,7 +44,7 @@ class Cavalry(pygame.sprite.Sprite):
 def set_view_stock(screen, coords):
     font = pygame.font.Font(None, 50)
     text = font.render(f'{stock}', True, 'white')
-    screen.blit(text, (coords[0], coords[1]))
+    screen.blit(text, coords)
 
 
 stock = None

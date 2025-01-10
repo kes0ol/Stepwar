@@ -27,10 +27,10 @@ def start(screen, size):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 select_button = check_click(screen, event.pos)
                 if select_button == 'new_step':
-                    new_step(screen)
+                    new_step()
                     enemys_move(screen)
                 if select_button == 'back_to_menu':
-                    new_step(screen)
+                    new_step()
                     screen.gameplay = False
                     screen.board.clear_board(screen.icon_swordsman, screen.icon_archer, screen.icon_cavalry,
                                              screen.icon_dragon)
@@ -374,7 +374,7 @@ def give_damage(screen, select_coords, select_cell, damage_team_unit):
                 break
 
 
-def new_step(screen):
+def new_step():
     for sword in swordsman.swordsmans:
         sword.step = 1
         sword.do_damage = True

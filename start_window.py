@@ -8,18 +8,18 @@ from widgets import Button
 class Start_window:
     def __init__(self, screen, size):
         self.running = True
-        self.size = width, height = size
+        self.size = self.width, self.height = size
         self.main_screen = screen
-        self.screen = screen
 
-        self.choose_level = Button('Уровни', 80, width // 2, height // 2 - 400, color=(255, 255, 0),
+        self.choose_level = Button('Уровни', 80, self.width // 2, self.height // 2 - 400, color=(255, 255, 0),
                                    dark_color=(0, 255, 0))
 
-        self.play_game_button = Button('Запустить игру', 80, width // 2, height // 2 - 200, color=(255, 255, 0),
+        self.play_game_button = Button('Запустить игру', 80, self.width // 2, self.height // 2 - 200,
+                                       color=(255, 255, 0),
                                        dark_color=(0, 255, 0))
-        self.setting_button = Button('Настройки', 80, width // 2, height // 2, color=(255, 255, 0),
+        self.setting_button = Button('Настройки', 80, self.width // 2, self.height // 2, color=(255, 255, 0),
                                      dark_color=(50, 50, 50))
-        self.exit_button = Button('Выйти', 80, width // 2, height // 2 + 200, color=(255, 255, 0),
+        self.exit_button = Button('Выйти', 80, self.width // 2, self.height // 2 + 200, color=(255, 255, 0),
                                   dark_color=(100, 0, 0))
 
         self.lst_buttons = [self.play_game_button, self.setting_button, self.exit_button, self.choose_level]
@@ -27,10 +27,7 @@ class Start_window:
         self.settings_screen = settings.Settings_window(self.main_screen, self.size)
 
         self.fon = pygame.image.load('images/fon.png')
-        self.fon = pygame.transform.scale(self.fon, (self.size[0], self.size[1]))
-
-        self.cursor = pygame.image.load('images/cursor.PNG')
-        self.cursor.set_colorkey((255, 255, 255))
+        self.fon = pygame.transform.scale(self.fon, (self.width, self.height))
 
     def check_click(self, mouse_pos, lst):
         for button in lst:
@@ -40,6 +37,7 @@ class Start_window:
                 if button == self.setting_button:
                     self.settings_screen.start()
                 if button == self.exit_button:
+                    self.running = False
                     pygame.quit()
                     sys.exit()
 
@@ -47,6 +45,7 @@ class Start_window:
         self.main_screen.sc.blit(self.fon, (0, 0))
         for button in self.lst_buttons:
             button.render(self.main_screen.sc)
+        self.main_screen.render_cursor()
 
     def start(self):
         fps = 120
@@ -57,8 +56,6 @@ class Start_window:
                     self.running = False
                     pygame.quit()
                     sys.exit()
-                if event.type == pygame.MOUSEMOTION:
-                    self.main_screen.sc.blit(self.cursor, (event.pos[0], event.pos[1]))
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.check_click(event.pos, self.lst_buttons)
 
