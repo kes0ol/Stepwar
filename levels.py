@@ -1,25 +1,23 @@
 import sys
 
 import pygame
-import start_game
 
-import start_window
 from widgets import Button
 
 
 class Levels_menu:
-    def __init__(self, screen, size):
-        self.running = True
+    def __init__(self, screen, size, main):
         self.size = width, height = size
         self.main_screen = screen
+        self.main = main
         self.screen = pygame.surface.Surface((width, height))
 
         self.first_level_button = Button('Уровень 1', 100, width // 2 - 700, height // 2,
-                                    color=(40, 120, 80), dark_color=(40, 150, 80))
+                                         color=(40, 120, 80), dark_color=(40, 150, 80))
         self.second_level_button = Button('Уровень 2', 100, width // 2, height // 2,
-                                    color=(40, 80, 120), dark_color=(40, 80, 150))
+                                          color=(40, 80, 120), dark_color=(40, 80, 150))
         self.thirst_level_button = Button('Уровень 3', 100, width // 2 + 600, height // 2,
-                                   color=(120, 80, 40), dark_color=(150, 80, 40))
+                                          color=(120, 80, 40), dark_color=(150, 80, 40))
         self.back_button = Button('Назад', 80, width // 2, height // 2 + 200, color=(130, 130, 130))
 
         self.lst_buttons = [self.first_level_button, self.second_level_button, self.thirst_level_button,
@@ -33,23 +31,28 @@ class Levels_menu:
             if button.check_click(mouse_pos):
                 if button == self.first_level_button:
                     self.running = False
+                    self.main.start()
                 if button == self.second_level_button:
-                    pass
+                    self.running = False
+                    self.main.start()
                 if button == self.thirst_level_button:
-                    pass
+                    self.running = False
+                    self.main.start()
                 if button == self.back_button:
                     self.running = False
-
+                    self.main.go_start_window()
 
     def render(self):
         self.screen.blit(self.fon, (0, 0))
         for button in self.lst_buttons:
             button.render(self.screen)
         self.main_screen.sc.blit(self.screen, (0, 0))
+        self.main_screen.render_cursor()
 
     def start(self):
         fps = 120
         clock = pygame.time.Clock()
+
         self.running = True
         while self.running:
             for event in pygame.event.get():

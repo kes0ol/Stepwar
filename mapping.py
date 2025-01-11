@@ -12,7 +12,7 @@ from widgets import Button
 
 
 class Screen:
-    def __init__(self, size):
+    def __init__(self, size, main):
         self.gameplay = False
         self.back_to_menu = False
         self.choose_unit = None
@@ -20,10 +20,12 @@ class Screen:
         self.size = self.width, self.height = size
         self.sc = pygame.display.set_mode(self.size, pygame.FULLSCREEN)
 
+        self.main = main
+
         self.board = Board(18, 10, self.size)
         self.button_start_game = Button('Начать игру', 38, 20, self.height - 20, coord_type="bottomleft")
         self.button_next_step = Button('Следующий ход', 38, 120, self.height - 20, coord_type="midbottom")
-        self.back_button = Button('Вернуться в главное меню', 40, self.width - 20, self.height - 20,
+        self.back_button = Button('Вернуться в список уровней', 40, self.width - 20, self.height - 20,
                                   color=(200, 75, 75),
                                   dark_color=(150, 25, 25), coord_type="bottomright")
 
@@ -96,7 +98,8 @@ class Screen:
             self.gameplay = True
         if not self.back_to_menu and self.back_button.check_click(mouse_pos):
             self.back_to_menu = True
-            self.board.clear_board(self.icon_swordsman, self.icon_archer, self.icon_cavalry, self.icon_dragon)
+            self.board.clear_board(self)
+            self.main.start_screen.levels_menu.start()
 
 
 class Board:
@@ -242,22 +245,22 @@ class Board:
         if cell[0] >= 0 and cell[1] >= 0:
             self.on_click(cell, mouse_button)
 
-    def clear_board(self, icon_swordsman, icon_archer, icon_cavalry, icon_dragon):
+    def clear_board(self, screen):
         self.board = [[0] * self.width for _ in range(self.height)]
         self.landscape = [[0] * self.width for _ in range(self.height)]
 
         swordsman.swordsmans.empty()
-        swordsman.swordsmans.add(icon_swordsman)
-        swordsman.stock = icon_swordsman.stock
+        swordsman.swordsmans.add(screen.icon_swordsman)
+        swordsman.stock = screen.icon_swordsman.stock
         archer.archers.empty()
-        archer.archers.add(icon_archer)
-        archer.stock = icon_archer.stock
+        archer.archers.add(screen.icon_archer)
+        archer.stock = screen.icon_archer.stock
         cavalry.cavalrys.empty()
-        cavalry.cavalrys.add(icon_cavalry)
-        cavalry.stock = icon_cavalry.stock
+        cavalry.cavalrys.add(screen.icon_cavalry)
+        cavalry.stock = screen.icon_cavalry.stock
         dragon.dragons.empty()
-        dragon.dragons.add(icon_dragon)
-        dragon.stock = icon_dragon.stock
+        dragon.dragons.add(screen.icon_dragon)
+        dragon.stock = screen.icon_dragon.stock
 
         enemys.swordsmans.empty()
         enemys.archers.empty()

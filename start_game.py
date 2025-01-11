@@ -2,8 +2,6 @@ import sys
 import random
 import pygame
 
-import start_window
-
 import enemys
 import swordsman
 import archer
@@ -12,10 +10,10 @@ import dragon
 import castle
 
 
-def start(screen, size):
+def start(screen):
     lst_surfaces = []
-
     enemys_move(screen)
+
     while screen.gameplay:
         fps = 120
         clock = pygame.time.Clock()
@@ -30,12 +28,10 @@ def start(screen, size):
                     new_step()
                     enemys_move(screen)
                 if select_button == 'back_to_menu':
-                    new_step()
                     screen.gameplay = False
-                    screen.board.clear_board(screen.icon_swordsman, screen.icon_archer, screen.icon_cavalry,
-                                             screen.icon_dragon)
-                    start_screen = start_window.Start_window(screen, size)
-                    start_window.Start_window.start(start_screen)
+
+                    new_step()
+                    screen.board.clear_board(screen)
 
                 cell_coords = screen.board.get_cell(event.pos)
                 unit, is_choose_unit = choose_unit(screen, cell_coords)

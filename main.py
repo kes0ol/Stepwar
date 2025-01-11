@@ -8,32 +8,44 @@ import start_window
 class Main:
     def __init__(self):
         self.size = pygame.display.get_desktop_sizes()[0]
-        self.screen = mapping.Screen(self.size)
-        self.start_screen = start_window.Start_window(self.screen, self.size)
+        self.screen = mapping.Screen(self.size, self)
+
+        self.fps = 120
+        self.clock = pygame.time.Clock()
 
         self.running = True
 
-    def start(self):
-        while self.running:
-            self.start_screen.start()
-            if self.screen.back_to_menu:
-                self.start_screen.running = True
-                self.start_screen.start()
-                self.screen.back_to_menu = False
-            if self.screen.gameplay:
-                start_game.start(self.screen, self.size)
+    def go_start_window(self):
+        self.start_screen = start_window.Start_window(self.screen, self.size, self)
+        self.start_screen.start()
 
+    def start(self):
+        self.start_screen.running = False
+        self.screen.gameplay = False
+        self.screen.back_to_menu = False
+
+        while self.running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.screen.get_click(event.pos, event.button)
 
+            if self.screen.back_to_menu:
+                self.start_screen.running = True
+                self.start_screen.start()
+                self.screen.back_to_menu = False
+
+            if self.screen.gameplay:
+                start_game.start(self.screen)
+                self.start_screen.levels_menu.start()
+
             self.screen.sc.fill((0, 0, 0))
             self.screen.render()
 
             start_game.show_stats(self.screen)
-            clock.tick(fps)
+
+            self.clock.tick(self.fps)
             pygame.display.flip()
         pygame.quit()
 
@@ -46,7 +58,5 @@ if __name__ == '__main__':
     pygame.mixer.music.play(-1)
     pygame.time.delay(20)
 
-    fps = 120
-    clock = pygame.time.Clock()
-
-    Main().start()
+    main_screen = Main()
+    main_screen.go_start_window()

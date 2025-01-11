@@ -7,15 +7,16 @@ from widgets import Button
 
 
 class Start_window:
-    def __init__(self, screen, size):
+    def __init__(self, screen, size, main):
         self.running = True
         self.size = self.width, self.height = size
         self.main_screen = screen
+        self.main = main
 
         self.choose_level = Button('Уровни', 80, self.width // 2, self.height // 2 - 400, color=(255, 255, 0),
                                    dark_color=(0, 255, 0))
         self.choose_level_button = Button('Уровни', 80, self.width // 2, self.height // 2 - 400, color=(255, 255, 0),
-                                       dark_color=(0, 255, 0))
+                                          dark_color=(0, 255, 0))
 
         self.play_game_button = Button('Запустить игру', 80, self.width // 2, self.height // 2 - 200,
                                        color=(255, 255, 0),
@@ -28,7 +29,7 @@ class Start_window:
         self.lst_buttons = [self.play_game_button, self.setting_button, self.exit_button, self.choose_level_button]
 
         self.settings_screen = settings.Settings_window(self.main_screen, self.size)
-        self.levels_menu = levels.Levels_menu(self.main_screen, self.size)
+        self.levels_menu = levels.Levels_menu(self.main_screen, self.size, self.main)
 
         self.fon = pygame.image.load('images/fon.png')
         self.fon = pygame.transform.scale(self.fon, (self.width, self.height))
@@ -37,6 +38,7 @@ class Start_window:
         for button in lst:
             if button.check_click(mouse_pos):
                 if button == self.choose_level_button:
+                    self.running = False
                     self.levels_menu.start()
                 if button == self.play_game_button:
                     self.running = False
