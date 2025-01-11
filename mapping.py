@@ -63,7 +63,7 @@ class Screen:
         self.sc.blit(self.cursor, pygame.mouse.get_pos())
 
     def render(self):
-        landscapes.grasses.draw(self.sc)
+        landscapes.landscapes.draw(self.sc)
 
         self.board.render(self.sc)
 
@@ -112,44 +112,11 @@ class Board:
         self.top = self.cell_size // 2
 
         self.board = [[0] * width for _ in range(height)]
-        self.landscape = [[0] * width for _ in range(height)]
+        self.field = [[0] * width for _ in range(height)]
 
         self.set_team()
         self.set_enemys()
         self.set_landscapes()
-
-    def set_enemys(self):
-        with open('levels/1.txt', mode='rt', encoding='utf-8') as level:
-            level_lst = [string.strip('\n').split(', ') for string in level]
-            for i in range(len(level_lst)):
-                for j in range(len(level_lst[i])):
-                    x, y = j * self.cell_size + self.left, i * self.cell_size + self.top
-                    if level_lst[i][j] == 's':
-                        enemys.Enemy('Рыцарь', x, y, 1, 1, 100, 20, 'images/enemy_images/swordsman2.png',
-                                     self.cell_size,
-                                     enemys.swordsmans)
-                        self.board[i][j] = 2
-                    if level_lst[i][j] == 'a':
-                        enemys.Enemy('Лучник', x, y, 1, 3, 40, 30, 'images/enemy_images/archer.png',
-                                     self.cell_size,
-                                     enemys.archers)
-                        self.board[i][j] = 2
-                    if level_lst[i][j] == 'c':
-                        enemys.Enemy('Кавалерия', x, y, 3, 1, 70, 25, 'images/enemy_images/cavalry.png',
-                                     self.cell_size,
-                                     enemys.cavalrys)
-                        self.board[i][j] = 2
-                    if level_lst[i][j] == 'd':
-                        enemys.Enemy('Дракон', x, y, 4, 2, 150, 30, 'images/enemy_images/dragon.png',
-                                     self.cell_size,
-                                     enemys.dragons)
-                        self.board[i][j] = 2
-                    if level_lst[i][j] == 'X':
-                        enemys.Enemy('Замок', x, y, 0, 0, 500, 0, 'images/enemy_images/castle.jpg',
-                                     self.cell_size * 2,
-                                     enemys.castles)
-                        self.board[i][j], self.board[i + 1][j] = 3, 3
-                        self.board[i][j + 1], self.board[i + 1][j + 1] = 3, 3
 
     def set_team(self):
         for i in range(len(self.board)):
@@ -159,15 +126,53 @@ class Board:
                                             self.cell_size)
                     self.board[j][i], self.board[j][i + 1], self.board[j + 1][i], self.board[j + 1][i + 1] = 4, 4, 4, 4
 
-    def set_landscapes(self):
-        for i in range(len(self.board)):
-            for j in range(len(self.board[i])):
-                x = j * self.cell_size + self.left
-                y = i * self.cell_size + self.top
+    def set_enemys(self):
+        with open('levels/1/enemys.txt', mode='rt', encoding='utf-8') as enemys_board:
+            level_lst = [string.strip('\n').split(', ') for string in enemys_board]
+            for i in range(len(level_lst)):
+                for j in range(len(level_lst[i])):
+                    x, y = j * self.cell_size + self.left, i * self.cell_size + self.top
+                    if level_lst[i][j] == 's':
+                        enemys.Enemy('Рыцарь', x, y, 1, 1, 100, 20, 'images/enemy_images/swordsman2.png',
+                                     self.cell_size,
+                                     enemys.swordsmans)
+                        self.board[i][j] = 2
+                    elif level_lst[i][j] == 'a':
+                        enemys.Enemy('Лучник', x, y, 1, 3, 40, 30, 'images/enemy_images/archer.png',
+                                     self.cell_size,
+                                     enemys.archers)
+                        self.board[i][j] = 2
+                    elif level_lst[i][j] == 'c':
+                        enemys.Enemy('Кавалерия', x, y, 3, 1, 70, 25, 'images/enemy_images/cavalry.png',
+                                     self.cell_size,
+                                     enemys.cavalrys)
+                        self.board[i][j] = 2
+                    elif level_lst[i][j] == 'd':
+                        enemys.Enemy('Дракон', x, y, 4, 2, 150, 30, 'images/enemy_images/dragon.png',
+                                     self.cell_size,
+                                     enemys.dragons)
+                        self.board[i][j] = 2
+                    elif level_lst[i][j] == 'X':
+                        enemys.Enemy('Замок', x, y, 0, 0, 500, 0, 'images/enemy_images/castle.jpg',
+                                     self.cell_size * 2,
+                                     enemys.castles)
+                        self.board[i][j], self.board[i + 1][j] = 3, 3
+                        self.board[i][j + 1], self.board[i + 1][j + 1] = 3, 3
 
-                if self.landscape[i][j] == 0:
-                    landscapes.Grass(x, y, self.cell_size, landscapes.grasses)
-                    self.landscape[i][j] = 1
+    def set_landscapes(self):
+        with open('levels/1/field.txt', mode='rt', encoding='utf-8') as land:
+            field_lst = [string.strip('\n').split(', ') for string in land]
+            for i in range(len(field_lst)):
+                for j in range(len(field_lst[i])):
+                    x, y = j * self.cell_size + self.left, i * self.cell_size + self.top
+
+                    if field_lst[i][j] == '0':
+                        landscapes.Landscape('grass', x, y, 'images/landscapes/grass.jpeg', self.cell_size,
+                                             landscapes.landscapes)
+                    elif field_lst[i][j] == 'm':
+                        landscapes.Landscape('mountains', x, y, 'images/landscapes/skala.png', self.cell_size,
+                                             landscapes.landscapes)
+                        self.field[i][j] = 1
 
     def render(self, screen):
         for i in range(len(self.board)):
@@ -247,7 +252,7 @@ class Board:
 
     def clear_board(self, screen):
         self.board = [[0] * self.width for _ in range(self.height)]
-        self.landscape = [[0] * self.width for _ in range(self.height)]
+        self.field = [[0] * self.width for _ in range(self.height)]
 
         swordsman.swordsmans.empty()
         swordsman.swordsmans.add(screen.icon_swordsman)

@@ -67,7 +67,8 @@ def enemys_move(screen):
             select_cell = screen.board.get_cell(select_coords)
 
             if (screen.board.left <= select_coords[0] <= width and screen.board.top <= select_coords[1] <= height and
-                    screen.board.board[select_cell[1]][select_cell[0]] == 0 and select_cell != (-1, -1)):
+                    not screen.board.board[select_cell[1]][select_cell[0]] and
+                    not screen.board.field[select_cell[1]][select_cell[0]] and select_cell != (-1, -1)):
                 screen.board.board[now_cell[1]][now_cell[0]] = 0
                 screen.board.board[select_cell[1]][select_cell[0]] = 2
                 unit.rect.x, unit.rect.y = select_coords
@@ -222,8 +223,8 @@ def add_step_surfaces(screen, lst_steps, lst_surfaces, x, y, cell_x, cell_y, dx,
     if ((dx, dy) != (0, 0) and
             0 <= cell_x + dx < len(screen.board.board[0]) and
             0 <= cell_y + dy < len(screen.board.board)):
-        if (screen.board.board[cell_y + dy][cell_x + dx] == 0 and not is_attack or
-                screen.board.board[cell_y + dy][cell_x + dx] in [2, 3] and is_attack):
+        if (not screen.board.board[cell_y + dy][cell_x + dx] and not screen.board.field[cell_y + dy][cell_x + dx] and
+                not is_attack or screen.board.board[cell_y + dy][cell_x + dx] in [2, 3] and is_attack):
             lst_steps.append((cell_y + dy, cell_x + dx))
 
             surface_coords_x = x + dx * screen.board.cell_size
