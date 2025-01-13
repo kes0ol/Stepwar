@@ -133,27 +133,27 @@ class Board:
                 for j in range(len(level_lst[i])):
                     x, y = j * self.cell_size + self.left, i * self.cell_size + self.top
                     if level_lst[i][j] == 's':
-                        enemys.Enemy('Рыцарь', x, y, 1, 1, 100, 20, 'images/enemy_images/swordsman2.png',
+                        enemys.Enemy('swordsman', x, y, 1, 1, 100, 20, 'images/enemy_images/swordsman2.png',
                                      self.cell_size,
                                      enemys.swordsmans)
                         self.board[i][j] = 2
                     elif level_lst[i][j] == 'a':
-                        enemys.Enemy('Лучник', x, y, 1, 3, 40, 30, 'images/enemy_images/archer.png',
+                        enemys.Enemy('archer', x, y, 1, 3, 40, 30, 'images/enemy_images/archer.png',
                                      self.cell_size,
                                      enemys.archers)
                         self.board[i][j] = 2
                     elif level_lst[i][j] == 'c':
-                        enemys.Enemy('Кавалерия', x, y, 3, 1, 70, 25, 'images/enemy_images/cavalry.png',
+                        enemys.Enemy('cavalry', x, y, 3, 1, 70, 25, 'images/enemy_images/cavalry.png',
                                      self.cell_size,
                                      enemys.cavalrys)
                         self.board[i][j] = 2
                     elif level_lst[i][j] == 'd':
-                        enemys.Enemy('Дракон', x, y, 4, 2, 150, 30, 'images/enemy_images/dragon.png',
+                        enemys.Enemy('dragon', x, y, 4, 2, 150, 30, 'images/enemy_images/dragon.png',
                                      self.cell_size,
                                      enemys.dragons)
                         self.board[i][j] = 2
                     elif level_lst[i][j] == 'X':
-                        enemys.Enemy('Замок', x, y, 0, 0, 500, 0, 'images/enemy_images/castle.jpg',
+                        enemys.Enemy('castle', x, y, 0, 0, 500, 0, 'images/enemy_images/castle.jpg',
                                      self.cell_size * 2,
                                      enemys.castles)
                         self.board[i][j], self.board[i + 1][j] = 3, 3
@@ -193,7 +193,7 @@ class Board:
     def get_cell(self, mouse_pos):
         xmax = self.left + self.width * self.cell_size
         ymax = self.top + self.height * self.cell_size
-        if not (self.left < mouse_pos[0] < xmax and self.top < mouse_pos[1] < ymax):
+        if not (self.left <= mouse_pos[0] <= xmax and self.top <= mouse_pos[1] <= ymax):
             return -1, -1
         n_x = (mouse_pos[0] - self.left) // self.cell_size
         n_y = (mouse_pos[1] - self.top) // self.cell_size
@@ -203,7 +203,7 @@ class Board:
     def on_click(self, cell_coords, mouse_button):
         x, y = cell_coords
         if mouse_button == 1:
-            if x <= 6:
+            if x <= 6 and self.field[y][x] in (0, 2):
                 if self.choosen_unit == 'swordsman' and self.board[y][x] == 0 and swordsman.stock > 0:
                     swordsman.Swordsman(x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
                                         swordsman.swordsmans)
