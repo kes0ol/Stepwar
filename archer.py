@@ -19,6 +19,7 @@ class Archer(pygame.sprite.Sprite):
         self.stock = 8
         self.hp = 40
         self.damage = 30
+        self.name = 'archer'
 
     def update(self, *args, **kwargs):
         self.x_now, self.y_now = args[0]

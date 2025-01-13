@@ -166,13 +166,21 @@ class Board:
                 for j in range(len(field_lst[i])):
                     x, y = j * self.cell_size + self.left, i * self.cell_size + self.top
 
-                    if field_lst[i][j] == '0':
-                        landscapes.Landscape('grass', x, y, 'images/landscapes/grass.jpeg', self.cell_size,
-                                             landscapes.landscapes)
-                    elif field_lst[i][j] == 'm':
+                    landscapes.Landscape('grass', x, y, 'images/landscapes/grass.jpeg', self.cell_size,
+                                         landscapes.landscapes)
+
+                    if field_lst[i][j] == 'm':
                         landscapes.Landscape('mountains', x, y, 'images/landscapes/skala.png', self.cell_size,
                                              landscapes.landscapes)
                         self.field[i][j] = 1
+                    elif field_lst[i][j] == 'h':
+                        landscapes.Landscape('hill', x, y, 'images/landscapes/hill.png', self.cell_size,
+                                             landscapes.landscapes)
+                        self.field[i][j] = 2
+                    elif field_lst[i][j] == 'r':
+                        landscapes.Landscape('river', x, y, 'images/landscapes/river.png', self.cell_size,
+                                             landscapes.landscapes)
+                        self.field[i][j] = 3
 
     def render(self, screen):
         for i in range(len(self.board)):

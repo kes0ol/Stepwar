@@ -219,7 +219,7 @@ def choose_unit(screen, cell_coords):
     return -1, -1
 
 
-def add_step_surfaces(screen, lst_steps, lst_surfaces, cell_x, cell_y, unit_range, is_attack):
+def add_step_surfaces(screen, unit, lst_steps, lst_surfaces, cell_x, cell_y, unit_range, is_attack):
     def check_borders(cell_x, cell_y, dx, dy):
         if ((dx, dy) != (0, 0) and
                 0 <= cell_x + dx < len(screen.board.board[0]) and
@@ -250,8 +250,18 @@ def add_step_surfaces(screen, lst_steps, lst_surfaces, cell_x, cell_y, unit_rang
                                 lst_surfaces.append(
                                     (surface, (surface_coords_x, surface_coords_y),
                                      (screen.board.cell_size, screen.board.cell_size)))
-                            if ran - 1 > 0:
-                                add(ran - 1, (cell_x + dx, cell_y + dy))
+
+                            minus = 1
+
+                            if screen.board.field[cell_y][cell_x] == 2:
+                                minus = 2
+
+                            if screen.board.field[cell_y][cell_x] == 3:
+                                if unit.name != 'dragon':
+                                    pass
+
+                            if ran - minus > 0:
+                                add(ran - minus, (cell_x + dx, cell_y + dy))
 
         add(r, (cell_x, cell_y))
 
@@ -281,12 +291,11 @@ def select_surfaces(screen, unit, cell_coords, lst_surfaces, is_attack):
         unit_range = unit.distance_attack
 
     groups = [swordsman.swordsmans, archer.archers, cavalry.cavalrys, dragon.dragons]
-    names = ['swordsman', 'archer', 'cavalry', 'dragon']
 
     for id in range(len(groups)):
         if unit in groups[id]:
-            how_choose_unit = names[id]
-            add_step_surfaces(screen, lst_steps, lst_surfaces, cell_x, cell_y, unit_range, is_attack)
+            how_choose_unit = unit.name
+            add_step_surfaces(screen, unit, lst_steps, lst_surfaces, cell_x, cell_y, unit_range, is_attack)
             return unit, lst_steps, how_choose_unit
 
 

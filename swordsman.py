@@ -19,6 +19,7 @@ class Swordsman(pygame.sprite.Sprite):
         self.stock = 10
         self.hp = 100
         self.damage = 20
+        self.name = 'swordsman'
 
     def update(self, *args, **kwargs):
         self.x_now, self.y_now = args[0]
