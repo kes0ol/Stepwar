@@ -3,6 +3,7 @@ import sys
 import pygame
 import settings
 import levels
+import reference
 from widgets import Button
 
 
@@ -13,23 +14,25 @@ class Start_window:
         self.main_screen = screen
         self.main = main
 
-        self.choose_level = Button('Уровни', 80, self.width // 2, self.height // 2 - 400, color=(255, 255, 0),
-                                   dark_color=(0, 255, 0))
-        self.choose_level_button = Button('Уровни', 80, self.width // 2, self.height // 2 - 400, color=(255, 255, 0),
+
+        self.choose_level_button = Button('Уровни', 100, self.width // 2, self.height // 2 - 350, color=(255, 255, 0),
                                           dark_color=(0, 255, 0))
 
-        self.play_game_button = Button('Запустить игру', 80, self.width // 2, self.height // 2 - 200,
-                                       color=(255, 255, 0),
-                                       dark_color=(0, 255, 0))
-        self.setting_button = Button('Настройки', 80, self.width // 2, self.height // 2, color=(255, 255, 0),
+        self.setting_button = Button('Настройки', 100, self.width // 2, self.height // 2 - 200, color=(255, 255, 0),
                                      dark_color=(50, 50, 50))
-        self.exit_button = Button('Выйти', 80, self.width // 2, self.height // 2 + 200, color=(255, 255, 0),
+
+        self.ref_button = Button('Справка', 100, self.width // 2, self.height // 2 - 50, color=(255, 255, 0),
+                                  dark_color=(0, 255, 0))
+
+        self.exit_button = Button('Выйти', 100, self.width // 2, self.height // 2 + 100, color=(255, 255, 0),
                                   dark_color=(100, 0, 0))
 
-        self.lst_buttons = [self.play_game_button, self.setting_button, self.exit_button, self.choose_level_button]
+        self.lst_buttons = [self.setting_button, self.exit_button, self.choose_level_button,
+                            self.ref_button]
 
         self.settings_screen = settings.Settings_window(self.main_screen, self.size)
-        self.levels_menu = levels.Levels_menu(self.main_screen, self.size, self.main)
+        self.ref_screen = reference.Reference_Window(self.main_screen, self.size)
+        self.levels_menu = levels.Levels_menu(self.main_screen, self.size, main)
 
         self.fon = pygame.image.load('images/fon.png')
         self.fon = pygame.transform.scale(self.fon, (self.width, self.height))
@@ -40,10 +43,10 @@ class Start_window:
                 if button == self.choose_level_button:
                     self.running = False
                     self.levels_menu.start()
-                if button == self.play_game_button:
-                    self.running = False
                 if button == self.setting_button:
                     self.settings_screen.start()
+                if button == self.ref_button:
+                    self.ref_screen.start()
                 if button == self.exit_button:
                     self.running = False
                     pygame.quit()
