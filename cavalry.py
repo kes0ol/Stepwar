@@ -41,8 +41,8 @@ class Cavalry(pygame.sprite.Sprite):
                                    self.damage)
 
 
-def set_view_stock(screen, coords):
-    font = pygame.font.Font(None, 50)
+def set_view_stock(screen, coords, size):
+    font = pygame.font.Font(None, size)
     text = font.render(f'{stock}', True, 'white')
     screen.blit(text, coords)
 

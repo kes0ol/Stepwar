@@ -23,19 +23,34 @@ class Screen:
         self.main = main
 
         self.board = Board(18, 10, self.size)
-        self.button_start_game = Button('Начать игру', 38, 20, self.height - 20, coord_type="bottomleft")
-        self.button_next_step = Button('Следующий ход', 38, 120, self.height - 20, coord_type="midbottom")
-        self.back_button = Button('Вернуться в список уровней', 40, self.width - 20, self.height - 20,
+        self.button_start_game = Button('Начать игру', self.board.cell_size // 2, 20,
+                                        self.height - self.board.cell_size // 2,
+                                        coord_type="bottomleft")
+        self.button_next_step = Button('Следующий ход', self.board.cell_size // 2, 120,
+                                       self.height - self.board.cell_size // 2,
+                                       coord_type="midbottom")
+        self.back_button = Button('Вернуться в список уровней', self.board.cell_size // 2,
+                                  self.width - self.board.cell_size // 2,
+                                  self.height - self.board.cell_size // 2,
                                   color=(200, 75, 75),
                                   dark_color=(150, 25, 25), coord_type="bottomright")
 
-        self.icon_swordsman = swordsman.Swordsman(125, 25, self.board.cell_size * 1.5, swordsman.swordsmans)
+        self.icon_swordsman = swordsman.Swordsman(round(self.board.cell_size * 1.7),
+                                                  self.board.top + (0 * self.board.cell_size * 1.7),
+                                                  self.board.cell_size * 1.5, swordsman.swordsmans)
+        self.icon_archer = archer.Archer(round(self.board.cell_size * 1.7),
+                                         self.board.top + (1 * self.board.cell_size * 1.7), self.board.cell_size * 1.5,
+                                         archer.archers)
+        self.icon_cavalry = cavalry.Cavalry(round(self.board.cell_size * 1.7),
+                                            self.board.top + (2 * self.board.cell_size * 1.7),
+                                            self.board.cell_size * 1.5, cavalry.cavalrys)
+        self.icon_dragon = dragon.Dragon(round(self.board.cell_size * 1.7),
+                                         self.board.top + (3 * self.board.cell_size * 1.7), self.board.cell_size * 1.5,
+                                         dragon.dragons)
+
         swordsman.stock = self.icon_swordsman.stock
-        self.icon_archer = archer.Archer(125, 125, self.board.cell_size * 1.5, archer.archers)
         archer.stock = self.icon_archer.stock
-        self.icon_cavalry = cavalry.Cavalry(125, 225, self.board.cell_size * 1.5, cavalry.cavalrys)
         cavalry.stock = self.icon_cavalry.stock
-        self.icon_dragon = dragon.Dragon(125, 325, self.board.cell_size * 1.5, dragon.dragons)
         dragon.stock = self.icon_dragon.stock
 
         self.cursor = pygame.image.load('images/cursor.PNG')
@@ -68,13 +83,17 @@ class Screen:
         self.board.render(self.sc)
 
         swordsman.swordsmans.draw(self.sc)
-        swordsman.set_view_stock(self.sc, (50, 50))
+        swordsman.set_view_stock(self.sc, (self.board.cell_size, self.board.top * 2 + (0 * self.board.cell_size * 1.8)),
+                                 round(self.board.cell_size * 0.66))
         archer.archers.draw(self.sc)
-        archer.set_view_stock(self.sc, (50, 150))
+        archer.set_view_stock(self.sc, (self.board.cell_size, self.board.top * 2 + (1 * self.board.cell_size * 1.8)),
+                              round(self.board.cell_size * 0.66))
         cavalry.cavalrys.draw(self.sc)
-        cavalry.set_view_stock(self.sc, (50, 250))
+        cavalry.set_view_stock(self.sc, (self.board.cell_size, self.board.top * 2 + (2 * self.board.cell_size * 1.8)),
+                               round(self.board.cell_size * 0.66))
         dragon.dragons.draw(self.sc)
-        dragon.set_view_stock(self.sc, (50, 350))
+        dragon.set_view_stock(self.sc, (self.board.cell_size, self.board.top * 2 + (3 * self.board.cell_size * 1.8)),
+                              round(self.board.cell_size * 0.66))
         castle.castles.draw(self.sc)
 
         enemys.swordsmans.draw(self.sc)
@@ -107,7 +126,7 @@ class Board:
         self.width = width
         self.height = height
 
-        self.cell_size = round(size[0] / 22)
+        self.cell_size = round(size[0] / 22)-10
         self.left = self.cell_size * 4
         self.top = self.cell_size // 2
 
