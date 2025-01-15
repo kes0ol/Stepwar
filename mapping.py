@@ -104,6 +104,8 @@ class Screen:
 
 class Board:
     def __init__(self, width, height, size):
+        self.level = '1'
+
         self.width = width
         self.height = height
 
@@ -114,6 +116,7 @@ class Board:
         self.board = [[0] * width for _ in range(height)]
         self.field = [[0] * width for _ in range(height)]
 
+    def set_map(self):
         self.set_team()
         self.set_enemys()
         self.set_landscapes()
@@ -127,7 +130,7 @@ class Board:
                     self.board[j][i], self.board[j][i + 1], self.board[j + 1][i], self.board[j + 1][i + 1] = 4, 4, 4, 4
 
     def set_enemys(self):
-        with open('levels/1/enemys.txt', mode='rt', encoding='utf-8') as enemys_board:
+        with open(f'levels/{self.level}/enemys.txt', mode='rt', encoding='utf-8') as enemys_board:
             level_lst = [string.strip('\n').split(', ') for string in enemys_board]
             for i in range(len(level_lst)):
                 for j in range(len(level_lst[i])):
@@ -160,25 +163,25 @@ class Board:
                         self.board[i][j + 1], self.board[i + 1][j + 1] = 3, 3
 
     def set_landscapes(self):
-        with open('levels/1/field.txt', mode='rt', encoding='utf-8') as land:
+        with open(f'levels/{self.level}/field.txt', mode='rt', encoding='utf-8') as land:
             field_lst = [string.strip('\n').split(', ') for string in land]
             for i in range(len(field_lst)):
                 for j in range(len(field_lst[i])):
                     x, y = j * self.cell_size + self.left, i * self.cell_size + self.top
 
-                    landscapes.Landscape('grass', x, y, 'images/landscapes/grass.jpeg', self.cell_size,
+                    landscapes.Landscape('grass', x, y, 'images/landscapes/grass.jpeg', self.cell_size, 0, 0,
                                          landscapes.landscapes)
 
                     if field_lst[i][j] == 'm':
-                        landscapes.Landscape('mountains', x, y, 'images/landscapes/skala.png', self.cell_size,
-                                             landscapes.landscapes)
+                        landscapes.Landscape('mountains', x, y, 'images/landscapes/skala.png', self.cell_size, 0,
+                                             'запрещено', landscapes.landscapes)
                         self.field[i][j] = 1
                     elif field_lst[i][j] == 'h':
-                        landscapes.Landscape('hill', x, y, 'images/landscapes/hill.png', self.cell_size,
+                        landscapes.Landscape('hill', x, y, 'images/landscapes/hill.png', self.cell_size, 15, -1,
                                              landscapes.landscapes)
                         self.field[i][j] = 2
                     elif field_lst[i][j] == 'r':
-                        landscapes.Landscape('river', x, y, 'images/landscapes/river.png', self.cell_size,
+                        landscapes.Landscape('river', x, y, 'images/landscapes/river.png', self.cell_size, 0, 0,
                                              landscapes.landscapes)
                         self.field[i][j] = 3
 
@@ -274,6 +277,7 @@ class Board:
         dragon.dragons.empty()
         dragon.dragons.add(screen.icon_dragon)
         dragon.stock = screen.icon_dragon.stock
+        castle.castles.empty()
 
         enemys.swordsmans.empty()
         enemys.archers.empty()

@@ -18,6 +18,7 @@ class Enemy(pygame.sprite.Sprite):
         self.distance_attack = distance_attack
         self.hp = hp
         self.damage = damage
+        self.damage_plus = 0
         self.name = name_unit
 
 

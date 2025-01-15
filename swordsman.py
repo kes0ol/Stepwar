@@ -13,12 +13,13 @@ class Swordsman(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-        self.step = 1
+        self.step = 2
         self.do_damage = True
         self.distance_attack = 1
-        self.stock = 10
+        self.stock = 4
         self.hp = 100
         self.damage = 20
+        self.damage_plus = 0
         self.name = 'swordsman'
 
     def update(self, *args, **kwargs):
@@ -26,20 +27,21 @@ class Swordsman(pygame.sprite.Sprite):
         self.select_y, self.select_x = args[1]
         self.screen = args[2]
         self.is_attack = args[3]
+        self.damage_plus = 0
 
         if not self.is_attack:
             self.screen.board.board[self.y_now][self.x_now] = 0
             self.screen.board.board[self.select_y][self.select_x] = 1
 
-            self.x = (self.select_x - self.x_now) * self.screen.board.cell_size
-            self.y = (self.select_y - self.y_now) * self.screen.board.cell_size
+            x = (self.select_x - self.x_now) * self.screen.board.cell_size
+            y = (self.select_y - self.y_now) * self.screen.board.cell_size
 
-            self.rect = self.rect.move(self.x, self.y)
+            self.rect = self.rect.move(x, y)
         else:
             start_game.give_damage(self.screen, (
                 self.select_x * self.screen.board.cell_size + self.screen.board.left,
                 self.select_y * self.screen.board.cell_size + self.screen.board.top), (self.select_x, self.select_y),
-                                   self.damage)
+                                   self.damage + self.damage_plus)
 
 
 def set_view_stock(screen, coords):

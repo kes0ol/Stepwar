@@ -19,11 +19,13 @@ class Main:
         self.start_screen = start_window.Start_window(self.screen, self.size, self)
         self.start_screen.start()
 
-    def start(self):
+    def start(self, level):
         self.start_screen.running = False
         self.screen.gameplay = False
         self.screen.back_to_menu = False
 
+        self.screen.board.level = level
+        self.screen.board.clear_board(self.screen)
         while self.running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
