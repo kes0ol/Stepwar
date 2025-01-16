@@ -124,7 +124,7 @@ def show_stats(screen):
 
     for sword in swordsman.swordsmans:
         if sword.rect.collidepoint(pygame.mouse.get_pos()):
-            stats = [
+            stat s = [
                 f'Тип юнита: Рыцарь',
                 f'Здоровье: {sword.hp}',
                 f'Урон: {sword.damage}',
