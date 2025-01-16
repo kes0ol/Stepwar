@@ -60,6 +60,10 @@ class Levels_menu:
                     self.running = False
                     pygame.quit()
                     sys.exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        self.running = False
+                        self.main.go_start_window()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.check_click(event.pos, self.lst_buttons)
             self.screen.fill((0, 0, 0))

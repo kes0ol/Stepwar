@@ -30,6 +30,11 @@ class Main:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        self.screen.back_to_menu = True
+                        self.screen.board.clear_board(self.screen)
+                        self.start_screen.levels_menu.start()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.screen.get_click(event.pos, event.button)
 

@@ -87,6 +87,7 @@ class Screen:
 
         if not self.gameplay:
             self.button_start_game.render(self.sc)
+            self.board.render_area(self.sc)
         else:
             self.button_next_step.render(self.sc)
 
@@ -115,6 +116,29 @@ class Board:
 
         self.board = [[0] * width for _ in range(height)]
         self.field = [[0] * width for _ in range(height)]
+
+        self.allow_area = pygame.Surface((7 * self.cell_size, self.height * self.cell_size))
+        self.allow_area.fill('yellow')
+        self.allow_area.set_alpha(60)
+
+    def render(self, screen):
+        for i in range(len(self.board)):
+            for j in range(len(self.board[i])):
+                x = j * self.cell_size + self.left
+                y = i * self.cell_size + self.top
+
+                pygame.draw.rect(screen, 'white', (x, y, self.cell_size, self.cell_size), 1)
+
+    def render_area(self, screen):
+        for i in range(len(self.board)):
+            for j in range(7):
+                if self.field[i][j] == 0 and self.board[i][j] == 0:
+                    surface_coords_x = j * self.cell_size + self.left
+                    surface_coords_y = i * self.cell_size + self.top
+                    surface = pygame.surface.Surface((self.cell_size, self.cell_size))
+                    surface.fill('yellow')
+                    surface.set_alpha(50)
+                    screen.blit(surface, (surface_coords_x, surface_coords_y))
 
     def set_map(self):
         self.set_team()
@@ -184,14 +208,6 @@ class Board:
                         landscapes.Landscape('river', x, y, 'images/landscapes/river.png', self.cell_size, 0, 0,
                                              landscapes.landscapes)
                         self.field[i][j] = 3
-
-    def render(self, screen):
-        for i in range(len(self.board)):
-            for j in range(len(self.board[i])):
-                x = j * self.cell_size + self.left
-                y = i * self.cell_size + self.top
-
-                pygame.draw.rect(screen, 'white', (x, y, self.cell_size, self.cell_size), 1)
 
     def get_cell(self, mouse_pos):
         xmax = self.left + self.width * self.cell_size

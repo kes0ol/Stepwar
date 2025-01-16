@@ -64,6 +64,9 @@ class Settings_window:
                     self.running = False
                     pygame.quit()
                     sys.exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        self.running = False
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.check_click(event.pos, self.lst_buttons)
 

@@ -1,28 +1,37 @@
-import sys
 import random
+import sys
+
 import pygame
 
+import archer
+import castle
+import cavalry
+import dragon
 import enemys
 import landscapes
 import swordsman
-import archer
-import cavalry
-import dragon
-import castle
+
+is_win = None
 
 
 def start(screen):
     lst_surfaces = []
     enemys_move(screen)
 
+    fps = 120
+    clock = pygame.time.Clock()
     while screen.gameplay:
-        fps = 120
-        clock = pygame.time.Clock()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 screen.board.gameplay = False
                 pygame.quit()
                 sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    screen.gameplay = False
+                    new_step()
+                    screen.board.clear_board(screen)
+
             if event.type == pygame.MOUSEBUTTONDOWN:
                 select_button = check_click(screen, event.pos)
                 if select_button == 'new_step':
@@ -47,6 +56,66 @@ def start(screen):
         show_stats(screen)
         clock.tick(fps)
         pygame.display.flip()
+
+    end(screen)
+
+
+def end(screen):
+    run = True
+    screen.gameplay = True
+    surf = pygame.Surface((8 * screen.board.cell_size, 5 * screen.board.cell_size))
+
+    if is_win:
+        font = pygame.font.Font(None, 100)
+    else:
+        font = pygame.font.Font(None, 80)
+
+    fps = 120
+    clock = pygame.time.Clock()
+    while run:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+                pygame.quit()
+                sys.exit()
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    run = False
+                    screen.gameplay = False
+                    new_step()
+                    screen.board.clear_board(screen)
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                select_button = check_click(screen, event.pos)
+
+                if select_button == 'back_to_menu':
+                    run = False
+                    screen.gameplay = False
+                    new_step()
+                    screen.board.clear_board(screen)
+
+        screen.sc.fill((0, 0, 0))
+        screen.render()
+        show_stats(screen)
+        draw_end_surface(screen, surf, font)
+        clock.tick(fps)
+        pygame.display.flip()
+
+
+def draw_end_surface(screen, surf, font):
+    global is_win
+
+    if is_win:
+        text = font.render('Вы победили!', True, (255, 255, 255))
+    else:
+        text = font.render('Вас уничтожили!', True, (255, 255, 255))
+
+    surf.fill((0, 0, 0))
+    surf.set_alpha(100)
+
+    surf.blit(text, (50, 50))
+    screen.sc.blit(surf, (500, 250))
 
 
 def check_borders(screen, cell_x, cell_y, dx, dy):
@@ -119,6 +188,8 @@ def enemys_attack(screen, unit, now_cell):
                     can_attack.append((n_x, n_y))
 
     if len(can_attack) > 0:
+        global is_win
+
         select_attack = random.choice(can_attack)
         damage_castle = True
 
@@ -136,6 +207,8 @@ def enemys_attack(screen, unit, now_cell):
                                 for j in range(len(screen.board.board[i])):
                                     if screen.board.board[i][j] == 4:
                                         screen.board.board[i][j] = 0
+                            is_win = False
+                            screen.gameplay = False
                         damage_castle = False
                         break
                     break
@@ -360,6 +433,8 @@ def choose_attack(screen, lst_surfaces, unit, cell_coords, is_chose_unit, is_att
 
 
 def give_damage(screen, select_coords, select_cell, damage_team_unit):
+    global is_win
+
     damage_at_enemy_castle = True
 
     for group in [enemys.swordsmans, enemys.archers, enemys.cavalrys, enemys.dragons, enemys.castles]:
@@ -374,6 +449,8 @@ def give_damage(screen, select_coords, select_cell, damage_team_unit):
                             for j in range(len(screen.board.board[i])):
                                 if screen.board.board[i][j] == 3:
                                     screen.board.board[i][j] = 0
+                        is_win = False
+                        screen.gameplay = False
                     damage_at_enemy_castle = False
                     break
                 break
