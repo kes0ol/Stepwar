@@ -20,6 +20,8 @@ class Screen:
         self.size = self.width, self.height = size
         self.sc = pygame.display.set_mode(self.size, pygame.FULLSCREEN)
 
+        self.money = 0
+
         self.main = main
 
         self.board = Board(18, 10, self.size)

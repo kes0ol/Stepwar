@@ -57,18 +57,15 @@ def start(screen):
         clock.tick(fps)
         pygame.display.flip()
 
-    end(screen)
-
 
 def end(screen):
     run = True
     screen.gameplay = True
     surf = pygame.Surface((8 * screen.board.cell_size, 5 * screen.board.cell_size))
 
-    if is_win:
-        font = pygame.font.Font(None, 100)
-    else:
-        font = pygame.font.Font(None, 80)
+    text_lst = []
+
+    font = pygame.font.Font(None, 80)
 
     fps = 120
     clock = pygame.time.Clock()
@@ -98,23 +95,25 @@ def end(screen):
         screen.sc.fill((0, 0, 0))
         screen.render()
         show_stats(screen)
-        draw_end_surface(screen, surf, font)
+        draw_end_surface(screen, text_lst, surf, font)
         clock.tick(fps)
         pygame.display.flip()
 
 
-def draw_end_surface(screen, surf, font):
+def draw_end_surface(screen, lst, surf, font):
     global is_win
 
     if is_win:
-        text = font.render('Вы победили!', True, (255, 255, 255))
+        lst.append('Вы победили!')
     else:
-        text = font.render('Вас уничтожили!', True, (255, 255, 255))
+        lst.append('Вас уничтожили!')
+    lst.append(f'Заработанные монеты: {screen.money}')
 
-    surf.fill((0, 0, 0))
-    surf.set_alpha(100)
+    surf.fill('white')
+    for t in lst:
+        text = font.render(t, True, 'black')
+        surf.blit(text, (20, 20))
 
-    surf.blit(text, (50, 50))
     screen.sc.blit(surf, (500, 250))
 
 
@@ -208,7 +207,8 @@ def enemys_attack(screen, unit, now_cell):
                                     if screen.board.board[i][j] == 4:
                                         screen.board.board[i][j] = 0
                             is_win = False
-                            screen.gameplay = False
+                            end(screen)
+
                         damage_castle = False
                         break
                     break
@@ -450,7 +450,8 @@ def give_damage(screen, select_coords, select_cell, damage_team_unit):
                                 if screen.board.board[i][j] == 3:
                                     screen.board.board[i][j] = 0
                         is_win = False
-                        screen.gameplay = False
+                        end(screen)
+
                     damage_at_enemy_castle = False
                     break
                 break
