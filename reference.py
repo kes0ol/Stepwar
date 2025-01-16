@@ -28,7 +28,7 @@ class Reference_Window:
         self.fon = pygame.image.load('images/reffon.jpg')
         self.fon = pygame.transform.scale(self.fon, (self.width, self.height))
 
-        self.ref_screen = sreference.Reference_Window(self.main_screen, self.size)
+        self.ref_screen = sreference.Reference_Window(self.main_screen, self.size, self.main)
 
     def check_click(self, mouse_pos, lst):
         for button in lst:
