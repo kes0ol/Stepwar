@@ -43,9 +43,6 @@ class Reference_Window:
     def render(self):
         y = 50
         self.main_screen.sc.blit(self.fon, (0, 0))
-        # font = pygame.font.Font(None, 40)
-        # text = font.render(self.text, True, 'black')
-        # self.main_screen.sc.blit(text, (self.width // 8, self.height // 2 - 300))
         for i in self.lst:
             font = pygame.font.Font(None, 40)
             text = font.render(i, True, 'black')
