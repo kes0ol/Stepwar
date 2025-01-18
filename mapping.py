@@ -167,7 +167,7 @@ class Board:
                 for j in range(len(level_lst[i])):
                     x, y = j * self.cell_size + self.left, i * self.cell_size + self.top
                     if level_lst[i][j] == 's':
-                        enemys.Enemy('swordsman', 'Рыцарь', x, y, 1, 1, 100, 20, 'images/enemy_images/swordsman2.png',
+                        enemys.Enemy('swordsman', 'Рыцарь', x, y, 1, 1, 100, 20, 'images/enemy_images/swordsman.png',
                                      self.cell_size,
                                      enemys.swordsmans)
                         self.board[i][j] = 2
@@ -187,7 +187,7 @@ class Board:
                                      enemys.dragons)
                         self.board[i][j] = 2
                     elif level_lst[i][j] == 'X':
-                        enemys.Enemy('castle', 'Замок', x, y, 0, 0, 500, 0, 'images/enemy_images/castle.jpg',
+                        enemys.Enemy('castle', 'Замок', x, y, 0, 0, 500, 0, 'images/enemy_images/castle.png',
                                      self.cell_size * 2,
                                      enemys.castles)
                         self.board[i][j], self.board[i + 1][j] = 3, 3
