@@ -1,11 +1,7 @@
 import pygame
 
+import swordsman, archer, cavalry, dragon, castle
 import enemys
-import swordsman
-import castle
-import cavalry
-import archer
-import dragon
 import landscapes
 import money
 
@@ -32,7 +28,7 @@ class Screen:
 
         self.steps = 0
         self.score = 0
-        self.money = 0
+        self.money = 250
 
         self.icon_swordsman = swordsman.Swordsman(125, 100, self.board.cell_size * 1.5, swordsman.swordsmans)
         swordsman.stock = self.icon_swordsman.stock
@@ -298,11 +294,6 @@ class Board:
         archer.archers.add(screen.icon_archer)
         cavalry.cavalrys.add(screen.icon_cavalry)
         dragon.dragons.add(screen.icon_dragon)
-
-        swordsman.stock = screen.icon_swordsman.stock
-        archer.stock = screen.icon_archer.stock
-        cavalry.stock = screen.icon_cavalry.stock
-        dragon.stock = screen.icon_dragon.stock
 
         enemys.swordsmans.empty()
         enemys.archers.empty()

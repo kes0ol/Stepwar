@@ -16,7 +16,7 @@ class Cavalry(pygame.sprite.Sprite):
         self.step = 3
         self.do_damage = True
         self.distance_attack = 1
-        self.stock = 1
+        self.stock = 0
         self.hp = 70
         self.damage = 25
         self.damage_plus = 0

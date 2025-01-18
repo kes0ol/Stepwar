@@ -3,13 +3,9 @@ import sys
 
 import pygame
 
-import archer
-import castle
-import cavalry
-import dragon
+import swordsman, archer, cavalry, dragon, castle
 import enemys
 import landscapes
-import swordsman
 
 is_win = None
 
@@ -108,7 +104,7 @@ def draw_end_surface(screen, main_surf):
         lst.append(('Вас уничтожили!', 90))
 
     lst.append((f'Заработанные монеты: {screen.money}', 30))
-    lst.append((f'Счёт: {screen.score}', 30))
+    lst.append((f'Счёт: {screen.score * (20 // screen.steps)}', 30))
 
     surf.fill('white')
     main_surf.fill('black')
@@ -185,6 +181,8 @@ def enemys_move(screen):
 
 
 def enemys_attack(screen, unit, now_cell):
+    global is_win
+
     can_attack = []
     for dx in range(-unit.distance_attack, unit.distance_attack + 1):
         for dy in range(-unit.distance_attack, unit.distance_attack + 1):
@@ -442,6 +440,7 @@ def choose_attack(screen, unit, cell_coords, is_chose_unit, is_attack):
 
 
 def give_damage(screen, select_coords, select_cell, damage_team_unit):
+    global is_win
     damage_at_enemy_castle = True
 
     for group in [enemys.swordsmans, enemys.archers, enemys.cavalrys, enemys.dragons, enemys.castles]:
@@ -457,7 +456,7 @@ def give_damage(screen, select_coords, select_cell, damage_team_unit):
                                 if screen.board.board[i][j] == 3:
                                     screen.board.board[i][j] = 0
                         screen.money += 100
-                        is_win = False
+                        is_win = True
                         end(screen)
 
                     damage_at_enemy_castle = False

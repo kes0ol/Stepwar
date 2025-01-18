@@ -16,7 +16,7 @@ class Archer(pygame.sprite.Sprite):
         self.step = 1
         self.do_damage = True
         self.distance_attack = 3
-        self.stock = 1
+        self.stock = 2
         self.hp = 40
         self.damage = 30
         self.damage_plus = 0
