@@ -21,6 +21,7 @@ class Swordsman(pygame.sprite.Sprite):
         self.damage = 20
         self.damage_plus = 0
         self.name = 'swordsman'
+        self.title = 'Рыцарь'
 
     def update(self, *args, **kwargs):
         self.x_now, self.y_now = args[0]

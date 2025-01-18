@@ -16,11 +16,12 @@ class Dragon(pygame.sprite.Sprite):
         self.step = 4
         self.do_damage = True
         self.distance_attack = 2
-        self.stock = 1
+        self.stock = 5
         self.hp = 150
         self.damage = 30
         self.damage_plus = 0
         self.name = 'dragon'
+        self.title = 'Дракон'
 
     def update(self, *args, **kwargs):
         self.x_now, self.y_now = args[0]

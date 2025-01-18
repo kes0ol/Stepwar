@@ -24,10 +24,15 @@ class Screen:
         self.sc = pygame.display.set_mode(self.size, pygame.FULLSCREEN)
 
         self.board = Board(18, 10, self.size)
+
         self.button_start_game = Button('Начать игру', 45, self.width - 500, 70, coord_type="bottomleft")
         self.button_next_step = Button('Следующий ход', 45, self.width - 500, 70, coord_type="bottomleft")
         self.back_button = Button('Назад', 45, 150, 70, color=(200, 75, 75), dark_color=(150, 25, 25),
                                   coord_type="bottomright")
+
+        self.steps = 0
+        self.score = 0
+        self.money = 0
 
         self.icon_swordsman = swordsman.Swordsman(125, 100, self.board.cell_size * 1.5, swordsman.swordsmans)
         swordsman.stock = self.icon_swordsman.stock
@@ -37,8 +42,6 @@ class Screen:
         cavalry.stock = self.icon_cavalry.stock
         self.icon_dragon = dragon.Dragon(125, 400, self.board.cell_size * 1.5, dragon.dragons)
         dragon.stock = self.icon_dragon.stock
-
-        self.money = 0
         self.icon_money = money.Money(1450, 20, self.board.cell_size, money.moneys)
 
         self.cursor = pygame.image.load('images/different/cursor.PNG')
@@ -164,27 +167,27 @@ class Board:
                 for j in range(len(level_lst[i])):
                     x, y = j * self.cell_size + self.left, i * self.cell_size + self.top
                     if level_lst[i][j] == 's':
-                        enemys.Enemy('swordsman', x, y, 1, 1, 100, 20, 'images/enemy_images/swordsman.png',
+                        enemys.Enemy('swordsman', 'Рыцарь', x, y, 1, 1, 100, 20, 'images/enemy_images/swordsman2.png',
                                      self.cell_size,
                                      enemys.swordsmans)
                         self.board[i][j] = 2
                     elif level_lst[i][j] == 'a':
-                        enemys.Enemy('archer', x, y, 1, 3, 40, 30, 'images/enemy_images/archer.png',
+                        enemys.Enemy('archer', 'Лучник', x, y, 1, 3, 40, 30, 'images/enemy_images/archer.png',
                                      self.cell_size,
                                      enemys.archers)
                         self.board[i][j] = 2
                     elif level_lst[i][j] == 'c':
-                        enemys.Enemy('cavalry', x, y, 3, 1, 70, 25, 'images/enemy_images/cavalry.png',
+                        enemys.Enemy('cavalry', 'Кавалерия', x, y, 3, 1, 70, 25, 'images/enemy_images/cavalry.png',
                                      self.cell_size,
                                      enemys.cavalrys)
                         self.board[i][j] = 2
                     elif level_lst[i][j] == 'd':
-                        enemys.Enemy('dragon', x, y, 4, 2, 150, 30, 'images/enemy_images/dragon.png',
+                        enemys.Enemy('dragon', 'Дракон', x, y, 4, 2, 150, 30, 'images/enemy_images/dragon.png',
                                      self.cell_size,
                                      enemys.dragons)
                         self.board[i][j] = 2
                     elif level_lst[i][j] == 'X':
-                        enemys.Enemy('castle', x, y, 0, 0, 500, 0, 'images/enemy_images/castle.png',
+                        enemys.Enemy('castle', 'Замок', x, y, 0, 0, 500, 0, 'images/enemy_images/castle.jpg',
                                      self.cell_size * 2,
                                      enemys.castles)
                         self.board[i][j], self.board[i + 1][j] = 3, 3
@@ -197,19 +200,19 @@ class Board:
                 for j in range(len(field_lst[i])):
                     x, y = j * self.cell_size + self.left, i * self.cell_size + self.top
 
-                    landscapes.Landscape('grass', x, y, 'images/landscapes/grass.jpeg', self.cell_size, 0, 0,
+                    landscapes.Landscape('grass', 'Трава', x, y, 'images/landscapes/grass.jpeg', self.cell_size, 0, 0,
                                          landscapes.landscapes)
 
                     if field_lst[i][j] == 'm':
-                        landscapes.Landscape('mountains', x, y, 'images/landscapes/skala.png', self.cell_size, 0,
-                                             'запрещено', landscapes.landscapes)
+                        landscapes.Landscape('mountains', 'Гора', x, y, 'images/landscapes/skala.png', self.cell_size,
+                                             0, 'нельзя', landscapes.landscapes)
                         self.field[i][j] = 1
                     elif field_lst[i][j] == 'h':
-                        landscapes.Landscape('hill', x, y, 'images/landscapes/hill.png', self.cell_size, 15, -1,
+                        landscapes.Landscape('hill', 'Холм', x, y, 'images/landscapes/hill.png', self.cell_size, 15, -1,
                                              landscapes.landscapes)
                         self.field[i][j] = 2
                     elif field_lst[i][j] == 'r':
-                        landscapes.Landscape('river', x, y, 'images/landscapes/river.png', self.cell_size, 0, 0,
+                        landscapes.Landscape('river', 'Река', x, y, 'images/landscapes/river.png', self.cell_size, 0, 0,
                                              landscapes.landscapes)
                         self.field[i][j] = 3
 

@@ -2,7 +2,7 @@ import pygame
 
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, name_unit, x, y, step, distance_attack, hp, damage, image, image_size, group):
+    def __init__(self, name_unit, title_name, x, y, step, distance_attack, hp, damage, image, image_size, group):
         super().__init__(group)
         self.image = pygame.image.load(image)
         self.image.set_colorkey((0xb3, 0x22, 0xb7))
@@ -20,6 +20,7 @@ class Enemy(pygame.sprite.Sprite):
         self.damage = damage
         self.damage_plus = 0
         self.name = name_unit
+        self.title = title_name
 
 
 swordsmans = pygame.sprite.Group()
