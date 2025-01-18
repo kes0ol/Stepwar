@@ -6,8 +6,7 @@ import archer
 import castle
 import cavalry
 import dragon
-import settings
-import levels
+
 from widgets import Button
 
 import swordsman
@@ -116,8 +115,6 @@ class Reference_Window:
         for button in self.lst_buttons:
             button.render(self.main_screen.sc)
         self.main_screen.render_cursor()
-
-
 
     def start(self):
         self.running = True

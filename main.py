@@ -61,9 +61,9 @@ if __name__ == '__main__':
     pygame.init()
     pygame.display.set_caption('StepWar')
 
-    pygame.mixer.music.load('music/walking.wav')
-    pygame.mixer.music.play(-1)
-    pygame.time.delay(20)
+    # pygame.mixer.music.load('music/walking.wav')
+    # pygame.mixer.music.play(-1)
+    # pygame.time.delay(20)
 
     main_screen = Main()
     main_screen.go_start_window()

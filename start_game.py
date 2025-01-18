@@ -35,6 +35,7 @@ def start(screen):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 select_button = check_click(screen, event.pos)
                 if select_button == 'new_step':
+                    screen.steps += 1
                     new_step()
                     enemys_move(screen)
                 if select_button == 'back_to_menu':
@@ -100,27 +101,28 @@ def end(screen):
 def draw_end_surface(screen, main_surf):
     global is_win
 
-    surf = pygame.surface.Surface((400, 100))
+    surf = pygame.surface.Surface((450, 100))
     lst = []
 
     if is_win:
         lst.append(('Вы победили!', 100))
     else:
         lst.append(('Вас уничтожили!', 90))
-    lst.append((f'Заработанные монеты: {screen.money}', 30))
 
+    lst.append((f'Заработанные монеты: {screen.money}', 30))
+    lst.append((f'Счёт: {screen.score}', 30))
+
+    surf.fill('white')
     main_surf.fill('black')
 
     font = pygame.font.Font(None, lst[0][1])
     text = font.render(lst[0][0], True, 'white')
     main_surf.blit(text, (20, 20))
 
-    surf.fill('white')
-
     for i in range(len(lst[1:])):
         font = pygame.font.Font(None, lst[1:][i][1])
         text = font.render(lst[1:][i][0], True, 'black')
-        surf.blit(text, (10, i * 60))
+        surf.blit(text, (10, i * 50 + 20))
 
     main_surf.blit(surf, (50, 100))
     screen.sc.blit(main_surf, (500, 250))
@@ -241,7 +243,7 @@ def show_stats(screen):
         for un in group:
             if un.rect.collidepoint(pygame.mouse.get_pos()):
                 stats = [
-                    f'Тип юнита: {un.name}',
+                    f'Тип юнита: {un.title}',
                     f'Здоровье: {un.hp}',
                     f'Урон: {un.damage}',
                     f'Передвижение: {un.step}',
@@ -254,7 +256,7 @@ def show_stats(screen):
         for land in landscapes.landscapes:
             if land.rect.collidepoint(pygame.mouse.get_pos()):
                 stats = [
-                    f'Ландшафт: {land.name}',
+                    f'Ландшафт: {land.title}',
                     f'Доп. урон: {land.damage}',
                     f'Передвижение: {land.move}'
                 ]
@@ -474,12 +476,16 @@ def give_damage(screen, select_coords, select_cell, damage_team_unit):
 
                     if unit.name == 'swordsman':
                         screen.money += 10
+                        screen.score += 5
                     if unit.name == 'archer':
                         screen.money += 15
+                        screen.score += 25
                     if unit.name == 'cavalry':
                         screen.money += 20
+                        screen.score += 20
                     if unit.name == 'dragon':
                         screen.money += 50
+                        screen.score += 40
                 break
 
 

@@ -21,6 +21,7 @@ class Cavalry(pygame.sprite.Sprite):
         self.damage = 25
         self.damage_plus = 0
         self.name = 'cavalry'
+        self.title = 'Кавалерия'
 
     def update(self, *args, **kwargs):
         self.x_now, self.y_now = args[0]
