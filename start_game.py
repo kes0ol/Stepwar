@@ -15,7 +15,7 @@ is_win = None
 
 
 def start(screen):
-    lst_surfaces = []
+    global is_win
     enemys_move(screen)
 
     fps = 120
@@ -46,10 +46,10 @@ def start(screen):
                 unit, is_choose_unit = choose_unit(screen, cell_coords)
                 if unit != -1 and event.button == 1:
                     is_attack = False
-                    choose_step(screen, lst_surfaces, unit, cell_coords, is_choose_unit, select_button, is_attack)
+                    choose_step(screen, unit, cell_coords, is_choose_unit, select_button, is_attack)
                 if unit != -1 and event.button == 3:
                     is_attack = True
-                    choose_attack(screen, lst_surfaces, unit, cell_coords, is_choose_unit, is_attack)
+                    choose_attack(screen, unit, cell_coords, is_choose_unit, is_attack)
 
         screen.sc.fill((0, 0, 0))
         screen.render()
@@ -98,8 +98,6 @@ def end(screen):
 
 
 def draw_end_surface(screen, main_surf):
-    global is_win
-
     surf = pygame.surface.Surface((400, 100))
     lst = []
 
@@ -196,8 +194,6 @@ def enemys_attack(screen, unit, now_cell):
                     can_attack.append((n_x, n_y))
 
     if len(can_attack) > 0:
-        global is_win
-
         select_attack = random.choice(can_attack)
         damage_castle = True
 
@@ -372,7 +368,8 @@ def select_surfaces(screen, unit, cell_coords, lst_surfaces, is_attack):
             return unit, lst_steps, how_choose_unit
 
 
-def choose_step(screen, lst_surfaces, unit, cell_coords, is_choose_unit, select_button, is_attack):
+def choose_step(screen, unit, cell_coords, is_choose_unit, select_button, is_attack):
+    lst_surfaces = []
     type_unit, lst_steps, how_choose_unit = select_surfaces(screen, unit, cell_coords, lst_surfaces, is_attack)
     if type_unit.step > 0:
         while is_choose_unit and select_button != 'new_step':
@@ -409,7 +406,8 @@ def choose_step(screen, lst_surfaces, unit, cell_coords, is_choose_unit, select_
             pygame.display.flip()
 
 
-def choose_attack(screen, lst_surfaces, unit, cell_coords, is_chose_unit, is_attack):
+def choose_attack(screen, unit, cell_coords, is_chose_unit, is_attack):
+    lst_surfaces = []
     type_unit, lst_steps, how_choose_unit = select_surfaces(screen, unit, cell_coords, lst_surfaces, is_attack)
     if type_unit.do_damage:
         while is_chose_unit and is_attack:
@@ -442,8 +440,6 @@ def choose_attack(screen, lst_surfaces, unit, cell_coords, is_chose_unit, is_att
 
 
 def give_damage(screen, select_coords, select_cell, damage_team_unit):
-    global is_win
-
     damage_at_enemy_castle = True
 
     for group in [enemys.swordsmans, enemys.archers, enemys.cavalrys, enemys.dragons, enemys.castles]:

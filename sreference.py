@@ -50,7 +50,7 @@ class Reference_Window:
         self.icons_units = pygame.sprite.Group()
         self.icon_unit = None
 
-        self.fon = pygame.image.load('images/reffon.jpg')
+        self.fon = pygame.image.load('images/backgrounds/reffon.jpg')
         self.fon = pygame.transform.scale(self.fon, (self.width, self.height))
 
         self.stats = []

@@ -1,3 +1,5 @@
+import sys
+
 import pygame
 
 import mapping
@@ -10,11 +12,6 @@ class Main:
         self.size = pygame.display.get_desktop_sizes()[0]
         self.screen = mapping.Screen(self.size, self)
 
-        self.fps = 120
-        self.clock = pygame.time.Clock()
-
-        self.running = True
-
     def go_start_window(self):
         self.start_screen = start_window.Start_window(self.screen, self.size, self)
         self.start_screen.start()
@@ -26,15 +23,24 @@ class Main:
 
         self.screen.board.level = level
         self.screen.board.clear_board(self.screen)
+
+        fps = 120
+        clock = pygame.time.Clock()
+
+        self.running = True
         while self.running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
+                    pygame.quit()
+                    sys.exit()
+
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         self.screen.back_to_menu = True
                         self.screen.board.clear_board(self.screen)
                         self.start_screen.levels_menu.start()
+
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.screen.get_click(event.pos, event.button)
 
@@ -49,21 +55,26 @@ class Main:
 
             self.screen.sc.fill((0, 0, 0))
             self.screen.render()
-
             start_game.show_stats(self.screen)
 
-            self.clock.tick(self.fps)
+            clock.tick(fps)
             pygame.display.flip()
+
         pygame.quit()
+        sys.exit()
+
+
+def set_music(path, time_play, delay):
+    pygame.mixer.music.load(path)
+    pygame.mixer.music.play(time_play)
+    pygame.time.delay(delay)
 
 
 if __name__ == '__main__':
     pygame.init()
     pygame.display.set_caption('StepWar')
 
-    pygame.mixer.music.load('music/walking.wav')
-    pygame.mixer.music.play(-1)
-    pygame.time.delay(20)
+    set_music('music/walking.wav', -1, 20)
 
     main_screen = Main()
     main_screen.go_start_window()

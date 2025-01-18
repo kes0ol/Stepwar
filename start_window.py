@@ -9,11 +9,9 @@ from widgets import Button
 
 class Start_window:
     def __init__(self, screen, size, main):
-        self.running = True
         self.size = self.width, self.height = size
         self.main_screen = screen
         self.main = main
-
 
         self.choose_level_button = Button('Уровни', 100, self.width // 2, self.height // 2 - 350, color=(255, 255, 0),
                                           dark_color=(0, 255, 0))
@@ -22,7 +20,7 @@ class Start_window:
                                      dark_color=(50, 50, 50))
 
         self.ref_button = Button('Справка', 100, self.width // 2, self.height // 2 - 50, color=(255, 255, 0),
-                                  dark_color=(0, 255, 0))
+                                 dark_color=(0, 255, 0))
 
         self.exit_button = Button('Выйти', 100, self.width // 2, self.height // 2 + 100, color=(255, 255, 0),
                                   dark_color=(100, 0, 0))
@@ -34,7 +32,7 @@ class Start_window:
         self.ref_screen = reference.Reference_Window(self.main_screen, self.size, main)
         self.levels_menu = levels.Levels_menu(self.main_screen, self.size, main)
 
-        self.fon = pygame.image.load('images/fon.png')
+        self.fon = pygame.image.load('images/backgrounds/fon.PNG')
         self.fon = pygame.transform.scale(self.fon, (self.width, self.height))
 
     def check_click(self, mouse_pos, lst):
@@ -61,6 +59,8 @@ class Start_window:
     def start(self):
         fps = 120
         clock = pygame.time.Clock()
+
+        self.running = True
         while self.running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:

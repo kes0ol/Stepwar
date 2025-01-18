@@ -41,7 +41,7 @@ class Screen:
         self.money = 0
         self.icon_money = money.Money(1450, 20, self.board.cell_size, money.moneys)
 
-        self.cursor = pygame.image.load('images/cursor.PNG')
+        self.cursor = pygame.image.load('images/different/cursor.PNG')
         self.cursor.set_colorkey((255, 255, 255))
         self.cursor = pygame.transform.scale(self.cursor, (20, 20))
 
@@ -71,14 +71,15 @@ class Screen:
         self.board.render(self.sc)
 
         swordsman.swordsmans.draw(self.sc)
-        swordsman.set_view_stock(self.sc, (50, 150), 50)
         archer.archers.draw(self.sc)
-        archer.set_view_stock(self.sc, (50, 250), 50)
         cavalry.cavalrys.draw(self.sc)
-        cavalry.set_view_stock(self.sc, (50, 350), 50)
         dragon.dragons.draw(self.sc)
-        dragon.set_view_stock(self.sc, (50, 450), 50)
         castle.castles.draw(self.sc)
+
+        swordsman.set_view_stock(self.sc, (50, 150), 50)
+        archer.set_view_stock(self.sc, (50, 250), 50)
+        cavalry.set_view_stock(self.sc, (50, 350), 50)
+        dragon.set_view_stock(self.sc, (50, 450), 50)
 
         enemys.swordsmans.draw(self.sc)
         enemys.archers.draw(self.sc)
@@ -163,7 +164,7 @@ class Board:
                 for j in range(len(level_lst[i])):
                     x, y = j * self.cell_size + self.left, i * self.cell_size + self.top
                     if level_lst[i][j] == 's':
-                        enemys.Enemy('swordsman', x, y, 1, 1, 100, 20, 'images/enemy_images/swordsman2.png',
+                        enemys.Enemy('swordsman', x, y, 1, 1, 100, 20, 'images/enemy_images/swordsman.png',
                                      self.cell_size,
                                      enemys.swordsmans)
                         self.board[i][j] = 2
@@ -183,7 +184,7 @@ class Board:
                                      enemys.dragons)
                         self.board[i][j] = 2
                     elif level_lst[i][j] == 'X':
-                        enemys.Enemy('castle', x, y, 0, 0, 500, 0, 'images/enemy_images/castle.jpg',
+                        enemys.Enemy('castle', x, y, 0, 0, 500, 0, 'images/enemy_images/castle.png',
                                      self.cell_size * 2,
                                      enemys.castles)
                         self.board[i][j], self.board[i + 1][j] = 3, 3
@@ -285,18 +286,20 @@ class Board:
         self.field = [[0] * self.width for _ in range(self.height)]
 
         swordsman.swordsmans.empty()
-        swordsman.swordsmans.add(screen.icon_swordsman)
-        swordsman.stock = screen.icon_swordsman.stock
         archer.archers.empty()
-        archer.archers.add(screen.icon_archer)
-        archer.stock = screen.icon_archer.stock
         cavalry.cavalrys.empty()
-        cavalry.cavalrys.add(screen.icon_cavalry)
-        cavalry.stock = screen.icon_cavalry.stock
         dragon.dragons.empty()
-        dragon.dragons.add(screen.icon_dragon)
-        dragon.stock = screen.icon_dragon.stock
         castle.castles.empty()
+
+        swordsman.swordsmans.add(screen.icon_swordsman)
+        archer.archers.add(screen.icon_archer)
+        cavalry.cavalrys.add(screen.icon_cavalry)
+        dragon.dragons.add(screen.icon_dragon)
+
+        swordsman.stock = screen.icon_swordsman.stock
+        archer.stock = screen.icon_archer.stock
+        cavalry.stock = screen.icon_cavalry.stock
+        dragon.stock = screen.icon_dragon.stock
 
         enemys.swordsmans.empty()
         enemys.archers.empty()
@@ -304,6 +307,4 @@ class Board:
         enemys.dragons.empty()
         enemys.castles.empty()
 
-        self.set_team()
-        self.set_enemys()
-        self.set_landscapes()
+        self.set_map()

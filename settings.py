@@ -9,7 +9,6 @@ from widgets import Button, View
 class Settings_window:
     def __init__(self, screen, size):
         self.volume = 1
-        self.running = True
         self.size = self.width, self.height = size
         self.main_screen = screen
         self.screen = pygame.surface.Surface((self.width, self.height))
@@ -27,7 +26,7 @@ class Settings_window:
 
         self.lst_buttons = [self.volume_button, self.plus_button, self.minus_button, self.back_button]
 
-        self.fon = pygame.image.load('images/settingsfon.jpg')
+        self.fon = pygame.image.load('images/backgrounds/settingsfon.jpg')
         self.fon = pygame.transform.scale(self.fon, (self.size[0], self.size[1]))
 
     def check_click(self, mouse_pos, lst):
@@ -57,6 +56,7 @@ class Settings_window:
     def start(self):
         fps = 120
         clock = pygame.time.Clock()
+
         self.running = True
         while self.running:
             for event in pygame.event.get():

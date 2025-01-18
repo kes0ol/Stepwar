@@ -10,6 +10,7 @@ class Levels_menu:
         self.size = width, height = size
         self.main_screen = screen
         self.main = main
+
         self.screen = pygame.surface.Surface((width, height))
 
         self.first_level_button = Button('Уровень 1', 100, width // 2 - 700, height // 2,
@@ -23,7 +24,7 @@ class Levels_menu:
         self.lst_buttons = [self.first_level_button, self.second_level_button, self.thirst_level_button,
                             self.back_button]
 
-        self.fon = pygame.image.load('images/menu_levels_fon.jpg')
+        self.fon = pygame.image.load('images/backgrounds/menu_levels_fon.jpg')
         self.fon = pygame.transform.scale(self.fon, (self.size[0], self.size[1]))
 
     def check_click(self, mouse_pos, lst):
@@ -66,6 +67,7 @@ class Levels_menu:
                         self.main.go_start_window()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.check_click(event.pos, self.lst_buttons)
+
             self.screen.fill((0, 0, 0))
             self.render()
 

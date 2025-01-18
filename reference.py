@@ -25,7 +25,7 @@ class Reference_Window:
                     'За пройденный уровень вы получаете очки. Чтобы пройти уровень, нужно сокрушить вражеский замок.',
                     'Игра представляет собой стратегию, состоящая из уровней. С каждым открытым уровнем вы получаете доступ к следующему.']
 
-        self.fon = pygame.image.load('images/reffon.jpg')
+        self.fon = pygame.image.load('images/backgrounds/reffon.jpg')
         self.fon = pygame.transform.scale(self.fon, (self.width, self.height))
 
         self.ref_screen = sreference.Reference_Window(self.main_screen, self.size, self.main)
