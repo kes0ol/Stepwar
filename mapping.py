@@ -71,13 +71,13 @@ class Screen:
         self.board.render(self.sc)
 
         swordsman.swordsmans.draw(self.sc)
-        swordsman.set_view_stock(self.sc, (50, 150))
+        swordsman.set_view_stock(self.sc, (50, 150), 50)
         archer.archers.draw(self.sc)
-        archer.set_view_stock(self.sc, (50, 250))
+        archer.set_view_stock(self.sc, (50, 250), 50)
         cavalry.cavalrys.draw(self.sc)
-        cavalry.set_view_stock(self.sc, (50, 350))
+        cavalry.set_view_stock(self.sc, (50, 350), 50)
         dragon.dragons.draw(self.sc)
-        dragon.set_view_stock(self.sc, (50, 450))
+        dragon.set_view_stock(self.sc, (50, 450), 50)
         castle.castles.draw(self.sc)
 
         enemys.swordsmans.draw(self.sc)
