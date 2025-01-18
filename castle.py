@@ -15,6 +15,8 @@ class Castle(pygame.sprite.Sprite):
         self.distance_attack = 0
         self.hp = 500
         self.damage = 0
+        self.damage_plus = 0
+        self.name = 'castle'
 
 
 def add_start_castle(x, y, cell_size):

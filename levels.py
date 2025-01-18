@@ -31,13 +31,13 @@ class Levels_menu:
             if button.check_click(mouse_pos):
                 if button == self.first_level_button:
                     self.running = False
-                    self.main.start()
+                    self.main.start('1')
                 if button == self.second_level_button:
                     self.running = False
-                    self.main.start()
+                    self.main.start('2')
                 if button == self.thirst_level_button:
                     self.running = False
-                    self.main.start()
+                    self.main.start('3')
                 if button == self.back_button:
                     self.running = False
                     self.main.go_start_window()
@@ -60,6 +60,10 @@ class Levels_menu:
                     self.running = False
                     pygame.quit()
                     sys.exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        self.running = False
+                        self.main.go_start_window()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.check_click(event.pos, self.lst_buttons)
             self.screen.fill((0, 0, 0))

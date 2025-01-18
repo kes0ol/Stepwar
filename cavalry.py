@@ -16,29 +16,32 @@ class Cavalry(pygame.sprite.Sprite):
         self.step = 3
         self.do_damage = True
         self.distance_attack = 1
-        self.stock = 5
+        self.stock = 1
         self.hp = 70
         self.damage = 25
+        self.damage_plus = 0
+        self.name = 'cavalry'
 
     def update(self, *args, **kwargs):
         self.x_now, self.y_now = args[0]
         self.select_y, self.select_x = args[1]
         self.screen = args[2]
         self.is_attack = args[3]
+        self.damage_plus = 0
 
         if not self.is_attack:
             self.screen.board.board[self.y_now][self.x_now] = 0
             self.screen.board.board[self.select_y][self.select_x] = 1
 
-            self.x = (self.select_x - self.x_now) * self.screen.board.cell_size
-            self.y = (self.select_y - self.y_now) * self.screen.board.cell_size
+            x = (self.select_x - self.x_now) * self.screen.board.cell_size
+            y = (self.select_y - self.y_now) * self.screen.board.cell_size
 
-            self.rect = self.rect.move(self.x, self.y)
+            self.rect = self.rect.move(x, y)
         else:
             start_game.give_damage(self.screen, (
                 self.select_x * self.screen.board.cell_size + self.screen.board.left,
                 self.select_y * self.screen.board.cell_size + self.screen.board.top), (self.select_x, self.select_y),
-                                   self.damage)
+                                   self.damage + self.damage_plus)
 
 
 def set_view_stock(screen, coords, size):

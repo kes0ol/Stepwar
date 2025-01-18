@@ -9,15 +9,16 @@ class Enemy(pygame.sprite.Sprite):
         self.image = pygame.transform.flip(self.image, True, False)
         self.image = pygame.transform.scale(self.image, (image_size, image_size))
         self.image = pygame.transform.flip(self.image, True, False)
-        # self.image.set_colorkey((0xb3, 0x22, 0xb7))
-        self.rect = self.image.get_rect()
 
+        self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+
         self.step = step
         self.distance_attack = distance_attack
         self.hp = hp
         self.damage = damage
+        self.damage_plus = 0
         self.name = name_unit
 
 

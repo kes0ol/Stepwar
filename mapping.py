@@ -7,6 +7,7 @@ import cavalry
 import archer
 import dragon
 import landscapes
+import money
 
 from widgets import Button
 
@@ -17,45 +18,36 @@ class Screen:
         self.back_to_menu = False
         self.choose_unit = None
 
+        self.main = main
+
         self.size = self.width, self.height = size
         self.sc = pygame.display.set_mode(self.size, pygame.FULLSCREEN)
 
-        self.main = main
-
         self.board = Board(18, 10, self.size)
-        self.button_start_game = Button('Начать игру', self.board.cell_size // 2, 20,
-                                        self.height - self.board.cell_size // 2,
-                                        coord_type="bottomleft")
-        self.button_next_step = Button('Следующий ход', self.board.cell_size // 2, 120,
-                                       self.height - self.board.cell_size // 2,
-                                       coord_type="midbottom")
-        self.back_button = Button('Вернуться в список уровней', self.board.cell_size // 2,
-                                  self.width - self.board.cell_size // 2,
-                                  self.height - self.board.cell_size // 2,
-                                  color=(200, 75, 75),
-                                  dark_color=(150, 25, 25), coord_type="bottomright")
+        self.button_start_game = Button('Начать игру', 45, self.width - 500, 70, coord_type="bottomleft")
+        self.button_next_step = Button('Следующий ход', 45, self.width - 500, 70, coord_type="bottomleft")
+        self.back_button = Button('Назад', 45, 150, 70, color=(200, 75, 75), dark_color=(150, 25, 25),
+                                  coord_type="bottomright")
 
-        self.icon_swordsman = swordsman.Swordsman(round(self.board.cell_size * 1.7),
-                                                  self.board.top + (0 * self.board.cell_size * 1.7),
-                                                  self.board.cell_size * 1.5, swordsman.swordsmans)
-        self.icon_archer = archer.Archer(round(self.board.cell_size * 1.7),
-                                         self.board.top + (1 * self.board.cell_size * 1.7), self.board.cell_size * 1.5,
-                                         archer.archers)
-        self.icon_cavalry = cavalry.Cavalry(round(self.board.cell_size * 1.7),
-                                            self.board.top + (2 * self.board.cell_size * 1.7),
-                                            self.board.cell_size * 1.5, cavalry.cavalrys)
-        self.icon_dragon = dragon.Dragon(round(self.board.cell_size * 1.7),
-                                         self.board.top + (3 * self.board.cell_size * 1.7), self.board.cell_size * 1.5,
-                                         dragon.dragons)
-
+        self.icon_swordsman = swordsman.Swordsman(125, 100, self.board.cell_size * 1.5, swordsman.swordsmans)
         swordsman.stock = self.icon_swordsman.stock
+        self.icon_archer = archer.Archer(125, 200, self.board.cell_size * 1.5, archer.archers)
         archer.stock = self.icon_archer.stock
+        self.icon_cavalry = cavalry.Cavalry(125, 300, self.board.cell_size * 1.5, cavalry.cavalrys)
         cavalry.stock = self.icon_cavalry.stock
+        self.icon_dragon = dragon.Dragon(125, 400, self.board.cell_size * 1.5, dragon.dragons)
         dragon.stock = self.icon_dragon.stock
+
+        self.money = 0
+        self.icon_money = money.Money(1450, 20, self.board.cell_size, money.moneys)
 
         self.cursor = pygame.image.load('images/cursor.PNG')
         self.cursor.set_colorkey((255, 255, 255))
-        self.cursor = pygame.transform.scale(self.cursor, (10, 10))
+        self.cursor = pygame.transform.scale(self.cursor, (20, 20))
+
+    def render_cursor(self):
+        pygame.mouse.set_visible(False)
+        self.sc.blit(self.cursor, pygame.mouse.get_pos())
 
     def choose_unit(self, mouse_pos):
         if (self.icon_swordsman.rect.left <= mouse_pos[0] <= self.icon_swordsman.rect.right and
@@ -73,27 +65,19 @@ class Screen:
 
         return self.choose_unit
 
-    def render_cursor(self):
-        pygame.mouse.set_visible(False)
-        self.sc.blit(self.cursor, pygame.mouse.get_pos())
-
     def render(self):
-        landscapes.grasses.draw(self.sc)
+        landscapes.landscapes.draw(self.sc)
 
         self.board.render(self.sc)
 
         swordsman.swordsmans.draw(self.sc)
-        swordsman.set_view_stock(self.sc, (self.board.cell_size, self.board.top * 2 + (0 * self.board.cell_size * 1.8)),
-                                 round(self.board.cell_size * 0.66))
+        swordsman.set_view_stock(self.sc, (50, 150))
         archer.archers.draw(self.sc)
-        archer.set_view_stock(self.sc, (self.board.cell_size, self.board.top * 2 + (1 * self.board.cell_size * 1.8)),
-                              round(self.board.cell_size * 0.66))
+        archer.set_view_stock(self.sc, (50, 250))
         cavalry.cavalrys.draw(self.sc)
-        cavalry.set_view_stock(self.sc, (self.board.cell_size, self.board.top * 2 + (2 * self.board.cell_size * 1.8)),
-                               round(self.board.cell_size * 0.66))
+        cavalry.set_view_stock(self.sc, (50, 350))
         dragon.dragons.draw(self.sc)
-        dragon.set_view_stock(self.sc, (self.board.cell_size, self.board.top * 2 + (3 * self.board.cell_size * 1.8)),
-                              round(self.board.cell_size * 0.66))
+        dragon.set_view_stock(self.sc, (50, 450))
         castle.castles.draw(self.sc)
 
         enemys.swordsmans.draw(self.sc)
@@ -106,9 +90,11 @@ class Screen:
 
         if not self.gameplay:
             self.button_start_game.render(self.sc)
+            self.board.render_area(self.sc)
         else:
             self.button_next_step.render(self.sc)
 
+        self.icon_money.render(self.sc, self.money)
         self.render_cursor()
 
     def get_click(self, mouse_pos, mouse_button):
@@ -123,70 +109,20 @@ class Screen:
 
 class Board:
     def __init__(self, width, height, size):
+        self.level = '1'
+
         self.width = width
         self.height = height
 
-        self.cell_size = round(size[0] / 22)-10
+        self.cell_size = round(size[0] / 22)
         self.left = self.cell_size * 4
-        self.top = self.cell_size // 2
+        self.top = round(self.cell_size * 1.5)
 
         self.board = [[0] * width for _ in range(height)]
-        self.landscape = [[0] * width for _ in range(height)]
+        self.field = [[0] * width for _ in range(height)]
 
-        self.set_team()
-        self.set_enemys()
-        self.set_landscapes()
-
-    def set_enemys(self):
-        with open('levels/1.txt', mode='rt', encoding='utf-8') as level:
-            level_lst = [string.strip('\n').split(', ') for string in level]
-            for i in range(len(level_lst)):
-                for j in range(len(level_lst[i])):
-                    x, y = j * self.cell_size + self.left, i * self.cell_size + self.top
-                    if level_lst[i][j] == 's':
-                        enemys.Enemy('Рыцарь', x, y, 1, 1, 100, 20, 'images/enemy_images/swordsman2.png',
-                                     self.cell_size,
-                                     enemys.swordsmans)
-                        self.board[i][j] = 2
-                    if level_lst[i][j] == 'a':
-                        enemys.Enemy('Лучник', x, y, 1, 3, 40, 30, 'images/enemy_images/archer.png',
-                                     self.cell_size,
-                                     enemys.archers)
-                        self.board[i][j] = 2
-                    if level_lst[i][j] == 'c':
-                        enemys.Enemy('Кавалерия', x, y, 3, 1, 70, 25, 'images/enemy_images/cavalry.png',
-                                     self.cell_size,
-                                     enemys.cavalrys)
-                        self.board[i][j] = 2
-                    if level_lst[i][j] == 'd':
-                        enemys.Enemy('Дракон', x, y, 4, 2, 150, 30, 'images/enemy_images/dragon.png',
-                                     self.cell_size,
-                                     enemys.dragons)
-                        self.board[i][j] = 2
-                    if level_lst[i][j] == 'X':
-                        enemys.Enemy('Замок', x, y, 0, 0, 500, 0, 'images/enemy_images/castle.jpg',
-                                     self.cell_size * 2,
-                                     enemys.castles)
-                        self.board[i][j], self.board[i + 1][j] = 3, 3
-                        self.board[i][j + 1], self.board[i + 1][j + 1] = 3, 3
-
-    def set_team(self):
-        for i in range(len(self.board)):
-            for j in range(len(self.board[i])):
-                if (i, j) == (0, 4):
-                    castle.add_start_castle(i * self.cell_size + self.left, j * self.cell_size + self.top,
-                                            self.cell_size)
-                    self.board[j][i], self.board[j][i + 1], self.board[j + 1][i], self.board[j + 1][i + 1] = 4, 4, 4, 4
-
-    def set_landscapes(self):
-        for i in range(len(self.board)):
-            for j in range(len(self.board[i])):
-                x = j * self.cell_size + self.left
-                y = i * self.cell_size + self.top
-
-                if self.landscape[i][j] == 0:
-                    landscapes.Grass(x, y, self.cell_size, landscapes.grasses)
-                    self.landscape[i][j] = 1
+        self.allow_area = pygame.Surface((7 * self.cell_size, self.height * self.cell_size))
+        self.allow_area.set_alpha(80)
 
     def render(self, screen):
         for i in range(len(self.board)):
@@ -196,10 +132,90 @@ class Board:
 
                 pygame.draw.rect(screen, 'white', (x, y, self.cell_size, self.cell_size), 1)
 
+    def render_area(self, screen):
+        for i in range(len(self.board)):
+            for j in range(7):
+                if self.field[i][j] == 0 and self.board[i][j] == 0:
+                    surface_coords_x = j * self.cell_size + self.left
+                    surface_coords_y = i * self.cell_size + self.top
+                    surface = pygame.surface.Surface((self.cell_size, self.cell_size))
+                    surface.fill('yellow')
+                    surface.set_alpha(80)
+                    screen.blit(surface, (surface_coords_x, surface_coords_y))
+
+    def set_map(self):
+        self.set_team()
+        self.set_enemys()
+        self.set_landscapes()
+
+    def set_team(self):
+        for i in range(len(self.board)):
+            for j in range(len(self.board[i])):
+                if (i, j) == (0, 4):
+                    castle.add_start_castle(i * self.cell_size + self.left, j * self.cell_size + self.top,
+                                            self.cell_size)
+                    self.board[j][i], self.board[j][i + 1], self.board[j + 1][i], self.board[j + 1][i + 1] = 4, 4, 4, 4
+
+    def set_enemys(self):
+        with open(f'levels/{self.level}/enemys.txt', mode='rt', encoding='utf-8') as enemys_board:
+            level_lst = [string.strip('\n').split(', ') for string in enemys_board]
+            for i in range(len(level_lst)):
+                for j in range(len(level_lst[i])):
+                    x, y = j * self.cell_size + self.left, i * self.cell_size + self.top
+                    if level_lst[i][j] == 's':
+                        enemys.Enemy('swordsman', x, y, 1, 1, 100, 20, 'images/enemy_images/swordsman2.png',
+                                     self.cell_size,
+                                     enemys.swordsmans)
+                        self.board[i][j] = 2
+                    elif level_lst[i][j] == 'a':
+                        enemys.Enemy('archer', x, y, 1, 3, 40, 30, 'images/enemy_images/archer.png',
+                                     self.cell_size,
+                                     enemys.archers)
+                        self.board[i][j] = 2
+                    elif level_lst[i][j] == 'c':
+                        enemys.Enemy('cavalry', x, y, 3, 1, 70, 25, 'images/enemy_images/cavalry.png',
+                                     self.cell_size,
+                                     enemys.cavalrys)
+                        self.board[i][j] = 2
+                    elif level_lst[i][j] == 'd':
+                        enemys.Enemy('dragon', x, y, 4, 2, 150, 30, 'images/enemy_images/dragon.png',
+                                     self.cell_size,
+                                     enemys.dragons)
+                        self.board[i][j] = 2
+                    elif level_lst[i][j] == 'X':
+                        enemys.Enemy('castle', x, y, 0, 0, 500, 0, 'images/enemy_images/castle.jpg',
+                                     self.cell_size * 2,
+                                     enemys.castles)
+                        self.board[i][j], self.board[i + 1][j] = 3, 3
+                        self.board[i][j + 1], self.board[i + 1][j + 1] = 3, 3
+
+    def set_landscapes(self):
+        with open(f'levels/{self.level}/field.txt', mode='rt', encoding='utf-8') as land:
+            field_lst = [string.strip('\n').split(', ') for string in land]
+            for i in range(len(field_lst)):
+                for j in range(len(field_lst[i])):
+                    x, y = j * self.cell_size + self.left, i * self.cell_size + self.top
+
+                    landscapes.Landscape('grass', x, y, 'images/landscapes/grass.jpeg', self.cell_size, 0, 0,
+                                         landscapes.landscapes)
+
+                    if field_lst[i][j] == 'm':
+                        landscapes.Landscape('mountains', x, y, 'images/landscapes/skala.png', self.cell_size, 0,
+                                             'запрещено', landscapes.landscapes)
+                        self.field[i][j] = 1
+                    elif field_lst[i][j] == 'h':
+                        landscapes.Landscape('hill', x, y, 'images/landscapes/hill.png', self.cell_size, 15, -1,
+                                             landscapes.landscapes)
+                        self.field[i][j] = 2
+                    elif field_lst[i][j] == 'r':
+                        landscapes.Landscape('river', x, y, 'images/landscapes/river.png', self.cell_size, 0, 0,
+                                             landscapes.landscapes)
+                        self.field[i][j] = 3
+
     def get_cell(self, mouse_pos):
         xmax = self.left + self.width * self.cell_size
         ymax = self.top + self.height * self.cell_size
-        if not (self.left < mouse_pos[0] < xmax and self.top < mouse_pos[1] < ymax):
+        if not (self.left <= mouse_pos[0] <= xmax and self.top <= mouse_pos[1] <= ymax):
             return -1, -1
         n_x = (mouse_pos[0] - self.left) // self.cell_size
         n_y = (mouse_pos[1] - self.top) // self.cell_size
@@ -209,7 +225,7 @@ class Board:
     def on_click(self, cell_coords, mouse_button):
         x, y = cell_coords
         if mouse_button == 1:
-            if x <= 6:
+            if x <= 6 and self.field[y][x] in (0, 2):
                 if self.choosen_unit == 'swordsman' and self.board[y][x] == 0 and swordsman.stock > 0:
                     swordsman.Swordsman(x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
                                         swordsman.swordsmans)
@@ -266,7 +282,7 @@ class Board:
 
     def clear_board(self, screen):
         self.board = [[0] * self.width for _ in range(self.height)]
-        self.landscape = [[0] * self.width for _ in range(self.height)]
+        self.field = [[0] * self.width for _ in range(self.height)]
 
         swordsman.swordsmans.empty()
         swordsman.swordsmans.add(screen.icon_swordsman)
@@ -280,6 +296,7 @@ class Board:
         dragon.dragons.empty()
         dragon.dragons.add(screen.icon_dragon)
         dragon.stock = screen.icon_dragon.stock
+        castle.castles.empty()
 
         enemys.swordsmans.empty()
         enemys.archers.empty()
