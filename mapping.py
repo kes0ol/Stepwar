@@ -7,6 +7,7 @@ import cavalry
 import archer
 import dragon
 import landscapes
+import money
 
 from widgets import Button
 
@@ -17,32 +18,36 @@ class Screen:
         self.back_to_menu = False
         self.choose_unit = None
 
+        self.main = main
+
         self.size = self.width, self.height = size
         self.sc = pygame.display.set_mode(self.size, pygame.FULLSCREEN)
 
-        self.money = 0
-
-        self.main = main
-
         self.board = Board(18, 10, self.size)
-        self.button_start_game = Button('Начать игру', 38, 20, self.height - 20, coord_type="bottomleft")
-        self.button_next_step = Button('Следующий ход', 38, 120, self.height - 20, coord_type="midbottom")
-        self.back_button = Button('Вернуться в список уровней', 40, self.width - 20, self.height - 20,
-                                  color=(200, 75, 75),
-                                  dark_color=(150, 25, 25), coord_type="bottomright")
+        self.button_start_game = Button('Начать игру', 45, self.width - 500, 70, coord_type="bottomleft")
+        self.button_next_step = Button('Следующий ход', 45, self.width - 500, 70, coord_type="bottomleft")
+        self.back_button = Button('Назад', 45, 150, 70, color=(200, 75, 75), dark_color=(150, 25, 25),
+                                  coord_type="bottomright")
 
-        self.icon_swordsman = swordsman.Swordsman(125, 25, self.board.cell_size * 1.5, swordsman.swordsmans)
+        self.icon_swordsman = swordsman.Swordsman(125, 100, self.board.cell_size * 1.5, swordsman.swordsmans)
         swordsman.stock = self.icon_swordsman.stock
-        self.icon_archer = archer.Archer(125, 125, self.board.cell_size * 1.5, archer.archers)
+        self.icon_archer = archer.Archer(125, 200, self.board.cell_size * 1.5, archer.archers)
         archer.stock = self.icon_archer.stock
-        self.icon_cavalry = cavalry.Cavalry(125, 225, self.board.cell_size * 1.5, cavalry.cavalrys)
+        self.icon_cavalry = cavalry.Cavalry(125, 300, self.board.cell_size * 1.5, cavalry.cavalrys)
         cavalry.stock = self.icon_cavalry.stock
-        self.icon_dragon = dragon.Dragon(125, 325, self.board.cell_size * 1.5, dragon.dragons)
+        self.icon_dragon = dragon.Dragon(125, 400, self.board.cell_size * 1.5, dragon.dragons)
         dragon.stock = self.icon_dragon.stock
+
+        self.money = 0
+        self.icon_money = money.Money(1450, 20, self.board.cell_size, money.moneys)
 
         self.cursor = pygame.image.load('images/cursor.PNG')
         self.cursor.set_colorkey((255, 255, 255))
-        self.cursor = pygame.transform.scale(self.cursor, (10, 10))
+        self.cursor = pygame.transform.scale(self.cursor, (20, 20))
+
+    def render_cursor(self):
+        pygame.mouse.set_visible(False)
+        self.sc.blit(self.cursor, pygame.mouse.get_pos())
 
     def choose_unit(self, mouse_pos):
         if (self.icon_swordsman.rect.left <= mouse_pos[0] <= self.icon_swordsman.rect.right and
@@ -60,23 +65,19 @@ class Screen:
 
         return self.choose_unit
 
-    def render_cursor(self):
-        pygame.mouse.set_visible(False)
-        self.sc.blit(self.cursor, pygame.mouse.get_pos())
-
     def render(self):
         landscapes.landscapes.draw(self.sc)
 
         self.board.render(self.sc)
 
         swordsman.swordsmans.draw(self.sc)
-        swordsman.set_view_stock(self.sc, (50, 50))
+        swordsman.set_view_stock(self.sc, (50, 150))
         archer.archers.draw(self.sc)
-        archer.set_view_stock(self.sc, (50, 150))
+        archer.set_view_stock(self.sc, (50, 250))
         cavalry.cavalrys.draw(self.sc)
-        cavalry.set_view_stock(self.sc, (50, 250))
+        cavalry.set_view_stock(self.sc, (50, 350))
         dragon.dragons.draw(self.sc)
-        dragon.set_view_stock(self.sc, (50, 350))
+        dragon.set_view_stock(self.sc, (50, 450))
         castle.castles.draw(self.sc)
 
         enemys.swordsmans.draw(self.sc)
@@ -93,6 +94,7 @@ class Screen:
         else:
             self.button_next_step.render(self.sc)
 
+        self.icon_money.render(self.sc, self.money)
         self.render_cursor()
 
     def get_click(self, mouse_pos, mouse_button):
@@ -114,14 +116,13 @@ class Board:
 
         self.cell_size = round(size[0] / 22)
         self.left = self.cell_size * 4
-        self.top = self.cell_size // 2
+        self.top = round(self.cell_size * 1.5)
 
         self.board = [[0] * width for _ in range(height)]
         self.field = [[0] * width for _ in range(height)]
 
         self.allow_area = pygame.Surface((7 * self.cell_size, self.height * self.cell_size))
-        self.allow_area.fill('yellow')
-        self.allow_area.set_alpha(60)
+        self.allow_area.set_alpha(80)
 
     def render(self, screen):
         for i in range(len(self.board)):
@@ -139,7 +140,7 @@ class Board:
                     surface_coords_y = i * self.cell_size + self.top
                     surface = pygame.surface.Surface((self.cell_size, self.cell_size))
                     surface.fill('yellow')
-                    surface.set_alpha(50)
+                    surface.set_alpha(80)
                     screen.blit(surface, (surface_coords_x, surface_coords_y))
 
     def set_map(self):

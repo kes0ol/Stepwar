@@ -63,10 +63,6 @@ def end(screen):
     screen.gameplay = True
     surf = pygame.Surface((8 * screen.board.cell_size, 5 * screen.board.cell_size))
 
-    text_lst = []
-
-    font = pygame.font.Font(None, 80)
-
     fps = 120
     clock = pygame.time.Clock()
     while run:
@@ -95,26 +91,39 @@ def end(screen):
         screen.sc.fill((0, 0, 0))
         screen.render()
         show_stats(screen)
-        draw_end_surface(screen, text_lst, surf, font)
+        draw_end_surface(screen, surf)
+        screen.render_cursor()
         clock.tick(fps)
         pygame.display.flip()
 
 
-def draw_end_surface(screen, lst, surf, font):
+def draw_end_surface(screen, main_surf):
     global is_win
 
+    surf = pygame.surface.Surface((400, 100))
+    lst = []
+
     if is_win:
-        lst.append('Вы победили!')
+        lst.append(('Вы победили!', 100))
     else:
-        lst.append('Вас уничтожили!')
-    lst.append(f'Заработанные монеты: {screen.money}')
+        lst.append(('Вас уничтожили!', 90))
+    lst.append((f'Заработанные монеты: {screen.money}', 30))
+
+    main_surf.fill('black')
+
+    font = pygame.font.Font(None, lst[0][1])
+    text = font.render(lst[0][0], True, 'white')
+    main_surf.blit(text, (20, 20))
 
     surf.fill('white')
-    for t in lst:
-        text = font.render(t, True, 'black')
-        surf.blit(text, (20, 20))
 
-    screen.sc.blit(surf, (500, 250))
+    for i in range(len(lst[1:])):
+        font = pygame.font.Font(None, lst[1:][i][1])
+        text = font.render(lst[1:][i][0], True, 'black')
+        surf.blit(text, (10, i * 60))
+
+    main_surf.blit(surf, (50, 100))
+    screen.sc.blit(main_surf, (500, 250))
 
 
 def check_borders(screen, cell_x, cell_y, dx, dy):
@@ -253,7 +262,7 @@ def show_stats(screen):
     for i in range(len(stats)):
         text = font.render(stats[i], True, (255, 255, 255))
         stats_surface.blit(text, (0, i * 20, 100, 100))
-    screen.sc.blit(stats_surface, (screen.board.left // 2 - 100, 500))
+    screen.sc.blit(stats_surface, (screen.board.left // 2 - 100, 600))
 
 
 def check_click(screen, mouse_pos):
@@ -449,6 +458,7 @@ def give_damage(screen, select_coords, select_cell, damage_team_unit):
                             for j in range(len(screen.board.board[i])):
                                 if screen.board.board[i][j] == 3:
                                     screen.board.board[i][j] = 0
+                        screen.money += 100
                         is_win = False
                         end(screen)
 
@@ -461,6 +471,15 @@ def give_damage(screen, select_coords, select_cell, damage_team_unit):
                 if unit.hp <= 0:
                     unit.kill()
                     screen.board.board[select_cell[1]][select_cell[0]] = 0
+
+                    if unit.name == 'swordsman':
+                        screen.money += 10
+                    if unit.name == 'archer':
+                        screen.money += 15
+                    if unit.name == 'cavalry':
+                        screen.money += 20
+                    if unit.name == 'dragon':
+                        screen.money += 50
                 break
 
 
