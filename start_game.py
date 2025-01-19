@@ -16,15 +16,15 @@ def start(screen):
 
     fps = 120
     clock = pygame.time.Clock()
-    while screen.gameplay:
+    running = True
+    while screen.gameplay and running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                screen.board.gameplay = False
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    screen.gameplay = False
+                    running = False
                     new_step()
                     screen.board.clear_board(screen)
 
@@ -35,9 +35,13 @@ def start(screen):
                     new_step()
                     enemys_move(screen)
                 if select_button == 'back_to_menu':
-                    screen.gameplay = False
+                    running = False
                     new_step()
                     screen.board.clear_board(screen)
+                if screen.setting_button.check_click(event.pos):
+                    screen.main.start_screen.settings_screen.start()
+                if screen.ref_button.check_click(event.pos):
+                    screen.main.start_screen.ref_screen.start()
 
                 cell_coords = screen.board.get_cell(event.pos)
                 unit, is_choose_unit = choose_unit(screen, cell_coords)
@@ -50,29 +54,35 @@ def start(screen):
 
         screen.sc.fill((0, 0, 0))
         screen.render()
+        screen.render_cursor()
         show_stats(screen)
         clock.tick(fps)
         pygame.display.flip()
 
 
 def end(screen):
-    run = True
-    screen.gameplay = True
     surf = pygame.Surface((8 * screen.board.cell_size, 5 * screen.board.cell_size))
 
     fps = 120
     clock = pygame.time.Clock()
-    while run:
+
+    running = True
+    while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                run = False
                 pygame.quit()
                 sys.exit()
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    run = False
+                    swordsman.stock = len(swordsman.swordsmans) - 1
+                    archer.stock = len(archer.archers) - 1
+                    cavalry.stock = len(cavalry.cavalrys) - 1
+                    dragon.stock = len(dragon.dragons) - 1
+
+                    running = False
                     screen.gameplay = False
+
                     new_step()
                     screen.board.clear_board(screen)
 
@@ -80,8 +90,9 @@ def end(screen):
                 select_button = check_click(screen, event.pos)
 
                 if select_button == 'back_to_menu':
-                    run = False
+                    running = False
                     screen.gameplay = False
+
                     new_step()
                     screen.board.clear_board(screen)
 
@@ -375,7 +386,6 @@ def choose_step(screen, unit, cell_coords, is_choose_unit, select_button, is_att
         while is_choose_unit and select_button != 'new_step':
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    screen.gameplay = False
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
@@ -413,7 +423,6 @@ def choose_attack(screen, unit, cell_coords, is_chose_unit, is_attack):
         while is_chose_unit and is_attack:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    screen.gameplay = False
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:

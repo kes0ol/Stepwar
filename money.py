@@ -18,7 +18,7 @@ class Money(pygame.sprite.Sprite):
 
         font = pygame.font.Font(None, 50)
         text = font.render(f'{money}', True, 'yellow')
-        screen.blit(text, (self.rect.x - 50, self.rect.y))
+        screen.blit(text, (self.rect.x - 80, self.rect.y))
 
 
 moneys = pygame.sprite.Group()

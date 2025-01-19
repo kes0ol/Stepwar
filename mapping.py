@@ -23,12 +23,16 @@ class Screen:
 
         self.button_start_game = Button('Начать игру', 45, self.width - 500, 70, coord_type="bottomleft")
         self.button_next_step = Button('Следующий ход', 45, self.width - 500, 70, coord_type="bottomleft")
+        self.setting_button = Button('Настройки', 45, 450, 70, color=(255, 255, 0),
+                                     dark_color=(50, 50, 50), coord_type="bottomright")
+        self.ref_button = Button('Справка', 45, 650, 70, color=(255, 255, 0),
+                                 dark_color=(50, 50, 50), coord_type="bottomright")
         self.back_button = Button('Назад', 45, 150, 70, color=(200, 75, 75), dark_color=(150, 25, 25),
                                   coord_type="bottomright")
 
         self.steps = 0
         self.score = 0
-        self.money = 250
+        self.money = 150
 
         self.icon_swordsman = swordsman.Swordsman(125, 100, self.board.cell_size * 1.5, swordsman.swordsmans)
         swordsman.stock = self.icon_swordsman.stock
@@ -38,31 +42,28 @@ class Screen:
         cavalry.stock = self.icon_cavalry.stock
         self.icon_dragon = dragon.Dragon(125, 400, self.board.cell_size * 1.5, dragon.dragons)
         dragon.stock = self.icon_dragon.stock
-        self.icon_money = money.Money(1450, 20, self.board.cell_size, money.moneys)
+        self.icon_money = money.Money(self.width - 100, 20, self.board.cell_size, money.moneys)
 
         self.cursor = pygame.image.load('images/different/cursor.PNG')
         self.cursor.set_colorkey((255, 255, 255))
         self.cursor = pygame.transform.scale(self.cursor, (20, 20))
 
+    def get_click(self, mouse_pos, mouse_button):
+        Board.get_click(self.board, mouse_pos, mouse_button, self)
+        if not self.gameplay and self.button_start_game.check_click(mouse_pos):
+            self.gameplay = True
+        if not self.back_to_menu and self.back_button.check_click(mouse_pos):
+            self.back_to_menu = True
+            self.board.clear_board(self)
+            self.main.start_screen.levels_menu.start()
+        if self.setting_button.check_click(mouse_pos):
+            self.main.start_screen.settings_screen.start()
+        if self.ref_button.check_click(mouse_pos):
+            self.main.start_screen.ref_screen.start()
+
     def render_cursor(self):
         pygame.mouse.set_visible(False)
         self.sc.blit(self.cursor, pygame.mouse.get_pos())
-
-    def choose_unit(self, mouse_pos):
-        if (self.icon_swordsman.rect.left <= mouse_pos[0] <= self.icon_swordsman.rect.right and
-                self.icon_swordsman.rect.top <= mouse_pos[1] <= self.icon_swordsman.rect.bottom):
-            self.choose_unit = 'swordsman'
-        if (self.icon_archer.rect.left <= mouse_pos[0] <= self.icon_archer.rect.right and
-                self.icon_archer.rect.top <= mouse_pos[1] <= self.icon_archer.rect.bottom):
-            self.choose_unit = 'archer'
-        if (self.icon_cavalry.rect.left <= mouse_pos[0] <= self.icon_cavalry.rect.right and
-                self.icon_cavalry.rect.top <= mouse_pos[1] <= self.icon_cavalry.rect.bottom):
-            self.choose_unit = 'cavalry'
-        if (self.icon_dragon.rect.left <= mouse_pos[0] <= self.icon_dragon.rect.right and
-                self.icon_dragon.rect.top <= mouse_pos[1] <= self.icon_dragon.rect.bottom):
-            self.choose_unit = 'dragon'
-
-        return self.choose_unit
 
     def render(self):
         landscapes.landscapes.draw(self.sc)
@@ -87,6 +88,8 @@ class Screen:
         enemys.castles.draw(self.sc)
 
         self.back_button.render(self.sc)
+        self.setting_button.render(self.sc)
+        self.ref_button.render(self.sc)
 
         if not self.gameplay:
             self.button_start_game.render(self.sc)
@@ -95,16 +98,22 @@ class Screen:
             self.button_next_step.render(self.sc)
 
         self.icon_money.render(self.sc, self.money)
-        self.render_cursor()
 
-    def get_click(self, mouse_pos, mouse_button):
-        Board.get_click(self.board, mouse_pos, mouse_button, self)
-        if not self.gameplay and self.button_start_game.check_click(mouse_pos):
-            self.gameplay = True
-        if not self.back_to_menu and self.back_button.check_click(mouse_pos):
-            self.back_to_menu = True
-            self.board.clear_board(self)
-            self.main.start_screen.levels_menu.start()
+    def choose_unit(self, mouse_pos):
+        if (self.icon_swordsman.rect.left <= mouse_pos[0] <= self.icon_swordsman.rect.right and
+                self.icon_swordsman.rect.top <= mouse_pos[1] <= self.icon_swordsman.rect.bottom):
+            self.choose_unit = 'swordsman'
+        if (self.icon_archer.rect.left <= mouse_pos[0] <= self.icon_archer.rect.right and
+                self.icon_archer.rect.top <= mouse_pos[1] <= self.icon_archer.rect.bottom):
+            self.choose_unit = 'archer'
+        if (self.icon_cavalry.rect.left <= mouse_pos[0] <= self.icon_cavalry.rect.right and
+                self.icon_cavalry.rect.top <= mouse_pos[1] <= self.icon_cavalry.rect.bottom):
+            self.choose_unit = 'cavalry'
+        if (self.icon_dragon.rect.left <= mouse_pos[0] <= self.icon_dragon.rect.right and
+                self.icon_dragon.rect.top <= mouse_pos[1] <= self.icon_dragon.rect.bottom):
+            self.choose_unit = 'dragon'
+
+        return self.choose_unit
 
 
 class Board:

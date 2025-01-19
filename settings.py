@@ -21,10 +21,13 @@ class Settings_window:
                                    color=(255, 0, 0), dark_color=(100, 0, 0), fill_type=FILL_TYPE_BORDER)
         self.percent_view = View(f'{self.volume * 100}%', 80, self.width // 2, self.height / 2 - 200,
                                  color=(255, 255, 0))
-        self.back_button = Button('Назад', 80, self.width // 2, self.height // 2, color=(255, 255, 0),
+        self.reset_button = Button('Начать сначала', 80, self.width // 2, self.height // 2, color=(255, 255, 0),
+                                   dark_color=(100, 100, 0))
+        self.back_button = Button('Назад', 80, self.width // 2, self.height // 2 + 200, color=(255, 255, 0),
                                   dark_color=(100, 100, 0))
 
-        self.lst_buttons = [self.volume_button, self.plus_button, self.minus_button, self.back_button]
+        self.lst_buttons = [self.volume_button, self.plus_button, self.minus_button, self.reset_button,
+                            self.back_button]
 
         self.fon = pygame.image.load('images/backgrounds/settingsfon.jpg')
         self.fon = pygame.transform.scale(self.fon, (self.size[0], self.size[1]))

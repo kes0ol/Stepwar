@@ -5,7 +5,7 @@ import sreference
 from widgets import Button
 
 
-class Reference_Window:
+class Reference_window:
     def __init__(self, screen, size, main):
         self.running = True
         self.size = self.width, self.height = size

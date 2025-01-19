@@ -30,7 +30,7 @@ class Start_window:
                             self.ref_button, self.shop_button]
 
         self.settings_screen = settings.Settings_window(self.main_screen, self.size)
-        self.ref_screen = reference.Reference_Window(self.main_screen, self.size, main)
+        self.ref_screen = reference.Reference_window(self.main_screen, self.size, main)
         self.levels_menu = levels.Levels_menu(self.main_screen, self.size, main)
         self.store = shop.Store(screen, self.size)
 

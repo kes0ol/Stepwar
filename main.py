@@ -45,7 +45,6 @@ class Main:
                     self.screen.get_click(event.pos, event.button)
 
             if self.screen.back_to_menu:
-                self.start_screen.running = True
                 self.start_screen.start()
                 self.screen.back_to_menu = False
 
@@ -55,6 +54,7 @@ class Main:
 
             self.screen.sc.fill((0, 0, 0))
             self.screen.render()
+            self.screen.render_cursor()
             start_game.show_stats(self.screen)
 
             clock.tick(fps)

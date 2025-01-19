@@ -15,69 +15,60 @@ class Store:
         self.main_screen = screen
         self.screen = pygame.surface.Surface((self.width, self.height))
 
+        self.cell_size = self.main_screen.board.cell_size
+
+        self.lst_units = [swordsman, archer, cavalry, dragon]
+        self.lst_products = [('images/team_images/swordsman.png', 25), ('images/team_images/archer.png', 40),
+                             ('images/team_images/cavalry.png', 55), ('images/team_images/dragon.png', 120)]
+
         self.back_button = Button('Назад', 80, 120, self.height - 100, color=(200, 75, 75), dark_color=(150, 25, 25))
-        self.buy_sw = Button('Купить', 80, 300, self.height - 250, color=(255, 255, 0),
-                             dark_color=(0, 255, 0))
-        self.buy_ar = Button('Купить', 80, 600, self.height - 250, color=(255, 255, 0),
-                             dark_color=(0, 255, 0))
-        self.buy_cav = Button('Купить', 80, 900, self.height - 250, color=(255, 255, 0),
-                              dark_color=(0, 255, 0))
-        self.buy_dr = Button('Купить', 80, 1200, self.height - 250, color=(255, 255, 0),
-                             dark_color=(0, 255, 0))
-        self.lst_buttons = [self.back_button, self.buy_sw, self.buy_ar, self.buy_cav, self.buy_dr]
+
+        self.lst_buttons = [self.back_button]
+
+        for i in range(len(self.lst_units)):
+            self.buy_btn = Button('Купить', self.cell_size,
+                                  i * round(self.cell_size * 4.62) + round(self.cell_size * 4.35),
+                                  round(self.cell_size * 9.5), color=(255, 255, 0), dark_color=(0, 255, 0))
+            self.lst_buttons.append(self.buy_btn)
 
         self.fon = pygame.image.load('images/backgrounds/store.png')
         self.fon = pygame.transform.scale(self.fon, (self.size[0], self.size[1]))
 
-        self.lst_products = [('images/team_images/swordsman.png', 25), ('images/team_images/archer.png', 40),
-                             ('images/team_images/cavalry.png', 55), ('images/team_images/dragon.png', 120)]
-
     def render_products(self):
-        swordsman.set_view_stock(self.screen, (300, 150), 50)
-        archer.set_view_stock(self.screen, (600, 150), 50)
-        cavalry.set_view_stock(self.screen, (900, 150), 50)
-        dragon.set_view_stock(self.screen, (1200, 150), 50)
+        for i in range(len(self.lst_units)):
+            self.lst_units[i].set_view_stock(self.screen, (
+                i * round(self.cell_size * 4.5) + round(self.cell_size * 4.35), round(self.cell_size)), self.cell_size)
 
         for index in range(len(self.lst_products)):
             im, cost = self.lst_products[index]
-            surf = pygame.surface.Surface((200, 300))
+            surf = pygame.surface.Surface((round(self.cell_size * 4), round(self.cell_size * 6)))
 
             image = pygame.image.load(im)
-            image = pygame.transform.scale(image, (200, 200))
+            image = pygame.transform.scale(image, (self.cell_size * 3, self.cell_size * 3))
             image.set_colorkey((0xb3, 0x22, 0xb7))
 
-            font = pygame.font.Font(None, 40)
+            font = pygame.font.Font(None, round(self.cell_size * 1.2))
             text = font.render(str(cost), True, 'yellow')
 
-            surf.blit(image, (0, 0))
-            surf.blit(text, (90, 250))
+            surf.blit(image, (self.cell_size // 2, 0))
+            surf.blit(text, (round(self.cell_size * 1.45), round(self.cell_size * 3.5)))
 
             money.moneys.draw(self.screen)
             self.main_screen.icon_money.render(self.screen, self.main_screen.money)
 
-            self.screen.blit(surf, (index * 300 + 200, 200))
+            self.screen.blit(surf, (
+                index * round(self.cell_size * 4.5) + round(self.cell_size * 2.5), round(self.cell_size * 2.5)))
 
     def check_click(self, mouse_pos, lst):
         for button in lst:
             if button.check_click(mouse_pos):
                 if button == self.back_button:
                     self.running = False
-                if button == self.buy_sw:
-                    if self.main_screen.money >= self.lst_products[0][1]:
-                        self.main_screen.money -= self.lst_products[0][1]
-                        swordsman.stock += 1
-                if button == self.buy_ar:
-                    if self.main_screen.money >= self.lst_products[1][1]:
-                        self.main_screen.money -= self.lst_products[1][1]
-                        archer.stock += 1
-                if button == self.buy_cav:
-                    if self.main_screen.money >= self.lst_products[2][1]:
-                        self.main_screen.money -= self.lst_products[2][1]
-                        cavalry.stock += 1
-                if button == self.buy_dr:
-                    if self.main_screen.money >= self.lst_products[3][1]:
-                        self.main_screen.money -= self.lst_products[3][1]
-                        dragon.stock += 1
+                else:
+                    select_button = self.lst_products[self.lst_buttons.index(button) - 1]
+                    if self.main_screen.money >= select_button[1]:
+                        self.main_screen.money -= select_button[1]
+                        self.lst_units[self.lst_buttons.index(button) - 1].stock += 1
 
     def render(self):
         self.screen.blit(self.fon, (0, 0))
