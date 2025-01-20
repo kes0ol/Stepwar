@@ -61,83 +61,83 @@ class Reference_Window:
         for button in lst:
             if button.check_click(mouse_pos):
                 self.font_render = True
-                if button == self.swordsman_button:
-                    self.font_render = True
-                    self.icon_unit = swordsman.Swordsman(self.width / 1.35, self.height // 2, 500, self.icons_units)
-                    self.stats = [
-                        f'Тип юнита: {self.icon_unit.name}',
-                        f'Здоровье: {self.icon_unit.hp}',
-                        f'Урон: {self.icon_unit.damage}',
-                        f'Передвижение: {self.icon_unit.step}',
-                        f'Дистанция атаки: {self.icon_unit.distance_attack}']
-                if button == self.archer_button:
-                    self.font_render = True
-                    self.icon_unit = archer.Archer(self.width / 1.35, self.height // 2, 500, self.icons_units)
-                    self.stats = [
-                        f'Тип юнита: {self.icon_unit.name}',
-                        f'Здоровье: {self.icon_unit.hp}',
-                        f'Урон: {self.icon_unit.damage}',
-                        f'Передвижение: {self.icon_unit.step}',
-                        f'Дистанция атаки: {self.icon_unit.distance_attack}']
-                if button == self.dragon_button:
-                    self.font_render = True
-                    self.icon_unit = dragon.Dragon(self.width / 1.35, self.height // 2, 200, self.icons_units)
-                    self.stats = [
-                        f'Тип юнита: {self.icon_unit.name}',
-                        f'Здоровье: {self.icon_unit.hp}',
-                        f'Урон: {self.icon_unit.damage}',
-                        f'Передвижение: {self.icon_unit.step}',
-                        f'Дистанция атаки: {self.icon_unit.distance_attack}']
-                if button == self.cavalry_button:
-                    self.font_render = True
-                    self.icon_unit = cavalry.Cavalry(self.width / 1.35, self.height // 2, 200, self.icons_units)
-                    self.stats = [
-                        f'Тип юнита: {self.icon_unit.name}',
-                        f'Здоровье: {self.icon_unit.hp}',
-                        f'Урон: {self.icon_unit.damage}',
-                        f'Передвижение: {self.icon_unit.step}',
-                        f'Дистанция атаки: {self.icon_unit.distance_attack}']
-                if button == self.castle_button:
-                    self.font_render = True
-                    self.icon_unit = castle.Castle(self.width / 1.35, self.height // 2, 200, self.icons_units)
-                    self.stats = [
-                        f'Тип юнита: {self.icon_unit.name}',
-                        f'Здоровье: {self.icon_unit.hp}',
-                        f'Урон: {self.icon_unit.damage}',
-                        f'Передвижение: {self.icon_unit.step}',
-                        f'Дистанция атаки: {self.icon_unit.distance_attack}']
-                if button == self.grass_button:
-                    self.font_render = True
-                    self.icon_unit = landscapes.Landscape('Трава', self.width / 1.35, self.height // 2,
-                                                          'images/landscapes/grass.jpeg', 200, 0, 1, self.icons_units)
-                    self.stats = [
-                        f'Тип ландшафта: {self.icon_unit.name}',
-                        f'Урон: {self.icon_unit.damage}',
-                        f'Передвижение: {self.icon_unit.move}']
-                if button == self.rock_button:
-                    self.font_render = True
-                    self.icon_unit = landscapes.Landscape('Скала', self.width / 1.35, self.height // 2,
-                                                          'images/landscapes/skala.png', 200, 0, 1, self.icons_units)
-                    self.stats = [
-                        f'Тип ландшафта: {self.icon_unit.name}',
-                        f'Урон: {self.icon_unit.damage}',
-                        f'Передвижение: {self.icon_unit.move}']
-                if button == self.hill_button:
-                    self.font_render = True
-                    self.icon_unit = landscapes.Landscape('Холм', self.width / 1.35, self.height // 2,
-                                                          'images/landscapes/hill.png', 200, 0, 1, self.icons_units)
-                    self.stats = [
-                        f'Тип ландшафта: {self.icon_unit.name}',
-                        f'Урон: {self.icon_unit.damage}',
-                        f'Передвижение: {self.icon_unit.move}']
-                if button == self.river_button:
-                    self.font_render = True
-                    self.icon_unit = landscapes.Landscape('Река', self.width / 1.35, self.height // 2,
-                                                          'images/landscapes/top_river.xcf', 200, 0, 1, self.icons_units)
-                    self.stats = [
-                        f'Тип ландшафта: {self.icon_unit.name}',
-                        f'Урон: {self.icon_unit.damage}',
-                        f'Передвижение: {self.icon_unit.move}']
+    #             if button == self.swordsman_button:
+    #                 self.font_render = True
+    #                 self.icon_unit = swordsman.Swordsman(self.width / 1.35, self.height // 2, 500, self.icons_units)
+    #                 self.stats = [
+    #                     f'Тип юнита: {self.icon_unit.name}',
+    #                     f'Здоровье: {self.icon_unit.hp}',
+    #                     f'Урон: {self.icon_unit.damage}',
+    #                     f'Передвижение: {self.icon_unit.step}',
+    #                     f'Дистанция атаки: {self.icon_unit.distance_attack}']
+    #             if button == self.archer_button:
+    #                 self.font_render = True
+    #                 self.icon_unit = archer.Archer(self.width / 1.35, self.height // 2, 500, self.icons_units)
+    #                 self.stats = [
+    #                     f'Тип юнита: {self.icon_unit.name}',
+    #                     f'Здоровье: {self.icon_unit.hp}',
+    #                     f'Урон: {self.icon_unit.damage}',
+    #                     f'Передвижение: {self.icon_unit.step}',
+    #                     f'Дистанция атаки: {self.icon_unit.distance_attack}']
+    #             if button == self.dragon_button:
+    #                 self.font_render = True
+    #                 self.icon_unit = dragon.Dragon(self.width / 1.35, self.height // 2, 200, self.icons_units)
+    #                 self.stats = [
+    #                     f'Тип юнита: {self.icon_unit.name}',
+    #                     f'Здоровье: {self.icon_unit.hp}',
+    #                     f'Урон: {self.icon_unit.damage}',
+    #                     f'Передвижение: {self.icon_unit.step}',
+    #                     f'Дистанция атаки: {self.icon_unit.distance_attack}']
+    #             if button == self.cavalry_button:
+    #                 self.font_render = True
+    #                 self.icon_unit = cavalry.Cavalry(self.width / 1.35, self.height // 2, 200, self.icons_units)
+    #                 self.stats = [
+    #                     f'Тип юнита: {self.icon_unit.name}',
+    #                     f'Здоровье: {self.icon_unit.hp}',
+    #                     f'Урон: {self.icon_unit.damage}',
+    #                     f'Передвижение: {self.icon_unit.step}',
+    #                     f'Дистанция атаки: {self.icon_unit.distance_attack}']
+    #             if button == self.castle_button:
+    #                 self.font_render = True
+    #                 self.icon_unit = castle.Castle(self.width / 1.35, self.height // 2, 200, self.icons_units)
+    #                 self.stats = [
+    #                     f'Тип юнита: {self.icon_unit.name}',
+    #                     f'Здоровье: {self.icon_unit.hp}',
+    #                     f'Урон: {self.icon_unit.damage}',
+    #                     f'Передвижение: {self.icon_unit.step}',
+    #                     f'Дистанция атаки: {self.icon_unit.distance_attack}']
+    #             if button == self.grass_button:
+    #                 self.font_render = True
+    #                 self.icon_unit = landscapes.Landscape('Трава', self.width / 1.35, self.height // 2,
+    #                                                       'images/landscapes/grass.jpeg', 200, 0, 1, self.icons_units)
+    #                 self.stats = [
+    #                     f'Тип ландшафта: {self.icon_unit.name}',
+    #                     f'Урон: {self.icon_unit.damage}',
+    #                     f'Передвижение: {self.icon_unit.move}']
+    #             if button == self.rock_button:
+    #                 self.font_render = True
+    #                 self.icon_unit = landscapes.Landscape('Скала', self.width / 1.35, self.height // 2,
+    #                                                       'images/landscapes/skala.png', 200, 0, 1, self.icons_units)
+    #                 self.stats = [
+    #                     f'Тип ландшафта: {self.icon_unit.name}',
+    #                     f'Урон: {self.icon_unit.damage}',
+    #                     f'Передвижение: {self.icon_unit.move}']
+    #             if button == self.hill_button:
+    #                 self.font_render = True
+    #                 self.icon_unit = landscapes.Landscape('Холм', self.width / 1.35, self.height // 2,
+    #                                                       'images/landscapes/hill.png', 200, 0, 1, self.icons_units)
+    #                 self.stats = [
+    #                     f'Тип ландшафта: {self.icon_unit.name}',
+    #                     f'Урон: {self.icon_unit.damage}',
+    #                     f'Передвижение: {self.icon_unit.move}']
+    #             if button == self.river_button:
+    #                 self.font_render = True
+    #                 self.icon_unit = landscapes.Landscape('Река', self.width / 1.35, self.height // 2,
+    #                                                       'images/landscapes/top_river.xcf', 200, 0, 1, self.icons_units)
+    #                 self.stats = [
+    #                     f'Тип ландшафта: {self.icon_unit.name}',
+    #                     f'Урон: {self.icon_unit.damage}',
+    #                     f'Передвижение: {self.icon_unit.move}']
                 if button == self.back_button:
                     self.running = False
 

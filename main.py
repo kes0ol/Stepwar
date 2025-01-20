@@ -56,7 +56,7 @@ class Main:
             self.screen.render()
             self.screen.render_cursor()
             start_game.show_stats(self.screen)
-
+            self.screen.render_cursor()
             clock.tick(fps)
             pygame.display.flip()
 

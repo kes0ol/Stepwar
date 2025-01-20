@@ -413,6 +413,7 @@ def choose_step(screen, unit, cell_coords, is_choose_unit, select_button, is_att
             screen.render()
             render(screen, lst_surfaces, (0, 200, 0))
             show_stats(screen)
+            screen.render_cursor()
             pygame.display.flip()
 
 
@@ -445,6 +446,7 @@ def choose_attack(screen, unit, cell_coords, is_chose_unit, is_attack):
             screen.render()
             render(screen, lst_surfaces, (200, 0, 0))
             show_stats(screen)
+            screen.render_cursor()
             pygame.display.flip()
 
 
