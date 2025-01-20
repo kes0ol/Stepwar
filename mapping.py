@@ -20,14 +20,9 @@ class Screen:
         self.sc = pygame.display.set_mode(self.size, pygame.FULLSCREEN)
 
         self.board = Board(18, 10, self.size)
-
-        self.button_start_game = Button('Начать игру', 45, self.width - 500, 70, coord_type="bottomleft")
-        self.button_next_step = Button('Следующий ход', 45, self.width - 500, 70, coord_type="bottomleft")
-        self.setting_button = Button('Настройки', 45, 450, 70, color=(255, 255, 0),
-                                     dark_color=(50, 50, 50), coord_type="bottomright")
-        self.ref_button = Button('Справка', 45, 650, 70, color=(255, 255, 0),
-                                 dark_color=(50, 50, 50), coord_type="bottomright")
-        self.back_button = Button('Назад', 45, 150, 70, color=(200, 75, 75), dark_color=(150, 25, 25),
+        self.button_start_game = Button('Начать игру', 45, self.width / 2, self.height / 15, coord_type="bottomleft")
+        self.button_next_step = Button('Следующий ход', 45, self.width / 2, self.height / 15, coord_type="bottomleft")
+        self.back_button = Button('Назад', 45, self.width / 20, self.height / 15, color=(200, 75, 75), dark_color=(150, 25, 25),
                                   coord_type="bottomright")
 
         self.steps = 0

@@ -6,6 +6,7 @@ import archer
 import castle
 import cavalry
 import dragon
+import landscapes
 
 from widgets import Button
 
@@ -20,14 +21,14 @@ class Reference_Window:
 
         self.swordsman_button = Button('Рыцарь', 100, self.width // 10, self.height // 10, color=(100, 0, 0),
                                        dark_color=(50, 0, 0))
-        self.archer_button = Button('Лучник', 100, self.width // 10, self.height / 5.3, color=(100, 0, 0),
+        self.archer_button = Button('Лучник', 100, self.width // 10, self.height / 5.1, color=(100, 0, 0),
                                     dark_color=(50, 0, 0))
-        self.cavalry_button = Button('Кавалерия', 100, self.width // 10, self.height / 3.8, color=(100, 0, 0),
+        self.cavalry_button = Button('Кавалерия', 100, self.width // 10, self.height / 3.6, color=(100, 0, 0),
                                      dark_color=(50, 0, 0))
-        self.dragon_button = Button('Дракон', 100, self.width // 10, self.height / 2.7, color=(100, 0, 0),
+        self.dragon_button = Button('Дракон', 100, self.width // 10, self.height / 2.5, color=(100, 0, 0),
                                     dark_color=(50, 0, 0))
 
-        self.castle_button = Button('Замок', 100, self.width // 10, self.height / 2, color=(100, 0, 0),
+        self.castle_button = Button('Замок', 100, self.width // 10, self.height / 1.9, color=(100, 0, 0),
                                     dark_color=(50, 0, 0))
 
         self.back_button = Button('<-', 200, 80, self.height - 80,
@@ -54,64 +55,103 @@ class Reference_Window:
 
         self.stats = []
 
+        self.font_render = True
     def check_click(self, mouse_pos, lst):
         self.icons_units.empty()
         for button in lst:
             if button.check_click(mouse_pos):
+                self.font_render = True
                 if button == self.swordsman_button:
+                    self.font_render = True
                     self.icon_unit = swordsman.Swordsman(self.width / 1.35, self.height // 2, 500, self.icons_units)
                     self.stats = [
-                        f'Тип юнита: Рыцарь',
+                        f'Тип юнита: {self.icon_unit.name}',
                         f'Здоровье: {self.icon_unit.hp}',
                         f'Урон: {self.icon_unit.damage}',
                         f'Передвижение: {self.icon_unit.step}',
                         f'Дистанция атаки: {self.icon_unit.distance_attack}']
                 if button == self.archer_button:
+                    self.font_render = True
                     self.icon_unit = archer.Archer(self.width / 1.35, self.height // 2, 500, self.icons_units)
                     self.stats = [
-                        f'Тип юнита: Лучник',
+                        f'Тип юнита: {self.icon_unit.name}',
                         f'Здоровье: {self.icon_unit.hp}',
                         f'Урон: {self.icon_unit.damage}',
                         f'Передвижение: {self.icon_unit.step}',
                         f'Дистанция атаки: {self.icon_unit.distance_attack}']
                 if button == self.dragon_button:
+                    self.font_render = True
                     self.icon_unit = dragon.Dragon(self.width / 1.35, self.height // 2, 200, self.icons_units)
                     self.stats = [
-                        f'Тип юнита: Дракон',
+                        f'Тип юнита: {self.icon_unit.name}',
                         f'Здоровье: {self.icon_unit.hp}',
                         f'Урон: {self.icon_unit.damage}',
                         f'Передвижение: {self.icon_unit.step}',
                         f'Дистанция атаки: {self.icon_unit.distance_attack}']
                 if button == self.cavalry_button:
+                    self.font_render = True
                     self.icon_unit = cavalry.Cavalry(self.width / 1.35, self.height // 2, 200, self.icons_units)
                     self.stats = [
-                        f'Тип юнита: Кавалерия',
+                        f'Тип юнита: {self.icon_unit.name}',
                         f'Здоровье: {self.icon_unit.hp}',
                         f'Урон: {self.icon_unit.damage}',
                         f'Передвижение: {self.icon_unit.step}',
                         f'Дистанция атаки: {self.icon_unit.distance_attack}']
                 if button == self.castle_button:
+                    self.font_render = True
                     self.icon_unit = castle.Castle(self.width / 1.35, self.height // 2, 200, self.icons_units)
                     self.stats = [
-                        f'Тип юнита: Замок',
+                        f'Тип юнита: {self.icon_unit.name}',
                         f'Здоровье: {self.icon_unit.hp}',
                         f'Урон: {self.icon_unit.damage}',
                         f'Передвижение: {self.icon_unit.step}',
                         f'Дистанция атаки: {self.icon_unit.distance_attack}']
+                if button == self.grass_button:
+                    self.font_render = True
+                    self.icon_unit = landscapes.Landscape('Трава', self.width / 1.35, self.height // 2,
+                                                          'images/landscapes/grass.jpeg', 200, 0, 1, self.icons_units)
+                    self.stats = [
+                        f'Тип ландшафта: {self.icon_unit.name}',
+                        f'Урон: {self.icon_unit.damage}',
+                        f'Передвижение: {self.icon_unit.move}']
+                if button == self.rock_button:
+                    self.font_render = True
+                    self.icon_unit = landscapes.Landscape('Скала', self.width / 1.35, self.height // 2,
+                                                          'images/landscapes/skala.png', 200, 0, 1, self.icons_units)
+                    self.stats = [
+                        f'Тип ландшафта: {self.icon_unit.name}',
+                        f'Урон: {self.icon_unit.damage}',
+                        f'Передвижение: {self.icon_unit.move}']
+                if button == self.hill_button:
+                    self.font_render = True
+                    self.icon_unit = landscapes.Landscape('Холм', self.width / 1.35, self.height // 2,
+                                                          'images/landscapes/hill.png', 200, 0, 1, self.icons_units)
+                    self.stats = [
+                        f'Тип ландшафта: {self.icon_unit.name}',
+                        f'Урон: {self.icon_unit.damage}',
+                        f'Передвижение: {self.icon_unit.move}']
+                if button == self.river_button:
+                    self.font_render = True
+                    self.icon_unit = landscapes.Landscape('Река', self.width / 1.35, self.height // 2,
+                                                          'images/landscapes/top_river.xcf', 200, 0, 1, self.icons_units)
+                    self.stats = [
+                        f'Тип ландшафта: {self.icon_unit.name}',
+                        f'Урон: {self.icon_unit.damage}',
+                        f'Передвижение: {self.icon_unit.move}']
                 if button == self.back_button:
                     self.running = False
 
+
     def render(self):
         y = 50
-
         self.main_screen.sc.blit(self.fon, (0, 0))
-        self.icons_units.draw(self.main_screen.sc)
-
-        for i in reversed(self.stats):
-            font = pygame.font.Font(None, 40)
-            text = font.render(i, True, 'black')
-            self.main_screen.sc.blit(text, (self.width / 1.8, self.height // 2 - y))
-            y += 50
+        if len(self.icons_units):
+            self.icons_units.draw(self.main_screen.sc)
+            for i in reversed(self.stats):
+                font = pygame.font.Font(None, 40)
+                text = font.render(i, True, 'black')
+                self.main_screen.sc.blit(text, (self.width / 1.8, self.height / 1.3 - y))
+                y += 50
         for button in self.lst_buttons:
             button.render(self.main_screen.sc)
         self.main_screen.render_cursor()

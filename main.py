@@ -49,7 +49,7 @@ class Main:
                 self.screen.back_to_menu = False
 
             if self.screen.gameplay:
-                start_game.start(self.screen)
+                start_game.start(self.screen, self.size)
                 self.start_screen.levels_menu.start()
 
             self.screen.sc.fill((0, 0, 0))

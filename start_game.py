@@ -122,7 +122,7 @@ def draw_end_surface(screen, main_surf):
 
     font = pygame.font.Font(None, lst[0][1])
     text = font.render(lst[0][0], True, 'white')
-    main_surf.blit(text, (20, 20))
+    main_surf.blit(text, (100, 100))
 
     for i in range(len(lst[1:])):
         font = pygame.font.Font(None, lst[1:][i][1])
