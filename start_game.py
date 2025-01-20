@@ -14,9 +14,9 @@ import swordsman
 is_win = None
 
 
-def start(screen):
+def start(screen, size):
     lst_surfaces = []
-    enemys_move(screen)
+    enemys_move(screen, size)
 
     fps = 120
     clock = pygame.time.Clock()
@@ -36,7 +36,7 @@ def start(screen):
                 select_button = check_click(screen, event.pos)
                 if select_button == 'new_step':
                     new_step()
-                    enemys_move(screen)
+                    enemys_move(screen, size)
                 if select_button == 'back_to_menu':
                     screen.gameplay = False
                     new_step()
@@ -58,7 +58,7 @@ def start(screen):
         pygame.display.flip()
 
 
-def end(screen):
+def end(screen, size):
     run = True
     screen.gameplay = True
     surf = pygame.Surface((8 * screen.board.cell_size, 5 * screen.board.cell_size))
@@ -91,13 +91,13 @@ def end(screen):
         screen.sc.fill((0, 0, 0))
         screen.render()
         show_stats(screen)
-        draw_end_surface(screen, surf)
+        draw_end_surface(screen, surf, size)
         screen.render_cursor()
         clock.tick(fps)
         pygame.display.flip()
 
 
-def draw_end_surface(screen, main_surf):
+def draw_end_surface(screen, main_surf, size):
     global is_win
 
     surf = pygame.surface.Surface((400, 100))
@@ -110,10 +110,11 @@ def draw_end_surface(screen, main_surf):
     lst.append((f'Заработанные монеты: {screen.money}', 30))
 
     main_surf.fill('black')
+    main_surf.set_alpha((0, 0, 0))
 
     font = pygame.font.Font(None, lst[0][1])
     text = font.render(lst[0][0], True, 'white')
-    main_surf.blit(text, (20, 20))
+    main_surf.blit(text, (100, 100))
 
     surf.fill('white')
 
@@ -134,7 +135,7 @@ def check_borders(screen, cell_x, cell_y, dx, dy):
     return False
 
 
-def enemys_move(screen):
+def enemys_move(screen, size):
     for group in [enemys.swordsmans, enemys.archers, enemys.cavalrys, enemys.dragons]:
         for unit in group:
             lst_steps = []
@@ -181,10 +182,10 @@ def enemys_move(screen):
                     screen.board.board[choise_cell[0]][choise_cell[1]] = 2
                     unit.rect.x, unit.rect.y = select_coords
 
-            enemys_attack(screen, unit, (cell_x, cell_y))
+            enemys_attack(screen, unit, (cell_x, cell_y), size)
 
 
-def enemys_attack(screen, unit, now_cell):
+def enemys_attack(screen, unit, now_cell, size):
     can_attack = []
     for dx in range(-unit.distance_attack, unit.distance_attack + 1):
         for dy in range(-unit.distance_attack, unit.distance_attack + 1):
@@ -216,7 +217,7 @@ def enemys_attack(screen, unit, now_cell):
                                     if screen.board.board[i][j] == 4:
                                         screen.board.board[i][j] = 0
                             is_win = False
-                            end(screen)
+                            end(screen, size)
 
                         damage_castle = False
                         break

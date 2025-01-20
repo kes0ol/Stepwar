@@ -16,16 +16,16 @@ class Start_window:
 
 
         self.choose_level_button = Button('Уровни', 100, self.width // 2, self.height // 2 - 350, color=(255, 255, 0),
-                                          dark_color=(0, 255, 0))
+                                          dark_color=(0, 255, 0), coord_type='midbottom')
 
         self.setting_button = Button('Настройки', 100, self.width // 2, self.height // 2 - 200, color=(255, 255, 0),
-                                     dark_color=(50, 50, 50))
+                                     dark_color=(50, 50, 50), coord_type='midbottom')
 
         self.ref_button = Button('Справка', 100, self.width // 2, self.height // 2 - 50, color=(255, 255, 0),
-                                  dark_color=(0, 255, 0))
+                                  dark_color=(0, 255, 0), coord_type='midbottom')
 
         self.exit_button = Button('Выйти', 100, self.width // 2, self.height // 2 + 100, color=(255, 255, 0),
-                                  dark_color=(100, 0, 0))
+                                  dark_color=(100, 0, 0), coord_type='midbottom')
 
         self.lst_buttons = [self.setting_button, self.exit_button, self.choose_level_button,
                             self.ref_button]

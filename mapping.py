@@ -24,9 +24,9 @@ class Screen:
         self.sc = pygame.display.set_mode(self.size, pygame.FULLSCREEN)
 
         self.board = Board(18, 10, self.size)
-        self.button_start_game = Button('Начать игру', 45, self.width - 500, 70, coord_type="bottomleft")
-        self.button_next_step = Button('Следующий ход', 45, self.width - 500, 70, coord_type="bottomleft")
-        self.back_button = Button('Назад', 45, 150, 70, color=(200, 75, 75), dark_color=(150, 25, 25),
+        self.button_start_game = Button('Начать игру', 45, self.width / 2, self.height / 15, coord_type="bottomleft")
+        self.button_next_step = Button('Следующий ход', 45, self.width / 2, self.height / 15, coord_type="bottomleft")
+        self.back_button = Button('Назад', 45, self.width / 20, self.height / 15, color=(200, 75, 75), dark_color=(150, 25, 25),
                                   coord_type="bottomright")
 
         self.icon_swordsman = swordsman.Swordsman(125, 100, self.board.cell_size * 1.5, swordsman.swordsmans)
@@ -39,7 +39,7 @@ class Screen:
         dragon.stock = self.icon_dragon.stock
 
         self.money = 0
-        self.icon_money = money.Money(1450, 20, self.board.cell_size, money.moneys)
+        self.icon_money = money.Money(self.width / 1.1, 20, self.board.cell_size, money.moneys)
 
         self.cursor = pygame.image.load('images/cursor.PNG')
         self.cursor.set_colorkey((255, 255, 255))
