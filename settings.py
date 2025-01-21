@@ -13,8 +13,8 @@ class Settings_window:
         self.main_screen = screen
         self.screen = pygame.surface.Surface((self.width, self.height))
 
-        self.volume_button = Button('Громкость', 80, self.width // 2, self.height // 2 - 400,
-                                    color=(255, 255, 0), dark_color=(255, 255, 0))
+        self.volume_title = View('Громкость', 80, self.width // 2, self.height // 2 - 350,
+                                 color=(255, 255, 0))
         self.plus_button = Button('+', 150, self.width // 2 + 200, self.height // 2 - 200, color=(0, 255, 0),
                                   dark_color=(0, 100, 0), fill_type=FILL_TYPE_BORDER)
         self.minus_button = Button('-', 150, self.width // 2 - 200, self.height // 2 - 200,
@@ -26,8 +26,9 @@ class Settings_window:
         self.back_button = Button('Назад', 80, self.width // 2, self.height // 2 + 200, color=(255, 255, 0),
                                   dark_color=(100, 100, 0))
 
-        self.lst_buttons = [self.volume_button, self.plus_button, self.minus_button, self.reset_button,
+        self.lst_buttons = [self.plus_button, self.minus_button, self.reset_button,
                             self.back_button]
+        self.lst_views = [self.volume_title, self.percent_view]
 
         self.fon = pygame.image.load('images/backgrounds/settingsfon.jpg')
         self.fon = pygame.transform.scale(self.fon, (self.size[0], self.size[1]))
@@ -52,7 +53,8 @@ class Settings_window:
         self.screen.blit(self.fon, (0, 0))
         for button in self.lst_buttons:
             button.render(self.screen)
-        self.percent_view.render(self.screen)
+        for view in self.lst_views:
+            view.render(self.screen)
         self.main_screen.sc.blit(self.screen, (0, 0))
         self.main_screen.render_cursor()
 

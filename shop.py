@@ -5,8 +5,7 @@ import pygame
 import swordsman, archer, cavalry, dragon
 
 import money
-from global_vars import FILL_TYPE_BORDER
-from widgets import Button, View
+from widgets import Button
 
 
 class Store:

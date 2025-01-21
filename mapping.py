@@ -20,14 +20,17 @@ class Screen:
         self.sc = pygame.display.set_mode(self.size, pygame.FULLSCREEN)
 
         self.board = Board(18, 10, self.size)
-        self.button_start_game = Button('Начать игру', 45, self.width / 2, self.height / 15, coord_type="bottomleft")
-        self.button_next_step = Button('Следующий ход', 45, self.width / 2, self.height / 15, coord_type="bottomleft")
-        self.setting_button = Button('Настройки', 45, 450, 70, color=(255, 255, 0), dark_color=(50, 50, 50),
-                                     coord_type="bottomright")
-        self.ref_button = Button('Справка', 45, 650, 70, color=(255, 255, 0), dark_color=(50, 50, 50),
-                                 coord_type="bottomright")
-        self.back_button = Button('Назад', 45, self.width / 20, self.height / 15, color=(200, 75, 75),
-                                  dark_color=(150, 25, 25), coord_type="bottomright")
+
+        self.button_start_game = Button('Начать игру', 45, self.board.cell_size * 16, self.board.cell_size,
+                                        coord_type="bottomleft")
+        self.button_next_step = Button('Следующий ход', 45, self.width / 2, self.board.cell_size,
+                                       coord_type="bottomleft")
+        self.setting_button = Button('Настройки', 45, self.board.cell_size * 4, self.board.cell_size,
+                                     color=(255, 255, 0), dark_color=(50, 50, 50), coord_type="bottomleft")
+        self.ref_button = Button('Справка', 45, self.board.cell_size * 7, self.board.cell_size,
+                                 color=(255, 255, 0), dark_color=(50, 50, 50), coord_type="bottomleft")
+        self.back_button = Button('Назад', 45, self.width / 20, self.board.cell_size, color=(200, 75, 75),
+                                  dark_color=(150, 25, 25), coord_type="bottomleft")
 
         self.steps = 0
         self.score = 0
@@ -204,11 +207,12 @@ class Board:
                 for j in range(len(field_lst[i])):
                     x, y = j * self.cell_size + self.left, i * self.cell_size + self.top
 
-                    landscapes.Landscape('grass', 'Трава', x, y, 'images/landscapes/grass.jpeg', self.cell_size, 0, 0,
+                    landscapes.Landscape('grass', 'Трава', x, y, 'images/landscapes/grass.png', self.cell_size, 0, 0,
                                          landscapes.landscapes)
 
                     if field_lst[i][j] == 'm':
-                        landscapes.Landscape('mountains', 'Гора', x, y, 'images/landscapes/skala.png', self.cell_size,
+                        landscapes.Landscape('mountains', 'Гора', x, y, 'images/landscapes/mountains.png',
+                                             self.cell_size,
                                              0, 'нельзя', landscapes.landscapes)
                         self.field[i][j] = 1
                     elif field_lst[i][j] == 'h':
