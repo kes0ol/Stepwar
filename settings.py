@@ -11,7 +11,6 @@ class Settings_window:
         self.volume = 1
         self.size = self.width, self.height = size
         self.main_screen = screen
-        self.screen = pygame.surface.Surface((self.width, self.height))
 
         self.volume_button = Button('Громкость', 80, self.width // 2, self.height // 2 - 400,
                                     color=(255, 255, 0), dark_color=(255, 255, 0))
@@ -49,11 +48,11 @@ class Settings_window:
                     pygame.mixer.music.set_volume(self.volume)
 
     def render(self):
-        self.screen.blit(self.fon, (0, 0))
+        self.main_screen.sc.blit(self.fon, (0, 0))
         for button in self.lst_buttons:
-            button.render(self.screen)
-        self.percent_view.render(self.screen)
-        self.main_screen.sc.blit(self.screen, (0, 0))
+            button.render(self.main_screen.sc)
+        self.percent_view.render(self.main_screen.sc)
+        self.main_screen.sc.blit(self.main_screen.sc, (0, 0))
         self.main_screen.render_cursor()
 
     def start(self):
@@ -73,7 +72,7 @@ class Settings_window:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.check_click(event.pos, self.lst_buttons)
 
-            self.screen.fill((0, 0, 0))
+            self.main_screen.sc.fill((0, 0, 0))
             self.render()
 
             clock.tick(fps)

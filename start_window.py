@@ -5,6 +5,7 @@ import settings
 import levels
 import reference
 import shop
+import creators
 
 from widgets import Button
 
@@ -25,14 +26,17 @@ class Start_window:
                                  dark_color=(0, 255, 0))
         self.exit_button = Button('Выйти', 100, self.width // 2, self.height // 2 + 250, color=(255, 255, 0),
                                   dark_color=(100, 0, 0))
+        self.creators_button = Button('О Нас', 100, self.width / 1.1, self.height / 20, color=(255, 255, 0),
+                                  dark_color=(150, 255, 150))
 
         self.lst_buttons = [self.setting_button, self.exit_button, self.choose_level_button,
-                            self.ref_button, self.shop_button]
+                            self.ref_button, self.shop_button, self.creators_button]
 
         self.settings_screen = settings.Settings_window(self.main_screen, self.size)
         self.ref_screen = reference.Reference_window(self.main_screen, self.size, main)
         self.levels_menu = levels.Levels_menu(self.main_screen, self.size, main)
         self.store = shop.Store(screen, self.size)
+        self.creators = creators.Creators(self.main_screen, self.size)
 
         self.fon = pygame.image.load('images/backgrounds/fon.PNG')
         self.fon = pygame.transform.scale(self.fon, (self.width, self.height))
@@ -43,6 +47,8 @@ class Start_window:
                 if button == self.choose_level_button:
                     self.running = False
                     self.levels_menu.start()
+                if button == self.creators_button:
+                    self.creators.start()
                 if button == self.setting_button:
                     self.settings_screen.start()
                 if button == self.ref_button:
