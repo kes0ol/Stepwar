@@ -25,6 +25,7 @@ def start(screen):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     running = False
+                    return_units()
                     new_step()
                     screen.board.clear_board(screen)
 
@@ -36,6 +37,7 @@ def start(screen):
                     enemys_move(screen)
                 if select_button == 'back_to_menu':
                     running = False
+                    return_units()
                     new_step()
                     screen.board.clear_board(screen)
                 if screen.setting_button.check_click(event.pos):
@@ -75,14 +77,9 @@ def end(screen):
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    swordsman.stock = len(swordsman.swordsmans) - 1
-                    archer.stock = len(archer.archers) - 1
-                    cavalry.stock = len(cavalry.cavalrys) - 1
-                    dragon.stock = len(dragon.dragons) - 1
-
                     running = False
                     screen.gameplay = False
-
+                    return_units()
                     new_step()
                     screen.board.clear_board(screen)
 
@@ -92,9 +89,13 @@ def end(screen):
                 if select_button == 'back_to_menu':
                     running = False
                     screen.gameplay = False
-
+                    return_units()
                     new_step()
                     screen.board.clear_board(screen)
+                if screen.setting_button.check_click(event.pos):
+                    screen.main.start_screen.settings_screen.start()
+                if screen.ref_button.check_click(event.pos):
+                    screen.main.start_screen.ref_screen.start()
 
         screen.sc.fill((0, 0, 0))
         screen.render()
@@ -131,6 +132,13 @@ def draw_end_surface(screen, main_surf):
 
     main_surf.blit(surf, (50, 100))
     screen.sc.blit(main_surf, (500, 250))
+
+
+def return_units():
+    swordsman.stock += len(swordsman.swordsmans) - 1
+    archer.stock += len(archer.archers) - 1
+    cavalry.stock += len(cavalry.cavalrys) - 1
+    dragon.stock += len(dragon.dragons) - 1
 
 
 def check_borders(screen, cell_x, cell_y, dx, dy):

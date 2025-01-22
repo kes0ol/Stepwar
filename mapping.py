@@ -5,6 +5,7 @@ import enemys
 import landscapes
 import money
 
+import start_game
 from widgets import Button
 
 
@@ -21,16 +22,17 @@ class Screen:
 
         self.board = Board(18, 10, self.size)
 
-        self.button_start_game = Button('Начать игру', 45, self.board.cell_size * 16, self.board.cell_size,
-                                        coord_type="bottomleft")
-        self.button_next_step = Button('Следующий ход', 45, self.width / 2, self.board.cell_size,
-                                       coord_type="bottomleft")
-        self.setting_button = Button('Настройки', 45, self.board.cell_size * 4, self.board.cell_size,
-                                     color=(255, 255, 0), dark_color=(50, 50, 50), coord_type="bottomleft")
-        self.ref_button = Button('Справка', 45, self.board.cell_size * 7, self.board.cell_size,
+        self.button_start_game = Button('Начать игру', self.board.cell_size // 2, self.board.cell_size * 15,
+                                        self.board.cell_size, coord_type="bottomleft")
+        self.button_next_step = Button('Следующий ход', self.board.cell_size // 2, self.board.cell_size * 15,
+                                       self.board.cell_size, coord_type="bottomleft")
+        self.setting_button = Button('Настройки', self.board.cell_size // 2, self.board.cell_size * 4,
+                                     self.board.cell_size, color=(255, 255, 0), dark_color=(50, 50, 50),
+                                     coord_type="bottomleft")
+        self.ref_button = Button('Справка', self.board.cell_size // 2, self.board.cell_size * 7, self.board.cell_size,
                                  color=(255, 255, 0), dark_color=(50, 50, 50), coord_type="bottomleft")
-        self.back_button = Button('Назад', 45, self.width / 20, self.board.cell_size, color=(200, 75, 75),
-                                  dark_color=(150, 25, 25), coord_type="bottomleft")
+        self.back_button = Button('Назад', self.board.cell_size // 2, self.width / 20, self.board.cell_size,
+                                  color=(200, 75, 75), dark_color=(150, 25, 25), coord_type="bottomleft")
 
         self.steps = 0
         self.score = 0
@@ -56,6 +58,7 @@ class Screen:
             self.gameplay = True
         if not self.back_to_menu and self.back_button.check_click(mouse_pos):
             self.back_to_menu = True
+            start_game.return_units()
             self.board.clear_board(self)
             self.main.start_screen.levels_menu.start()
         if self.setting_button.check_click(mouse_pos):

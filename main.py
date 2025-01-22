@@ -38,6 +38,7 @@ class Main:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         self.screen.back_to_menu = True
+                        start_game.return_units()
                         self.screen.board.clear_board(self.screen)
                         self.start_screen.levels_menu.start()
 
@@ -49,7 +50,7 @@ class Main:
                 self.screen.back_to_menu = False
 
             if self.screen.gameplay:
-                start_game.start(self.screen, self.size)
+                start_game.start(self.screen)
                 self.start_screen.levels_menu.start()
 
             self.screen.sc.fill((0, 0, 0))
@@ -74,7 +75,7 @@ if __name__ == '__main__':
     pygame.init()
     pygame.display.set_caption('StepWar')
 
-    # set_music('music/walking.wav', -1, 20)
+    set_music('music/walking.wav', -1, 20)
 
     main_screen = Main()
     main_screen.go_start_window()
