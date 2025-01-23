@@ -27,16 +27,19 @@ class Levels_menu:
         self.fon = pygame.image.load('images/backgrounds/menu_levels_fon.jpg')
         self.fon = pygame.transform.scale(self.fon, (self.size[0], self.size[1]))
 
+
     def check_click(self, mouse_pos, lst):
         for button in lst:
             if button.check_click(mouse_pos):
-                if button == self.first_level_button:
+                if button == self.first_level_button and 1 in self.main_screen.progress:
+                    self.main_screen.choose_level = 1
                     self.running = False
                     self.main.start('1')
-                if button == self.second_level_button:
+                if button == self.second_level_button and 2 in self.main_screen.progress:
+                    self.main_screen.choose_level = 2
                     self.running = False
                     self.main.start('2')
-                if button == self.thirst_level_button:
+                if button == self.thirst_level_button and 3 in self.main_screen.progress:
                     self.running = False
                     self.main.start('3')
                 if button == self.back_button:

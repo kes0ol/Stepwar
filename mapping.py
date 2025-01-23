@@ -37,6 +37,8 @@ class Screen:
         self.steps = 0
         self.score = 0
         self.money = 150
+        self.progress = [1]
+        self.choose_level = 1
 
         self.icon_swordsman = swordsman.Swordsman(125, 100, self.board.cell_size * 1.5, swordsman.swordsmans)
         swordsman.stock = self.icon_swordsman.stock

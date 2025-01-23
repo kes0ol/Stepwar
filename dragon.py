@@ -17,8 +17,8 @@ class Dragon(pygame.sprite.Sprite):
         self.do_damage = True
         self.distance_attack = 2
         self.stock = 0
-        self.hp = 150
-        self.damage = 30
+        self.hp = 15000
+        self.damage = 3000
         self.damage_plus = 0
         self.name = 'dragon'
         self.title = 'Дракон'
