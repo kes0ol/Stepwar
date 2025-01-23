@@ -458,6 +458,7 @@ def choose_attack(screen, unit, cell_coords, is_chose_unit, is_attack):
 
 
 def give_damage(screen, select_coords, select_cell, damage_team_unit):
+    kill_sound = pygame.mixer.Sound('music/kill_hit.wav')
     global is_win
     damage_at_enemy_castle = True
 
@@ -484,6 +485,7 @@ def give_damage(screen, select_coords, select_cell, damage_team_unit):
             if (unit.rect.x, unit.rect.y) == select_coords:
                 unit.hp -= damage_team_unit
                 if unit.hp <= 0:
+                    kill_sound.play()
                     unit.kill()
                     screen.board.board[select_cell[1]][select_cell[0]] = 0
 

@@ -32,17 +32,22 @@ class Settings_window:
         self.fon = pygame.image.load('images/backgrounds/settingsfon.jpg')
         self.fon = pygame.transform.scale(self.fon, (self.size[0], self.size[1]))
 
+        self.click_sound = pygame.mixer.Sound('music/click.wav')
+
     def check_click(self, mouse_pos, lst):
         for button in lst:
             if button.check_click(mouse_pos):
                 if button == self.back_button:
+                    self.click_sound.play()
                     self.running = False
                 if button == self.plus_button and self.volume + 0.2 <= 1:
+                    self.click_sound.play()
                     self.volume += 0.2
                     self.percent_view.set_text(f'{int(self.volume * 100)}%')
 
                     pygame.mixer.music.set_volume(self.volume)
                 if button == self.minus_button and self.volume - 0.2 >= 0:
+                    self.click_sound.play()
                     self.volume -= 0.2
                     self.percent_view.set_text(f'{int(self.volume * 100)}%')
 
