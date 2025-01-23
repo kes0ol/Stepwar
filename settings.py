@@ -13,18 +13,19 @@ class Settings_window:
         self.main_screen = screen
         self.screen = pygame.surface.Surface((self.width, self.height))
 
-        self.volume_title = View('Громкость', 80, self.width // 2, self.height // 2 - 350,
-                                 color=(255, 255, 0))
-        self.plus_button = Button('+', 150, self.width // 2 + 200, self.height // 2 - 200, color=(0, 255, 0),
-                                  dark_color=(0, 100, 0), fill_type=FILL_TYPE_BORDER)
-        self.minus_button = Button('-', 150, self.width // 2 - 200, self.height // 2 - 200,
+        self.one_size = self.main_screen.board.cell_size
+
+        self.volume_title = View('Громкость', self.one_size, self.width // 2, self.one_size, color=(255, 255, 0))
+        self.plus_button = Button('+', self.one_size * 2, self.width // 2 + 200, self.one_size * 3,
+                                  color=(0, 255, 0), dark_color=(0, 100, 0), fill_type=FILL_TYPE_BORDER)
+        self.minus_button = Button('-', self.one_size * 2, self.width // 2 - 200, self.one_size * 3,
                                    color=(255, 0, 0), dark_color=(100, 0, 0), fill_type=FILL_TYPE_BORDER)
-        self.percent_view = View(f'{self.volume * 100}%', 80, self.width // 2, self.height / 2 - 200,
+        self.percent_view = View(f'{self.volume * 100}%', self.one_size, self.width // 2, self.one_size * 3,
                                  color=(255, 255, 0))
-        self.reset_button = Button('Начать сначала', 80, self.width // 2, self.height // 2, color=(255, 255, 0),
-                                   dark_color=(100, 100, 0))
-        self.back_button = Button('Назад', 80, self.width // 2, self.height // 2 + 200, color=(255, 255, 0),
-                                  dark_color=(100, 100, 0))
+        self.reset_button = Button('Сбросить прогрес', self.one_size, self.one_size * 18, self.one_size * 11,
+                                   color=(255, 255, 0), dark_color=(100, 100, 0))
+        self.back_button = Button('Назад', self.one_size, self.one_size * 2, self.one_size * 11, color=(150, 0, 0),
+                                  dark_color=(100, 0, 0))
 
         self.lst_buttons = [self.plus_button, self.minus_button, self.reset_button,
                             self.back_button]
@@ -48,6 +49,10 @@ class Settings_window:
                     self.percent_view.set_text(f'{int(self.volume * 100)}%')
 
                     pygame.mixer.music.set_volume(self.volume)
+
+                if button == self.reset_button:
+                    self.running = False
+                    self.main_screen.reset_progress()
 
     def render(self):
         self.screen.blit(self.fon, (0, 0))

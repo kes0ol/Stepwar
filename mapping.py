@@ -36,7 +36,7 @@ class Screen:
 
         self.steps = 0
         self.score = 0
-        self.money = 150
+        self.money = 0
         self.progress = [1]
         self.choose_level = 1
 
@@ -128,6 +128,18 @@ class Screen:
             self.choose_unit = 'dragon'
 
         return self.choose_unit
+
+    def reset_progress(self):
+        self.steps = 0
+        self.money = 0
+        self.progress = [1]
+        self.choose_level = 1
+        self.board.clear_board(self)
+
+        swordsman.stock = self.icon_swordsman.stock
+        archer.stock = self.icon_archer.stock
+        cavalry.stock = self.icon_cavalry.stock
+        dragon.stock = self.icon_dragon.stock
 
 
 class Board:
