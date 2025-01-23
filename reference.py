@@ -30,7 +30,7 @@ class Reference_window:
              За пройденный уровень вы получаете очки. Чтобы пройти уровень, нужно сокрушить вражеский замок. Игра 
              представляет собой стратегию, состоящая из уровней. С каждым открытым уровнем вы получаете доступ к 
              следующему.''')
-        self.lst = self.parse_text(t, round(self.one_size * 1.2))
+        self.lst = self.parse_text(t, self.one_size)
 
         self.fon = pygame.image.load('images/backgrounds/reffon.jpg')
         self.fon = pygame.transform.scale(self.fon, (self.width, self.height))
@@ -41,7 +41,7 @@ class Reference_window:
         w = width
         st = ''
         while len(lst) > 1:
-            while w > 0:
+            while w > 0 and len(lst) > 1:
                 if len(lst[0]) > 0:
                     st += lst[0] + ' '
                     lst = lst[1:]
@@ -105,25 +105,35 @@ class Description:
 
         self.one_size = self.main_screen.board.cell_size
 
-        self.back_button = Button('<-', 200, self.one_size, self.height - self.one_size, color=(100, 0, 0),
+        self.back_button = Button('<-', round(self.main_screen.board.cell_size * 2.4), self.one_size,
+                                  self.height - self.one_size, color=(100, 0, 0),
                                   dark_color=(50, 0, 0))
-        self.swordsman_button = Button('Рыцарь', 100, self.one_size * 3, self.one_size, color=(100, 0, 0),
+        self.swordsman_button = Button('Рыцарь', round(self.main_screen.board.cell_size * 1.2), self.one_size * 3,
+                                       self.one_size, color=(100, 0, 0),
                                        dark_color=(50, 0, 0))
-        self.archer_button = Button('Лучник', 100, self.one_size * 3, round(self.one_size * 2.5), color=(100, 0, 0),
+        self.archer_button = Button('Лучник', round(self.main_screen.board.cell_size * 1.2), self.one_size * 3,
+                                    round(self.one_size * 2.5), color=(100, 0, 0),
                                     dark_color=(50, 0, 0))
-        self.cavalry_button = Button('Кавалерия', 100, self.one_size * 3, self.one_size * 4, color=(100, 0, 0),
+        self.cavalry_button = Button('Кавалерия', round(self.main_screen.board.cell_size * 1.2), self.one_size * 3,
+                                     self.one_size * 4, color=(100, 0, 0),
                                      dark_color=(50, 0, 0))
-        self.dragon_button = Button('Дракон', 100, self.one_size * 3, round(self.one_size * 5.5), color=(100, 0, 0),
+        self.dragon_button = Button('Дракон', round(self.main_screen.board.cell_size * 1.2), self.one_size * 3,
+                                    round(self.one_size * 5.5), color=(100, 0, 0),
                                     dark_color=(50, 0, 0))
-        self.castle_button = Button('Замок', 100, self.one_size * 3, self.one_size * 7, color=(100, 0, 0),
+        self.castle_button = Button('Замок', round(self.main_screen.board.cell_size * 1.2), self.one_size * 3,
+                                    self.one_size * 7, color=(100, 0, 0),
                                     dark_color=(50, 0, 0))
-        self.grass_button = Button('Трава', 100, self.one_size * 8, self.one_size, color=(100, 0, 0),
+        self.grass_button = Button('Трава', round(self.main_screen.board.cell_size * 1.2), self.one_size * 8,
+                                   self.one_size, color=(100, 0, 0),
                                    dark_color=(50, 0, 0))
-        self.rock_button = Button('Гора', 100, self.one_size * 8, round(self.one_size * 2.5), color=(100, 0, 0),
+        self.rock_button = Button('Гора', round(self.main_screen.board.cell_size * 1.2), self.one_size * 8,
+                                  round(self.one_size * 2.5), color=(100, 0, 0),
                                   dark_color=(50, 0, 0))
-        self.hill_button = Button('Холм', 100, self.one_size * 8, self.one_size * 4, color=(100, 0, 0),
+        self.hill_button = Button('Холм', round(self.main_screen.board.cell_size * 1.2), self.one_size * 8,
+                                  self.one_size * 4, color=(100, 0, 0),
                                   dark_color=(50, 0, 0))
-        self.river_button = Button('Река', 100, self.one_size * 8, round(self.one_size * 5.5), color=(100, 0, 0),
+        self.river_button = Button('Река', round(self.main_screen.board.cell_size * 1.2), self.one_size * 8,
+                                   round(self.one_size * 5.5), color=(100, 0, 0),
                                    dark_color=(50, 0, 0))
 
         self.icons_units = pygame.sprite.Group()

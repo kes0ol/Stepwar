@@ -15,15 +15,17 @@ class Start_window:
         self.main_screen = screen
         self.main = main
 
-        self.choose_level_button = Button('Уровни', 100, self.width // 2, self.height // 2 - 350, color=(255, 255, 0),
+        self.one_size = self.main_screen.board.cell_size
+
+        self.choose_level_button = Button('Уровни', round(self.one_size*1.5), self.width // 2, self.one_size * 2, color=(255, 255, 0),
                                           dark_color=(0, 255, 0))
-        self.shop_button = Button('Магазин', 100, self.width // 2, self.height // 2 - 200, color=(255, 255, 0),
+        self.shop_button = Button('Магазин', round(self.one_size*1.5), self.width // 2, self.one_size * 4, color=(255, 255, 0),
                                   dark_color=(0, 255, 0))
-        self.setting_button = Button('Настройки', 100, self.width // 2, self.height // 2 - 50, color=(255, 255, 0),
+        self.setting_button = Button('Настройки', round(self.one_size*1.5), self.width // 2, self.one_size * 6, color=(255, 255, 0),
                                      dark_color=(50, 50, 50))
-        self.ref_button = Button('Справка', 100, self.width // 2, self.height // 2 + 100, color=(255, 255, 0),
+        self.ref_button = Button('Справка', round(self.one_size*1.5), self.width // 2, self.one_size * 8, color=(255, 255, 0),
                                  dark_color=(0, 255, 0))
-        self.exit_button = Button('Выйти', 100, self.width // 2, self.height // 2 + 250, color=(255, 255, 0),
+        self.exit_button = Button('Выйти', round(self.one_size*1.5), self.width // 2, self.one_size * 10, color=(255, 255, 0),
                                   dark_color=(100, 0, 0))
 
         self.lst_buttons = [self.setting_button, self.exit_button, self.choose_level_button,

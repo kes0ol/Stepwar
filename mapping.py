@@ -40,13 +40,18 @@ class Screen:
         self.progress = [1]
         self.choose_level = 1
 
-        self.icon_swordsman = swordsman.Swordsman(125, 100, self.board.cell_size * 1.5, swordsman.swordsmans)
+        self.icon_swordsman = swordsman.Swordsman(self.board.cell_size * 1.4, 1 * (self.board.cell_size * 1.2),
+                                                  self.board.cell_size * 1.2, swordsman.swordsmans)
+        self.icon_archer = archer.Archer(self.board.cell_size * 1.4, 2 * (self.board.cell_size * 1.2),
+                                         self.board.cell_size * 1.2, archer.archers)
+        self.icon_cavalry = cavalry.Cavalry(self.board.cell_size * 1.4, 3 * (self.board.cell_size * 1.2),
+                                            self.board.cell_size * 1.2, cavalry.cavalrys)
+        self.icon_dragon = dragon.Dragon(self.board.cell_size * 1.4, 4 * (self.board.cell_size * 1.2),
+                                         self.board.cell_size * 1.2, dragon.dragons)
+
         swordsman.stock = self.icon_swordsman.stock
-        self.icon_archer = archer.Archer(125, 200, self.board.cell_size * 1.5, archer.archers)
         archer.stock = self.icon_archer.stock
-        self.icon_cavalry = cavalry.Cavalry(125, 300, self.board.cell_size * 1.5, cavalry.cavalrys)
         cavalry.stock = self.icon_cavalry.stock
-        self.icon_dragon = dragon.Dragon(125, 400, self.board.cell_size * 1.5, dragon.dragons)
         dragon.stock = self.icon_dragon.stock
         self.icon_money = money.Money(self.width - 100, 20, self.board.cell_size, money.moneys)
 
@@ -83,10 +88,12 @@ class Screen:
         dragon.dragons.draw(self.sc)
         castle.castles.draw(self.sc)
 
-        swordsman.set_view_stock(self.sc, (50, 150), 50)
-        archer.set_view_stock(self.sc, (50, 250), 50)
-        cavalry.set_view_stock(self.sc, (50, 350), 50)
-        dragon.set_view_stock(self.sc, (50, 450), 50)
+        for unit in [swordsman, archer, cavalry, dragon]:
+            index = [swordsman, archer, cavalry, dragon].index(unit) + 1
+            unit.set_view_stock(self.sc, (
+                round(self.board.cell_size * 0.9),
+                index * (self.board.cell_size * 1.23) + round(self.board.cell_size / 2.6)),
+                                round(self.board.cell_size / 1.4))
 
         enemys.swordsmans.draw(self.sc)
         enemys.archers.draw(self.sc)
