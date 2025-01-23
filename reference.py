@@ -30,12 +30,16 @@ class Reference_window:
 
         self.ref_screen = sreference.Reference_Window(self.main_screen, self.size, self.main)
 
+        self.click_sound = pygame.mixer.Sound('music/click.wav')
+
     def check_click(self, mouse_pos, lst):
         for button in lst:
             if button.check_click(mouse_pos):
                 if button == self.next_page_button:
+                    self.click_sound.play()
                     self.ref_screen.start()
                 if button == self.back_button:
+                    self.click_sound.play()
                     self.running = False
                     self.main.go_start_window()
 

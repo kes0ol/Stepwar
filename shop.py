@@ -34,6 +34,8 @@ class Store:
         self.fon = pygame.image.load('images/backgrounds/store.png')
         self.fon = pygame.transform.scale(self.fon, (self.size[0], self.size[1]))
 
+        self.click_sound = pygame.mixer.Sound('music/click.wav')
+
     def render_products(self):
         for i in range(len(self.lst_units)):
             self.lst_units[i].set_view_stock(self.screen, (
@@ -63,8 +65,10 @@ class Store:
         for button in lst:
             if button.check_click(mouse_pos):
                 if button == self.back_button:
+                    self.click_sound.play()
                     self.running = False
                 else:
+                    self.click_sound.play()
                     select_button = self.lst_products[self.lst_buttons.index(button) - 1]
                     if self.main_screen.money >= select_button[1]:
                         self.main_screen.money -= select_button[1]

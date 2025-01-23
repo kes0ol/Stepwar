@@ -37,19 +37,27 @@ class Start_window:
         self.fon = pygame.image.load('images/backgrounds/fon.PNG')
         self.fon = pygame.transform.scale(self.fon, (self.width, self.height))
 
+
+        self.click_sound = pygame.mixer.Sound('music/click.wav')
+
     def check_click(self, mouse_pos, lst):
         for button in lst:
             if button.check_click(mouse_pos):
                 if button == self.choose_level_button:
+                    self.click_sound.play()
                     self.running = False
                     self.levels_menu.start()
                 if button == self.setting_button:
+                    self.click_sound.play()
                     self.settings_screen.start()
                 if button == self.ref_button:
+                    self.click_sound.play()
                     self.ref_screen.start()
                 if button == self.shop_button:
+                    self.click_sound.play()
                     self.store.start()
                 if button == self.exit_button:
+                    self.click_sound.play()
                     self.running = False
                     pygame.quit()
                     sys.exit()

@@ -27,19 +27,25 @@ class Levels_menu:
         self.fon = pygame.image.load('images/backgrounds/menu_levels_fon.jpg')
         self.fon = pygame.transform.scale(self.fon, (self.size[0], self.size[1]))
 
+        self.click_sound = pygame.mixer.Sound('music/click.wav')
+
     def check_click(self, mouse_pos, lst):
         for button in lst:
             if button.check_click(mouse_pos):
                 if button == self.first_level_button:
+                    self.click_sound.play()
                     self.running = False
                     self.main.start('1')
                 if button == self.second_level_button:
+                    self.click_sound.play()
                     self.running = False
                     self.main.start('2')
                 if button == self.thirst_level_button:
+                    self.click_sound.play()
                     self.running = False
                     self.main.start('3')
                 if button == self.back_button:
+                    self.click_sound.play()
                     self.running = False
                     self.main.go_start_window()
 

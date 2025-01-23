@@ -106,12 +106,17 @@ def end(screen):
 
 
 def draw_end_surface(screen, main_surf):
+    win_sound = pygame.mixer.Sound('music/win.wav')
+    lose_sound = pygame.mixer.Sound('music/lose.wav')
+
     surf = pygame.surface.Surface((400, 100))
     lst = []
 
     if is_win:
+        win_sound.play()
         lst.append(('Вы победили!', 100))
     else:
+        lose_sound.play()
         lst.append(('Вас уничтожили!', 90))
 
     lst.append((f'Заработанные монеты: {screen.money}', 30))
@@ -192,6 +197,7 @@ def enemys_move(screen):
 
 
 def enemys_attack(screen, unit, now_cell):
+    click_sound = pygame.mixer.Sound('music/kill_hit.wav')
     global is_win
 
     can_attack = []
@@ -233,6 +239,7 @@ def enemys_attack(screen, unit, now_cell):
                        select_attack[1] * screen.board.cell_size + screen.board.top) == (un.rect.x, un.rect.y)):
                     un.hp -= unit.damage
                     if un.hp <= 0:
+                        click_sound.play()
                         un.kill()
                         screen.board.board[select_attack[1]][select_attack[0]] = 0
                     break
