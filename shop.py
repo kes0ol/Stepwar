@@ -5,8 +5,7 @@ import pygame
 import swordsman, archer, cavalry, dragon
 
 import money
-from global_vars import FILL_TYPE_BORDER
-from widgets import Button, View
+from widgets import Button
 
 
 class Store:
@@ -21,7 +20,8 @@ class Store:
         self.lst_products = [('images/team_images/swordsman.png', 25), ('images/team_images/archer.png', 40),
                              ('images/team_images/cavalry.png', 55), ('images/team_images/dragon.png', 120)]
 
-        self.back_button = Button('Назад', 80, 120, self.height - 100, color=(200, 75, 75), dark_color=(150, 25, 25))
+        self.back_button = Button('Назад', round(self.main_screen.board.cell_size * 1.2), round(self.main_screen.board.cell_size * 1.7), self.height - 100,
+                                  color=(200, 75, 75), dark_color=(150, 25, 25))
 
         self.lst_buttons = [self.back_button]
 

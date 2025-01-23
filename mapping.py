@@ -5,6 +5,7 @@ import enemys
 import landscapes
 import money
 
+import start_game
 from widgets import Button
 
 
@@ -20,26 +21,37 @@ class Screen:
         self.sc = pygame.display.set_mode(self.size, pygame.FULLSCREEN)
 
         self.board = Board(18, 10, self.size)
-        self.button_start_game = Button('Начать игру', 45, self.width / 2, self.height / 15, coord_type="bottomleft")
-        self.button_next_step = Button('Следующий ход', 45, self.width / 2, self.height / 15, coord_type="bottomleft")
-        self.setting_button = Button('Настройки', 45, 450, 70, color=(255, 255, 0), dark_color=(50, 50, 50),
-                                     coord_type="bottomright")
-        self.ref_button = Button('Справка', 45, 650, 70, color=(255, 255, 0), dark_color=(50, 50, 50),
-                                 coord_type="bottomright")
-        self.back_button = Button('Назад', 45, self.width / 20, self.height / 15, color=(200, 75, 75),
-                                  dark_color=(150, 25, 25), coord_type="bottomright")
+
+        self.button_start_game = Button('Начать игру', self.board.cell_size // 2, self.board.cell_size * 15,
+                                        self.board.cell_size, coord_type="bottomleft")
+        self.button_next_step = Button('Следующий ход', self.board.cell_size // 2, self.board.cell_size * 15,
+                                       self.board.cell_size, coord_type="bottomleft")
+        self.setting_button = Button('Настройки', self.board.cell_size // 2, self.board.cell_size * 4,
+                                     self.board.cell_size, color=(255, 255, 0), dark_color=(50, 50, 50),
+                                     coord_type="bottomleft")
+        self.ref_button = Button('Справка', self.board.cell_size // 2, self.board.cell_size * 7, self.board.cell_size,
+                                 color=(255, 255, 0), dark_color=(50, 50, 50), coord_type="bottomleft")
+        self.back_button = Button('Назад', self.board.cell_size // 2, self.width / 20, self.board.cell_size,
+                                  color=(200, 75, 75), dark_color=(150, 25, 25), coord_type="bottomleft")
 
         self.steps = 0
         self.score = 0
-        self.money = 150
+        self.money = 0
+        self.progress = [1]
+        self.choose_level = 1
 
-        self.icon_swordsman = swordsman.Swordsman(125, 100, self.board.cell_size * 1.5, swordsman.swordsmans)
+        self.icon_swordsman = swordsman.Swordsman(self.board.cell_size * 1.4, 1 * (self.board.cell_size * 1.2),
+                                                  self.board.cell_size * 1.2, swordsman.swordsmans)
+        self.icon_archer = archer.Archer(self.board.cell_size * 1.4, 2 * (self.board.cell_size * 1.2),
+                                         self.board.cell_size * 1.2, archer.archers)
+        self.icon_cavalry = cavalry.Cavalry(self.board.cell_size * 1.4, 3 * (self.board.cell_size * 1.2),
+                                            self.board.cell_size * 1.2, cavalry.cavalrys)
+        self.icon_dragon = dragon.Dragon(self.board.cell_size * 1.4, 4 * (self.board.cell_size * 1.2),
+                                         self.board.cell_size * 1.2, dragon.dragons)
+
         swordsman.stock = self.icon_swordsman.stock
-        self.icon_archer = archer.Archer(125, 200, self.board.cell_size * 1.5, archer.archers)
         archer.stock = self.icon_archer.stock
-        self.icon_cavalry = cavalry.Cavalry(125, 300, self.board.cell_size * 1.5, cavalry.cavalrys)
         cavalry.stock = self.icon_cavalry.stock
-        self.icon_dragon = dragon.Dragon(125, 400, self.board.cell_size * 1.5, dragon.dragons)
         dragon.stock = self.icon_dragon.stock
         self.icon_money = money.Money(self.width - 100, 20, self.board.cell_size, money.moneys)
 
@@ -53,6 +65,7 @@ class Screen:
             self.gameplay = True
         if not self.back_to_menu and self.back_button.check_click(mouse_pos):
             self.back_to_menu = True
+            start_game.return_units()
             self.board.clear_board(self)
             self.main.start_screen.levels_menu.start()
         if self.setting_button.check_click(mouse_pos):
@@ -75,10 +88,12 @@ class Screen:
         dragon.dragons.draw(self.sc)
         castle.castles.draw(self.sc)
 
-        swordsman.set_view_stock(self.sc, (50, 150), 50)
-        archer.set_view_stock(self.sc, (50, 250), 50)
-        cavalry.set_view_stock(self.sc, (50, 350), 50)
-        dragon.set_view_stock(self.sc, (50, 450), 50)
+        for unit in [swordsman, archer, cavalry, dragon]:
+            index = [swordsman, archer, cavalry, dragon].index(unit) + 1
+            unit.set_view_stock(self.sc, (
+                round(self.board.cell_size * 0.9),
+                index * (self.board.cell_size * 1.23) + round(self.board.cell_size / 2.6)),
+                                round(self.board.cell_size / 1.4))
 
         enemys.swordsmans.draw(self.sc)
         enemys.archers.draw(self.sc)
@@ -113,6 +128,18 @@ class Screen:
             self.choose_unit = 'dragon'
 
         return self.choose_unit
+
+    def reset_progress(self):
+        self.steps = 0
+        self.money = 0
+        self.progress = [1]
+        self.choose_level = 1
+        self.board.clear_board(self)
+
+        swordsman.stock = self.icon_swordsman.stock
+        archer.stock = self.icon_archer.stock
+        cavalry.stock = self.icon_cavalry.stock
+        dragon.stock = self.icon_dragon.stock
 
 
 class Board:
@@ -204,11 +231,12 @@ class Board:
                 for j in range(len(field_lst[i])):
                     x, y = j * self.cell_size + self.left, i * self.cell_size + self.top
 
-                    landscapes.Landscape('grass', 'Трава', x, y, 'images/landscapes/grass.jpeg', self.cell_size, 0, 0,
+                    landscapes.Landscape('grass', 'Трава', x, y, 'images/landscapes/grass.png', self.cell_size, 0, 0,
                                          landscapes.landscapes)
 
                     if field_lst[i][j] == 'm':
-                        landscapes.Landscape('mountains', 'Гора', x, y, 'images/landscapes/skala.png', self.cell_size,
+                        landscapes.Landscape('mountains', 'Гора', x, y, 'images/landscapes/mountains.png',
+                                             self.cell_size,
                                              0, 'нельзя', landscapes.landscapes)
                         self.field[i][j] = 1
                     elif field_lst[i][j] == 'h':

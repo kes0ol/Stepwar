@@ -8,11 +8,13 @@ import enemys
 import landscapes
 
 is_win = None
+money_now = 0
 
 
 def start(screen):
-    global is_win
+    global is_win, money_now
     enemys_move(screen)
+    money_now = 0
 
     fps = 120
     clock = pygame.time.Clock()
@@ -25,6 +27,7 @@ def start(screen):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     running = False
+                    return_units()
                     new_step()
                     screen.board.clear_board(screen)
 
@@ -36,6 +39,7 @@ def start(screen):
                     enemys_move(screen)
                 if select_button == 'back_to_menu':
                     running = False
+                    return_units()
                     new_step()
                     screen.board.clear_board(screen)
                 if screen.setting_button.check_click(event.pos):
@@ -61,6 +65,8 @@ def start(screen):
 
 
 def end(screen):
+    global money_now
+    screen.money += money_now
     surf = pygame.Surface((8 * screen.board.cell_size, 5 * screen.board.cell_size))
 
     fps = 120
@@ -75,14 +81,9 @@ def end(screen):
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    swordsman.stock = len(swordsman.swordsmans) - 1
-                    archer.stock = len(archer.archers) - 1
-                    cavalry.stock = len(cavalry.cavalrys) - 1
-                    dragon.stock = len(dragon.dragons) - 1
-
                     running = False
                     screen.gameplay = False
-
+                    return_units()
                     new_step()
                     screen.board.clear_board(screen)
 
@@ -92,9 +93,13 @@ def end(screen):
                 if select_button == 'back_to_menu':
                     running = False
                     screen.gameplay = False
-
+                    return_units()
                     new_step()
                     screen.board.clear_board(screen)
+                if screen.setting_button.check_click(event.pos):
+                    screen.main.start_screen.settings_screen.start()
+                if screen.ref_button.check_click(event.pos):
+                    screen.main.start_screen.ref_screen.start()
 
         screen.sc.fill((0, 0, 0))
         screen.render()
@@ -106,6 +111,7 @@ def end(screen):
 
 
 def draw_end_surface(screen, main_surf):
+    global money_now
     surf = pygame.surface.Surface((400, 100))
     lst = []
 
@@ -114,7 +120,7 @@ def draw_end_surface(screen, main_surf):
     else:
         lst.append(('Вас уничтожили!', 90))
 
-    lst.append((f'Заработанные монеты: {screen.money}', 30))
+    lst.append((f'Заработанные монеты: {money_now}', 30))
     lst.append((f'Счёт: {screen.score * (20 // screen.steps)}', 30))
 
     surf.fill('white')
@@ -131,6 +137,13 @@ def draw_end_surface(screen, main_surf):
 
     main_surf.blit(surf, (50, 100))
     screen.sc.blit(main_surf, (500, 250))
+
+
+def return_units():
+    swordsman.stock += len(swordsman.swordsmans) - 1
+    archer.stock += len(archer.archers) - 1
+    cavalry.stock += len(cavalry.cavalrys) - 1
+    dragon.stock += len(dragon.dragons) - 1
 
 
 def check_borders(screen, cell_x, cell_y, dx, dy):
@@ -451,7 +464,7 @@ def choose_attack(screen, unit, cell_coords, is_chose_unit, is_attack):
 
 
 def give_damage(screen, select_coords, select_cell, damage_team_unit):
-    global is_win
+    global is_win, money_now
     damage_at_enemy_castle = True
 
     for group in [enemys.swordsmans, enemys.archers, enemys.cavalrys, enemys.dragons, enemys.castles]:
@@ -466,8 +479,12 @@ def give_damage(screen, select_coords, select_cell, damage_team_unit):
                             for j in range(len(screen.board.board[i])):
                                 if screen.board.board[i][j] == 3:
                                     screen.board.board[i][j] = 0
-                        screen.money += 100
+                        money_now += 100
                         is_win = True
+
+                        screen.progress.append(screen.choose_level + 1)
+                        screen.progress = list(set(screen.progress))
+
                         end(screen)
 
                     damage_at_enemy_castle = False
@@ -481,16 +498,16 @@ def give_damage(screen, select_coords, select_cell, damage_team_unit):
                     screen.board.board[select_cell[1]][select_cell[0]] = 0
 
                     if unit.name == 'swordsman':
-                        screen.money += 10
+                        money_now += 10
                         screen.score += 5
                     if unit.name == 'archer':
-                        screen.money += 15
+                        money_now += 15
                         screen.score += 25
                     if unit.name == 'cavalry':
-                        screen.money += 20
+                        money_now += 20
                         screen.score += 20
                     if unit.name == 'dragon':
-                        screen.money += 50
+                        money_now += 50
                         screen.score += 40
                 break
 

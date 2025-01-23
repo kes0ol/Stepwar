@@ -38,6 +38,7 @@ class Main:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         self.screen.back_to_menu = True
+                        start_game.return_units()
                         self.screen.board.clear_board(self.screen)
                         self.start_screen.levels_menu.start()
 

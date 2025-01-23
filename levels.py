@@ -13,11 +13,13 @@ class Levels_menu:
 
         self.screen = pygame.surface.Surface((width, height))
 
-        self.first_level_button = Button('Уровень 1', 100, width // 2 - 700, height // 2,
+        self.one_size = self.main_screen.board.cell_size
+
+        self.first_level_button = Button('Уровень 1', 100, self.one_size * 4, height // 2,
                                          color=(40, 120, 80), dark_color=(40, 150, 80))
-        self.second_level_button = Button('Уровень 2', 100, width // 2, height // 2,
+        self.second_level_button = Button('Уровень 2', 100, self.one_size * 11, height // 2,
                                           color=(40, 80, 120), dark_color=(40, 80, 150))
-        self.thirst_level_button = Button('Уровень 3', 100, width // 2 + 600, height // 2,
+        self.thirst_level_button = Button('Уровень 3', 100, self.one_size * 18, height // 2,
                                           color=(120, 80, 40), dark_color=(150, 80, 40))
         self.back_button = Button('Назад', 80, width // 2, height // 2 + 200, color=(130, 130, 130))
 
@@ -30,13 +32,15 @@ class Levels_menu:
     def check_click(self, mouse_pos, lst):
         for button in lst:
             if button.check_click(mouse_pos):
-                if button == self.first_level_button:
+                if button == self.first_level_button and 1 in self.main_screen.progress:
+                    self.main_screen.choose_level = 1
                     self.running = False
                     self.main.start('1')
-                if button == self.second_level_button:
+                if button == self.second_level_button and 2 in self.main_screen.progress:
+                    self.main_screen.choose_level = 2
                     self.running = False
                     self.main.start('2')
-                if button == self.thirst_level_button:
+                if button == self.thirst_level_button and 3 in self.main_screen.progress:
                     self.running = False
                     self.main.start('3')
                 if button == self.back_button:
