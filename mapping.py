@@ -261,24 +261,24 @@ class Board:
     def on_click(self, cell_coords, mouse_button):
         x, y = cell_coords
         if mouse_button == 1:
-            if x <= 6 and self.field[y][x] in (0, 2):
-                if self.choosen_unit == 'swordsman' and self.board[y][x] == 0 and swordsman.stock > 0:
+            if x <= 6 and self.board[y][x] == 0 and self.field[y][x] == 0:
+                if self.choosen_unit == 'swordsman' and swordsman.stock > 0:
                     swordsman.Swordsman(x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
                                         swordsman.swordsmans)
                     swordsman.stock -= 1
                     self.board[y][x] = 1
-                if self.choosen_unit == 'archer' and self.board[y][x] == 0 and archer.stock > 0:
+                if self.choosen_unit == 'archer' and archer.stock > 0:
                     archer.Archer(x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
                                   archer.archers)
                     archer.stock -= 1
                     self.board[y][x] = 1
 
-                if self.choosen_unit == 'cavalry' and self.board[y][x] == 0 and cavalry.stock > 0:
+                if self.choosen_unit == 'cavalry' and cavalry.stock > 0:
                     cavalry.Cavalry(x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
                                     cavalry.cavalrys)
                     cavalry.stock -= 1
                     self.board[y][x] = 1
-                if self.choosen_unit == 'dragon' and self.board[y][x] == 0 and dragon.stock > 0:
+                if self.choosen_unit == 'dragon' and dragon.stock > 0:
                     dragon.Dragon(x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
                                   dragon.dragons)
                     dragon.stock -= 1
@@ -338,3 +338,12 @@ class Board:
         enemys.castles.empty()
 
         self.set_map()
+
+
+class Window:
+    def __init__(self, screen, size, main):
+        self.size = self.width, self.height = size
+        self.main_screen = screen
+        self.main = main
+
+        self.one_size = self.main_screen.board.cell_size

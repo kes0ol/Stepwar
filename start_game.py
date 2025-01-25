@@ -30,6 +30,10 @@ def start(screen):
                     return_units()
                     new_step()
                     screen.board.clear_board(screen)
+                if event.key == pygame.K_SPACE:
+                    screen.steps += 1
+                    new_step()
+                    enemys_move(screen)
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 select_button = check_click(screen, event.pos)
@@ -67,7 +71,7 @@ def start(screen):
 def end(screen):
     global money_now
     screen.money += money_now
-    surf = pygame.Surface((8 * screen.board.cell_size, 5 * screen.board.cell_size))
+    surf = pygame.Surface((screen.board.one_size * 8, screen.board.one_size * 4))
 
     fps = 120
     clock = pygame.time.Clock()
@@ -112,31 +116,32 @@ def end(screen):
 
 def draw_end_surface(screen, main_surf):
     global money_now
-    surf = pygame.surface.Surface((400, 100))
+    one_size = screen.board.one_size
     lst = []
 
-    if is_win:
-        lst.append(('Вы победили!', 100))
-    else:
-        lst.append(('Вас уничтожили!', 90))
-
-    lst.append((f'Заработанные монеты: {money_now}', 30))
-    lst.append((f'Счёт: {screen.score * (20 // screen.steps)}', 30))
+    surf = pygame.surface.Surface((one_size * 6, one_size * 2))
 
     surf.fill('white')
     main_surf.fill('black')
 
-    font = pygame.font.Font(None, lst[0][1])
-    text = font.render(lst[0][0], True, 'white')
-    main_surf.blit(text, (100, 100))
+    if is_win:
+        font = pygame.font.Font(None, round(one_size * 1.4))
+        text = font.render('Вы победили!', True, 'white')
+    else:
+        font = pygame.font.Font(None, round(one_size * 1.3))
+        text = font.render('Вас уничтожили!', True, 'white')
+    main_surf.blit(text, (one_size // 5, one_size // 5))
 
-    for i in range(len(lst[1:])):
-        font = pygame.font.Font(None, lst[1:][i][1])
-        text = font.render(lst[1:][i][0], True, 'black')
+    lst.append((f'Заработанные монеты: {money_now}', one_size // 2))
+    lst.append((f'Счёт: {screen.score * (20 // screen.steps)}', one_size // 2))
+
+    for i in range(len(lst)):
+        font = pygame.font.Font(None, lst[i][1])
+        text = font.render(lst[i][0], True, 'black')
         surf.blit(text, (10, i * 50 + 20))
 
-    main_surf.blit(surf, (50, 100))
-    screen.sc.blit(main_surf, (500, 250))
+    main_surf.blit(surf, (one_size, one_size * 1.5))
+    screen.sc.blit(main_surf, (one_size * 8, one_size * 4))
 
 
 def return_units():
@@ -193,8 +198,8 @@ def enemys_move(screen):
 
             if len(lst_steps) > 0:
                 choise_cell = random.choice(lst_steps)
-                select_coords = (choise_cell[1] * screen.board.cell_size + screen.board.left,
-                                 choise_cell[0] * screen.board.cell_size + screen.board.top)
+                select_coords = (choise_cell[1] * screen.board.one_size + screen.board.left,
+                                 choise_cell[0] * screen.board.one_size + screen.board.top)
 
                 if screen.board.board[choise_cell[0]][choise_cell[1]] == 0 and (cell_x, cell_y) != (-1, -1):
                     screen.board.board[cell_y][cell_x] = 0
@@ -242,8 +247,8 @@ def enemys_attack(screen, unit, now_cell):
                         break
                     break
 
-                elif ((select_attack[0] * screen.board.cell_size + screen.board.left,
-                       select_attack[1] * screen.board.cell_size + screen.board.top) == (un.rect.x, un.rect.y)):
+                elif ((select_attack[0] * screen.board.one_size + screen.board.left,
+                       select_attack[1] * screen.board.one_size + screen.board.top) == (un.rect.x, un.rect.y)):
                     un.hp -= unit.damage
                     if un.hp <= 0:
                         un.kill()
@@ -296,7 +301,7 @@ def check_click(screen, mouse_pos):
 
 def choose_unit(screen, cell_coords):
     cell_x, cell_y = cell_coords
-    coords = cell_x * screen.board.cell_size + screen.board.left, cell_y * screen.board.cell_size + screen.board.top
+    coords = cell_x * screen.board.one_size + screen.board.left, cell_y * screen.board.one_size + screen.board.top
 
     for sword in swordsman.swordsmans:
         if (sword.rect.x, sword.rect.y) == coords:
@@ -340,13 +345,13 @@ def add_step_surfaces(screen, unit, lst_steps, lst_surfaces, cell_x, cell_y, uni
                                     else:
                                         lst_steps.append((cell_y + dy, cell_x + dx))
 
-                                        surface_coords_x = (cell_x + dx) * screen.board.cell_size + screen.board.left
-                                        surface_coords_y = (cell_y + dy) * screen.board.cell_size + screen.board.top
+                                        surface_coords_x = (cell_x + dx) * screen.board.one_size + screen.board.left
+                                        surface_coords_y = (cell_y + dy) * screen.board.one_size + screen.board.top
                                         surface = pygame.surface.Surface(
-                                            (screen.board.cell_size, screen.board.cell_size))
+                                            (screen.board.one_size, screen.board.one_size))
                                         lst_surfaces.append(
                                             (surface, (surface_coords_x, surface_coords_y),
-                                             (screen.board.cell_size, screen.board.cell_size)))
+                                             (screen.board.one_size, screen.board.one_size)))
                                 else:
                                     minus = ran
 
@@ -365,12 +370,12 @@ def add_step_surfaces(screen, unit, lst_steps, lst_surfaces, cell_x, cell_y, uni
                     if screen.board.board[cell_y + dy][cell_x + dx] in [2, 3]:
                         lst_steps.append((cell_y + dy, cell_x + dx))
 
-                        surface_coords_x = (cell_x + dx) * screen.board.cell_size + screen.board.left
-                        surface_coords_y = (cell_y + dy) * screen.board.cell_size + screen.board.top
-                        surface = pygame.surface.Surface((screen.board.cell_size, screen.board.cell_size))
+                        surface_coords_x = (cell_x + dx) * screen.board.one_size + screen.board.left
+                        surface_coords_y = (cell_y + dy) * screen.board.one_size + screen.board.top
+                        surface = pygame.surface.Surface((screen.board.one_size, screen.board.one_size))
                         lst_surfaces.append(
                             (surface, (surface_coords_x, surface_coords_y),
-                             (screen.board.cell_size, screen.board.cell_size)))
+                             (screen.board.one_size, screen.board.one_size)))
 
 
 def select_surfaces(screen, unit, cell_coords, lst_surfaces, is_attack):
