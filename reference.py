@@ -19,13 +19,13 @@ class Reference_window(mapping.Window):
         self.back_button = Button('Назад', 80, 120, self.height - 70, color=(100, 0, 0), dark_color=(50, 0, 0))
         self.lst_buttons = [self.back_button, self.next_page_button]
 
-        t = ('''Каждый юнит обладает уникальными характеристиками, такие как: урон, дальность атаки, дальность 
-             передвижения и другими атрибутами. После расстановки юнитов нажмите "Начать игру" и управляйте своими 
-             юнитами, а так же пробуйте вступать в схватку с противником. Перед тем как начать игру, вы можете 
-             расставить своих юнитов, нажимая на иконку слева от поля битвы и кликая на клетку поля. Игровой процесс. 
-             За пройденный уровень вы получаете очки. Чтобы пройти уровень, нужно сокрушить вражеский замок. Игра 
-             представляет собой стратегию, состоящая из уровней. С каждым открытым уровнем вы получаете доступ к 
-             следующему.''')
+        t = ('''Игра представляет из себя стратегию, состоящую из уровней.Каждый юнит обладает уникальными
+             характеристиками, такие как: урон, дальность атаки, дальность передвижения и другими атрибутами. После
+             расстановки юнитов нажмите "Начать игру" и управляйте своими юнитами, а так же пробуйте вступать в схватку
+             с противником. Перед тем как начать игру, вы можете расставить своих юнитов, нажимая на иконку слева от 
+             поля битвы и кликая на клетку поля. За пройденный уровень вы получаете очки. Чтобы пройти уровень, нужно
+             сокрушить вражеский замок. С каждым пройденным уровнем вы получаете доступ к следующему.''')
+
         self.lst = self.parse_text(t, self.one_size)
 
         self.fon = pygame.image.load('images/backgrounds/reffon.jpg')
@@ -164,7 +164,7 @@ class Description(mapping.Window):
                 if button == self.back_button:
                     self.running = False
                 elif button in self.dct_units.keys():
-                    self.icon_unit = self.dct_units[button](self.width / 1.35, self.height // 2,
+                    self.icon_unit = self.dct_units[button](self.one_size * 17, self.height // 2,
                                                             self.one_size * 4, self.icons_units)
                     self.stats = [f'Тип юнита: {self.icon_unit.title}',
                                   f'Здоровье: {self.icon_unit.hp}',
@@ -181,7 +181,14 @@ class Description(mapping.Window):
     def render(self):
         y = 50
         self.main_screen.sc.blit(self.fon, (0, 0))
+        pygame.draw.rect(self.main_screen.sc, (66, 44, 33), (self.width // 2, self.height // 3, self.one_size * 12,
+                                                          self.one_size * 12), 8)
+        f = pygame.font.Font(None, 100)
+        t = f.render('Информация', True, 'black')
+        self.main_screen.sc.blit(t, (self.one_size * 12, self.height / 2.8))
         if len(self.icons_units):
+            pygame.draw.rect(self.main_screen.sc, (0, 0, 0), (self.one_size * 17 - 5, self.height // 2 - 5,
+                                                              self.one_size * 4 + 10, self.one_size * 4 + 10), 8)
             self.icons_units.draw(self.main_screen.sc)
             for i in reversed(self.stats):
                 font = pygame.font.Font(None, 40)
