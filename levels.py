@@ -2,26 +2,23 @@ import sys
 
 import pygame
 
+import mapping
+
 from widgets import Button
 
 
-class Levels_menu:
+class Levels_menu(mapping.Window):
     def __init__(self, screen, size, main):
-        self.size = width, height = size
-        self.main_screen = screen
-        self.main = main
+        super().__init__(screen, size, main)
+        self.screen = pygame.surface.Surface((self.width, self.height))
 
-        self.screen = pygame.surface.Surface((width, height))
-
-        self.one_size = self.main_screen.board.cell_size
-
-        self.first_level_button = Button('Уровень 1', 100, self.one_size * 4, height // 2,
+        self.first_level_button = Button('Уровень 1', 100, self.one_size * 4, self.height // 2,
                                          color=(40, 120, 80), dark_color=(40, 150, 80))
-        self.second_level_button = Button('Уровень 2', 100, self.one_size * 11, height // 2,
+        self.second_level_button = Button('Уровень 2', 100, self.one_size * 11, self.height // 2,
                                           color=(40, 80, 120), dark_color=(40, 80, 150))
-        self.thirst_level_button = Button('Уровень 3', 100, self.one_size * 18, height // 2,
+        self.thirst_level_button = Button('Уровень 3', 100, self.one_size * 18, self.height // 2,
                                           color=(120, 80, 40), dark_color=(150, 80, 40))
-        self.back_button = Button('Назад', 80, width // 2, height // 2 + 200, color=(130, 130, 130))
+        self.back_button = Button('Назад', 80, self.width // 2, self.height // 2 + 200, color=(130, 130, 130))
 
         self.lst_buttons = [self.first_level_button, self.second_level_button, self.thirst_level_button,
                             self.back_button]

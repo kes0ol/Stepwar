@@ -2,18 +2,17 @@ import sys
 
 import pygame
 
+import mapping
+
 from global_vars import FILL_TYPE_BORDER
 from widgets import Button, View
 
 
-class Settings_window:
-    def __init__(self, screen, size):
+class Settings_window(mapping.Window):
+    def __init__(self, screen, size, main):
+        super().__init__(screen, size, main)
         self.volume = 1
-        self.size = self.width, self.height = size
-        self.main_screen = screen
         self.screen = pygame.surface.Surface((self.width, self.height))
-
-        self.one_size = self.main_screen.board.cell_size
 
         self.volume_title = View('Громкость', self.one_size, self.width // 2, self.one_size, color=(255, 255, 0))
         self.plus_button = Button('+', self.one_size * 2, self.width // 2 + 200, self.one_size * 3,

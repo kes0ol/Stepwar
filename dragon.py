@@ -34,14 +34,14 @@ class Dragon(pygame.sprite.Sprite):
             self.screen.board.board[self.y_now][self.x_now] = 0
             self.screen.board.board[self.select_y][self.select_x] = 1
 
-            x = (self.select_x - self.x_now) * self.screen.board.cell_size
-            y = (self.select_y - self.y_now) * self.screen.board.cell_size
+            x = (self.select_x - self.x_now) * self.screen.board.one_size
+            y = (self.select_y - self.y_now) * self.screen.board.one_size
 
             self.rect = self.rect.move(x, y)
         else:
             start_game.give_damage(self.screen, (
-                self.select_x * self.screen.board.cell_size + self.screen.board.left,
-                self.select_y * self.screen.board.cell_size + self.screen.board.top), (self.select_x, self.select_y),
+                self.select_x * self.screen.board.one_size + self.screen.board.left,
+                self.select_y * self.screen.board.one_size + self.screen.board.top), (self.select_x, self.select_y),
                                    self.damage + self.damage_plus)
 
 

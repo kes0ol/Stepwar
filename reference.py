@@ -2,22 +2,18 @@ import sys
 
 import pygame
 
+import mapping
+
 import swordsman, archer, castle, cavalry, dragon
 import landscapes
 
 from widgets import Button
 
 
-class Reference_window:
+class Reference_window(mapping.Window):
     def __init__(self, screen, size, main):
-        self.size = self.width, self.height = size
-        self.main_screen = screen
-        self.main = main
-
+        super().__init__(screen, size, main)
         self.ref_screen = Description(self.main_screen, self.size, self.main)
-
-        self.one_size = self.main_screen.board.cell_size
-
         self.next_page_button = Button('->', 200, self.width - 80, self.height - 80,
                                        color=(100, 0, 0), dark_color=(50, 0, 0))
         self.back_button = Button('Назад', 80, 120, self.height - 70, color=(100, 0, 0), dark_color=(50, 0, 0))
@@ -65,7 +61,7 @@ class Reference_window:
         y = round(self.one_size / 1.7)
         self.main_screen.sc.blit(self.fon, (0, 0))
         for i in self.lst:
-            font = pygame.font.Font(None, round(self.one_size / 2))
+            font = pygame.font.Font(None, self.one_size // 2)
             text = font.render(i, True, 'black')
             self.main_screen.sc.blit(text, (self.width / 25, self.one_size + y))
             y += round(self.one_size / 1.7)
@@ -97,42 +93,37 @@ class Reference_window:
             pygame.display.flip()
 
 
-class Description:
+class Description(mapping.Window):
     def __init__(self, screen, size, main):
-        self.size = self.width, self.height = size
-        self.main_screen = screen
-        self.main = main
-
-        self.one_size = self.main_screen.board.cell_size
-
-        self.back_button = Button('<-', round(self.main_screen.board.cell_size * 2.4), self.one_size,
+        super().__init__(screen, size, main)
+        self.back_button = Button('<-', round(self.one_size * 2.4), self.one_size,
                                   self.height - self.one_size, color=(100, 0, 0),
                                   dark_color=(50, 0, 0))
-        self.swordsman_button = Button('Рыцарь', round(self.main_screen.board.cell_size * 1.2), self.one_size * 3,
+        self.swordsman_button = Button('Рыцарь', round(self.one_size * 1.2), self.one_size * 3,
                                        self.one_size, color=(100, 0, 0),
                                        dark_color=(50, 0, 0))
-        self.archer_button = Button('Лучник', round(self.main_screen.board.cell_size * 1.2), self.one_size * 3,
+        self.archer_button = Button('Лучник', round(self.one_size * 1.2), self.one_size * 3,
                                     round(self.one_size * 2.5), color=(100, 0, 0),
                                     dark_color=(50, 0, 0))
-        self.cavalry_button = Button('Кавалерия', round(self.main_screen.board.cell_size * 1.2), self.one_size * 3,
+        self.cavalry_button = Button('Кавалерия', round(self.one_size * 1.2), self.one_size * 3,
                                      self.one_size * 4, color=(100, 0, 0),
                                      dark_color=(50, 0, 0))
-        self.dragon_button = Button('Дракон', round(self.main_screen.board.cell_size * 1.2), self.one_size * 3,
+        self.dragon_button = Button('Дракон', round(self.one_size * 1.2), self.one_size * 3,
                                     round(self.one_size * 5.5), color=(100, 0, 0),
                                     dark_color=(50, 0, 0))
-        self.castle_button = Button('Замок', round(self.main_screen.board.cell_size * 1.2), self.one_size * 3,
+        self.castle_button = Button('Замок', round(self.one_size * 1.2), self.one_size * 3,
                                     self.one_size * 7, color=(100, 0, 0),
                                     dark_color=(50, 0, 0))
-        self.grass_button = Button('Трава', round(self.main_screen.board.cell_size * 1.2), self.one_size * 8,
+        self.grass_button = Button('Трава', round(self.one_size * 1.2), self.one_size * 8,
                                    self.one_size, color=(100, 0, 0),
                                    dark_color=(50, 0, 0))
-        self.rock_button = Button('Гора', round(self.main_screen.board.cell_size * 1.2), self.one_size * 8,
+        self.rock_button = Button('Гора', round(self.one_size * 1.2), self.one_size * 8,
                                   round(self.one_size * 2.5), color=(100, 0, 0),
                                   dark_color=(50, 0, 0))
-        self.hill_button = Button('Холм', round(self.main_screen.board.cell_size * 1.2), self.one_size * 8,
+        self.hill_button = Button('Холм', round(self.one_size * 1.2), self.one_size * 8,
                                   self.one_size * 4, color=(100, 0, 0),
                                   dark_color=(50, 0, 0))
-        self.river_button = Button('Река', round(self.main_screen.board.cell_size * 1.2), self.one_size * 8,
+        self.river_button = Button('Река', round(self.one_size * 1.2), self.one_size * 8,
                                    round(self.one_size * 5.5), color=(100, 0, 0),
                                    dark_color=(50, 0, 0))
 
