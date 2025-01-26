@@ -176,12 +176,21 @@ def enemys_move(screen):
         lst_steps, _ = select_surfaces(screen.board, unit, cell, False)
 
         if len(lst_steps):
-            choise_cell = random.choice(lst_steps)
+            choose_cell = lst_steps[0]
+            castle_unit_coords = None
+            for i in my_units_group:
+                if i.name == "castle":
+                    castle_unit_coords = screen.board.get_cell((i.rect.x, i.rect.y))
+                    break
+            for step in lst_steps[1:]:
+                if abs(step[0] - castle_unit_coords[0]) <= abs(choose_cell[0] - castle_unit_coords[1]):
+                    choose_cell = step
 
-            # if screen.board.board[choise_cell[1]][choise_cell[0]] == 0 and cell != (-1, -1):
             increment_action_in_progress()
-            unit.make_step(cell, choise_cell, screen, enemys_attack, [screen, unit, choise_cell])
-
+            unit.make_step(cell, choose_cell, screen, enemys_attack, [screen, unit, choose_cell])
+        else:
+            increment_action_in_progress()
+            enemys_attack(screen, unit, cell)
 
 def show_stats(screen):
     stats_surface = pygame.Surface((200, 100))
