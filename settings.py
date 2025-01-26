@@ -52,6 +52,7 @@ class Settings_window(mapping.Window):
                 if button == self.reset_button:
                     self.running = False
                     self.main_screen.reset_progress()
+                    self.main.start_window.start()
 
     def render(self):
         self.screen.blit(self.fon, (0, 0))
