@@ -413,16 +413,16 @@ def choose_step(screen, unit, cell_coords, is_choose_unit, select_button, is_att
                         if coords == choose_cell:
                             if how_choose_unit == 'swordsman':
                                 type_unit.step = 0
-                                swordsman.Swordsman.update(unit, cell_coords, choose_cell, screen, is_attack)
+                                unit.choose_step(cell_coords, choose_cell, screen, is_attack)
                             if how_choose_unit == 'archer':
                                 type_unit.step = 0
-                                archer.Archer.update(unit, cell_coords, choose_cell, screen, is_attack)
+                                unit.choose_step(cell_coords, choose_cell, screen, is_attack)
                             if how_choose_unit == 'cavalry':
                                 type_unit.step = 0
-                                cavalry.Cavalry.update(unit, cell_coords, choose_cell, screen, is_attack)
+                                unit.choose_step(cell_coords, choose_cell, screen, is_attack)
                             if how_choose_unit == 'dragon':
                                 type_unit.step = 0
-                                dragon.Dragon.update(unit, cell_coords, choose_cell, screen, is_attack)
+                                unit.choose_step(cell_coords, choose_cell, screen, is_attack)
 
                     lst_surfaces.clear()
                     is_choose_unit = False
@@ -449,13 +449,13 @@ def choose_attack(screen, unit, cell_coords, is_chose_unit, is_attack):
                     for coords in lst_steps:
                         if coords == choose_cell:
                             if how_choose_unit == 'swordsman':
-                                swordsman.Swordsman.update(unit, cell_coords, choose_cell, screen, is_attack)
+                                unit.choose_step(cell_coords, choose_cell, screen, is_attack)
                             if how_choose_unit == 'archer':
-                                archer.Archer.update(unit, cell_coords, choose_cell, screen, is_attack)
+                                unit.choose_step(cell_coords, choose_cell, screen, is_attack)
                             if how_choose_unit == 'cavalry':
-                                cavalry.Cavalry.update(unit, cell_coords, choose_cell, screen, is_attack)
+                                unit.choose_step(cell_coords, choose_cell, screen, is_attack)
                             if how_choose_unit == 'dragon':
-                                dragon.Dragon.update(unit, cell_coords, choose_cell, screen, is_attack)
+                                unit.choose_step(cell_coords, choose_cell, screen, is_attack)
                             type_unit.do_damage = False
                     lst_surfaces.clear()
                     is_attack = False

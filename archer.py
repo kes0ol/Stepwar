@@ -23,11 +23,11 @@ class Archer(pygame.sprite.Sprite):
         self.name = 'archer'
         self.title = 'Лучник'
 
-    def update(self, *args, **kwargs):
-        self.x_now, self.y_now = args[0]
-        self.select_y, self.select_x = args[1]
-        self.screen = args[2]
-        self.is_attack = args[3]
+    def choose_step(self, cell_coords, choose_cell, screen, is_attack):
+        self.x_now, self.y_now = cell_coords
+        self.select_y, self.select_x = choose_cell
+        self.screen = screen
+        self.is_attack = is_attack
         self.damage_plus = 0
 
         if self.screen.board.field[self.select_y][self.select_x] == 2:

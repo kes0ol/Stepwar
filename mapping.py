@@ -6,6 +6,7 @@ import landscapes
 import money
 
 import start_game
+from bone_dragon import BoneDragon
 from widgets import Button
 
 
@@ -46,7 +47,7 @@ class Screen:
                                          self.board.cell_size * 1.2, archer.archers)
         self.icon_cavalry = cavalry.Cavalry(self.board.cell_size * 1.4, 3 * (self.board.cell_size * 1.2),
                                             self.board.cell_size * 1.2, cavalry.cavalrys)
-        self.icon_dragon = dragon.Dragon(self.board.cell_size * 1.4, 4 * (self.board.cell_size * 1.2),
+        self.icon_dragon = BoneDragon(self.board.cell_size * 1.4, 4 * (self.board.cell_size * 1.2),
                                          self.board.cell_size * 1.2, dragon.dragons)
 
         swordsman.stock = self.icon_swordsman.stock
@@ -112,6 +113,8 @@ class Screen:
             self.button_next_step.render(self.sc)
 
         self.icon_money.render(self.sc, self.money)
+
+        dragon.dragons.update()
 
     def choose_unit(self, mouse_pos):
         if (self.icon_swordsman.rect.left <= mouse_pos[0] <= self.icon_swordsman.rect.right and
@@ -279,7 +282,7 @@ class Board:
                     cavalry.stock -= 1
                     self.board[y][x] = 1
                 if self.choosen_unit == 'dragon' and dragon.stock > 0:
-                    dragon.Dragon(x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
+                    BoneDragon(x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
                                   dragon.dragons)
                     dragon.stock -= 1
                     self.board[y][x] = 1

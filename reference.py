@@ -1,11 +1,10 @@
 import sys
 
 import pygame
-
 import mapping
-
 import swordsman, archer, castle, cavalry, dragon
 import landscapes
+from bone_dragon import BoneDragon
 
 from widgets import Button
 
@@ -136,7 +135,7 @@ class Description(mapping.Window):
         self.dct_units = {self.swordsman_button: swordsman.Swordsman,
                           self.archer_button: archer.Archer,
                           self.cavalry_button: cavalry.Cavalry,
-                          self.dragon_button: dragon.Dragon,
+                          self.dragon_button: BoneDragon,
                           self.castle_button: castle.Castle}
 
         self.dct_lands = {self.grass_button: ('grass', 'Трава', self.one_size * 17, self.height // 2,

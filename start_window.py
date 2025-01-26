@@ -6,6 +6,7 @@ import settings
 import levels
 import reference
 import shop
+from bone_dragon import BoneDragon
 
 from widgets import Button
 
