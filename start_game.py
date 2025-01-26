@@ -197,16 +197,25 @@ def enemys_move(screen):
             add(r, (cell_x, cell_y))
 
             if len(lst_steps) > 0:
-                choise_cell = random.choice(lst_steps)
-                select_coords = (choise_cell[1] * screen.board.cell_size + screen.board.left,
-                                 choise_cell[0] * screen.board.cell_size + screen.board.top)
+                random.shuffle(lst_steps)
+                choose_cell = random.choice(lst_steps)
+                castl = None
+                for cas in castle.castles:
+                    castl = cas
+                cas_cord = screen.board.get_cell((castl.rect.x, castl.rect.y))
+                for step in lst_steps:
+                    if abs(step[1] - cas_cord[0]) <= abs(choose_cell[1] - cas_cord[0]):
+                        choose_cell = step
 
-                if screen.board.board[choise_cell[0]][choise_cell[1]] == 0 and (cell_x, cell_y) != (-1, -1):
+                select_coords = (choose_cell[1] * screen.board.cell_size + screen.board.left,
+                                 choose_cell[0] * screen.board.cell_size + screen.board.top)
+
+                if screen.board.board[choose_cell[0]][choose_cell[1]] == 0 and (cell_x, cell_y) != (-1, -1):
                     screen.board.board[cell_y][cell_x] = 0
-                    screen.board.board[choise_cell[0]][choise_cell[1]] = 2
-                    unit.rect.x, unit.rect.y = select_coords
+                screen.board.board[choose_cell[0]][choose_cell[1]] = 2
+                unit.rect.x, unit.rect.y = select_coords
 
-            enemys_attack(screen, unit, (cell_x, cell_y))
+                enemys_attack(screen, unit, (cell_x, cell_y))
 
 
 def enemys_attack(screen, unit, now_cell):
@@ -515,6 +524,18 @@ def give_damage(screen, select_coords, select_cell, damage_team_unit):
                         money_now += 50
                         screen.score += 40
                 break
+
+    for group in [enemys.swordsmans, enemys.archers, enemys.cavalrys, enemys.dragons]: # убили ли всех врагов
+        if len(group) != 0:
+            break
+    else:
+        money_now += 100
+        is_win = True
+
+        screen.progress.append(screen.choose_level + 1)
+        screen.progress = list(set(screen.progress))
+
+        end(screen)
 
 
 def new_step():
