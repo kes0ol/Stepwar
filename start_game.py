@@ -202,20 +202,21 @@ def enemys_move(screen):
                 castl = None
                 for cas in castle.castles:
                     castl = cas
-                cas_cord = screen.board.get_cell((castl.rect.x, castl.rect.y))
-                for step in lst_steps:
-                    if abs(step[1] - cas_cord[0]) <= abs(choose_cell[1] - cas_cord[0]):
-                        choose_cell = step
+                if len(castle.castles) > 0:
+                    cas_cord = screen.board.get_cell((castl.rect.x, castl.rect.y))
+                    for step in lst_steps:
+                        if abs(step[1] - cas_cord[0]) <= abs(choose_cell[1] - cas_cord[0]):
+                            choose_cell = step
 
-                select_coords = (choose_cell[1] * screen.board.cell_size + screen.board.left,
-                                 choose_cell[0] * screen.board.cell_size + screen.board.top)
+                    select_coords = (choose_cell[1] * screen.board.cell_size + screen.board.left,
+                                     choose_cell[0] * screen.board.cell_size + screen.board.top)
 
-                if screen.board.board[choose_cell[0]][choose_cell[1]] == 0 and (cell_x, cell_y) != (-1, -1):
-                    screen.board.board[cell_y][cell_x] = 0
-                screen.board.board[choose_cell[0]][choose_cell[1]] = 2
-                unit.rect.x, unit.rect.y = select_coords
+                    if screen.board.board[choose_cell[0]][choose_cell[1]] == 0 and (cell_x, cell_y) != (-1, -1):
+                        screen.board.board[cell_y][cell_x] = 0
+                    screen.board.board[choose_cell[0]][choose_cell[1]] = 2
+                    unit.rect.x, unit.rect.y = select_coords
 
-                enemys_attack(screen, unit, (cell_x, cell_y))
+                    enemys_attack(screen, unit, (cell_x, cell_y))
 
 
 def enemys_attack(screen, unit, now_cell):
@@ -263,6 +264,15 @@ def enemys_attack(screen, unit, now_cell):
                         un.kill()
                         screen.board.board[select_attack[1]][select_attack[0]] = 0
                     break
+
+        for group in [swordsman.swordsmans, archer.archers, cavalry.cavalrys, dragon.dragons, castle.castles]:
+            if len(group) > 1:
+                break
+        else:
+            if money_now < 25:
+                screen.money = 200
+            is_win = False
+            end(screen)
 
 
 def show_stats(screen):
@@ -525,7 +535,7 @@ def give_damage(screen, select_coords, select_cell, damage_team_unit):
                         screen.score += 40
                 break
 
-    for group in [enemys.swordsmans, enemys.archers, enemys.cavalrys, enemys.dragons]: # убили ли всех врагов
+    for group in [enemys.swordsmans, enemys.archers, enemys.cavalrys, enemys.dragons]:  # убили ли всех врагов
         if len(group) != 0:
             break
     else:
