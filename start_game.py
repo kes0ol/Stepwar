@@ -62,6 +62,7 @@ def start(screen):
 
         screen.sc.fill((0, 0, 0))
         screen.render()
+        can_move(screen)
         screen.render_cursor()
         show_stats(screen)
         clock.tick(fps)
@@ -256,11 +257,20 @@ def enemys_attack(screen, unit, now_cell):
                     break
 
 
+def can_move(screen):
+    surfaces_can_move = []
+    for group in [swordsman.swordsmans, archer.archers, cavalry.cavalrys, dragon.dragons]:
+        for un in group:
+            if un.step != 0 and (un.rect.x >= screen.board.left and un.rect.y >= screen.board.top):
+                surfaces_can_move.append(
+                    (pygame.surface.Surface((screen.board.cell_size, screen.board.cell_size)), (un.rect.x, un.rect.y)))
+    render(screen, surfaces_can_move, 'orange')
+
+
 def show_stats(screen):
     stats_surface = pygame.Surface((200, 100))
     font = pygame.font.Font(None, 25)
     stats = []
-
     for group in [swordsman.swordsmans, archer.archers, cavalry.cavalrys, dragon.dragons, castle.castles,
                   enemys.swordsmans, enemys.archers, enemys.cavalrys, enemys.dragons, enemys.castles]:
         for un in group:
@@ -350,8 +360,7 @@ def add_step_surfaces(screen, unit, lst_steps, lst_surfaces, cell_x, cell_y, uni
                                         surface = pygame.surface.Surface(
                                             (screen.board.cell_size, screen.board.cell_size))
                                         lst_surfaces.append(
-                                            (surface, (surface_coords_x, surface_coords_y),
-                                             (screen.board.cell_size, screen.board.cell_size)))
+                                            (surface, (surface_coords_x, surface_coords_y)))
                                 else:
                                     minus = ran
 
@@ -373,9 +382,7 @@ def add_step_surfaces(screen, unit, lst_steps, lst_surfaces, cell_x, cell_y, uni
                         surface_coords_x = (cell_x + dx) * screen.board.cell_size + screen.board.left
                         surface_coords_y = (cell_y + dy) * screen.board.cell_size + screen.board.top
                         surface = pygame.surface.Surface((screen.board.cell_size, screen.board.cell_size))
-                        lst_surfaces.append(
-                            (surface, (surface_coords_x, surface_coords_y),
-                             (screen.board.cell_size, screen.board.cell_size)))
+                        lst_surfaces.append((surface, (surface_coords_x, surface_coords_y)))
 
 
 def select_surfaces(screen, unit, cell_coords, lst_surfaces, is_attack):
@@ -534,7 +541,7 @@ def new_step():
 
 def render(screen, lst_surfaces, color):
     for surf in lst_surfaces:
-        surface, surface_coords, surface_size = surf
+        surface, surface_coords = surf
         surface.fill(color)
-        surface.set_alpha(80)
+        surface.set_alpha(60)
         screen.sc.blit(surface, surface_coords)
