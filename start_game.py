@@ -309,7 +309,7 @@ def render_surfaces(screen, lst_surfaces, color):
     for surf in lst_surfaces:
         surface, surface_coords, surface_size = surf
         surface.fill(color)
-        surface.set_alpha(80)
+        surface.set_alpha(60)
         screen.sc.blit(surface, surface_coords)
 
 
