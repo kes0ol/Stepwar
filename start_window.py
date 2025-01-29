@@ -46,7 +46,6 @@ class Start_window(mapping.Window):
         for button in lst:
             if button.check_click(mouse_pos):
                 if button == self.choose_level_button:
-                    self.running = False
                     self.levels_menu.start()
                 if button == self.setting_button:
                     self.settings_screen.start()
@@ -71,6 +70,11 @@ class Start_window(mapping.Window):
         fps = 60
         clock = pygame.time.Clock()
 
+        dct_buttons = {pygame.K_1: self.levels_menu.start,
+                       pygame.K_2: self.store.start,
+                       pygame.K_3: self.settings_screen.start,
+                       pygame.K_4: self.ref_screen.start}
+
         self.running = True
         while self.running:
             for event in pygame.event.get():
@@ -83,6 +87,8 @@ class Start_window(mapping.Window):
                         self.running = False
                         pygame.quit()
                         sys.exit()
+                    if event.key in dct_buttons.keys():
+                        dct_buttons[event.key]()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.check_click(event.pos, self.lst_buttons)
 
