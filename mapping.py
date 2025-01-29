@@ -55,6 +55,14 @@ class Screen:
         dragon.stock = self.icon_dragon.default_stock
         self.icon_money = money.Money(self.width - 100, 20, self.board.cell_size, money.moneys)
 
+        self.choose_unit_surface = None
+        for shop_unit in [self.icon_swordsman, self.icon_archer, self.icon_cavalry, self.icon_dragon]:
+            if shop_unit.default_stock > 0:
+                self.choose_unit_surface = [
+                    pygame.surface.Surface((self.board.cell_size * 1.2, self.board.cell_size * 1.2)),
+                    [shop_unit.rect.x, shop_unit.rect.y]]
+                break
+
         self.cursor = pygame.image.load('images/different/cursor.PNG')
         self.cursor.set_colorkey((255, 255, 255))
         self.cursor = pygame.transform.scale(self.cursor, (20, 20))
@@ -82,19 +90,18 @@ class Screen:
 
         self.board.render(self.sc)
 
-        # swordsman.swordsmans.draw(self.sc)
-        # archer.archers.draw(self.sc)
-        # cavalry.cavalrys.draw(self.sc)
-        # dragon.dragons.draw(self.sc)
-        # castle.castles.draw(self.sc)
+        if self.choose_unit_surface is not None:
+            self.choose_unit_surface[0].fill('green')
+            self.choose_unit_surface[0].set_alpha(80)
+            self.sc.blit(self.choose_unit_surface[0], self.choose_unit_surface[1])
+
         my_units_group.draw(self.sc)
         shop_group.draw(self.sc)
 
         for unit in [swordsman, archer, cavalry, dragon]:
             index = [swordsman, archer, cavalry, dragon].index(unit) + 1
-            unit.set_view_stock(self.sc, (
-                round(self.board.cell_size * 0.9),
-                index * (self.board.cell_size * 1.23) + round(self.board.cell_size / 2.6)),
+            unit.set_view_stock(self.sc, (round(self.board.cell_size * 0.9),
+                                          index * (self.board.cell_size * 1.23) + round(self.board.cell_size / 2.6)),
                                 round(self.board.cell_size / 1.4))
 
         # enemys.swordsmans.draw(self.sc)
@@ -125,14 +132,19 @@ class Screen:
         shop_group.update()
 
     def choose_unit(self, mouse_pos):
-        if self.icon_swordsman.rect.collidepoint(mouse_pos):
+        if self.icon_swordsman.rect.collidepoint(mouse_pos) and swordsman.stock > 0:
             self.choose_unit = 'swordsman'
-        if self.icon_archer.rect.collidepoint(mouse_pos):
+            self.choose_unit_surface[1] = [self.icon_swordsman.rect.x, self.icon_swordsman.rect.y]
+        if self.icon_archer.rect.collidepoint(mouse_pos) and archer.stock > 0:
             self.choose_unit = 'archer'
-        if self.icon_cavalry.rect.collidepoint(mouse_pos):
+            self.choose_unit_surface[1] = [self.icon_archer.rect.x, self.icon_archer.rect.y]
+        if self.icon_cavalry.rect.collidepoint(mouse_pos) and cavalry.stock > 0:
             self.choose_unit = 'cavalry'
-        if self.icon_dragon.rect.collidepoint(mouse_pos):
+            self.choose_unit_surface[1] = [self.icon_cavalry.rect.x, self.icon_cavalry.rect.y]
+        if self.icon_dragon.rect.collidepoint(mouse_pos) and dragon.stock > 0:
             self.choose_unit = 'dragon'
+            self.choose_unit_surface[1] = [self.icon_dragon.rect.x, self.icon_dragon.rect.y]
+
 
         return self.choose_unit
 
@@ -152,6 +164,7 @@ class Screen:
 class Board:
     def __init__(self, width, height, size):
         self.level = '1'
+        self.choosen_unit = 'swordsman'
 
         self.width = width
         self.height = height
