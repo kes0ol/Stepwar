@@ -55,6 +55,10 @@ class Screen:
         dragon.stock = self.icon_dragon.stock
         self.icon_money = money.Money(self.width - 100, 20, self.board.cell_size, money.moneys)
 
+        self.choose_unit_surface = [
+            pygame.surface.Surface((self.board.cell_size * 1.2, self.board.cell_size * 1.2)),
+            [self.icon_swordsman.rect.x, self.icon_swordsman.rect.y]]
+
         self.cursor = pygame.image.load('images/different/cursor.PNG')
         self.cursor.set_colorkey((255, 255, 255))
         self.cursor = pygame.transform.scale(self.cursor, (20, 20))
@@ -82,6 +86,10 @@ class Screen:
 
         self.board.render(self.sc)
 
+        self.choose_unit_surface[0].fill('green')
+        self.choose_unit_surface[0].set_alpha(80)
+        self.sc.blit(self.choose_unit_surface[0], self.choose_unit_surface[1])
+
         swordsman.swordsmans.draw(self.sc)
         archer.archers.draw(self.sc)
         cavalry.cavalrys.draw(self.sc)
@@ -90,9 +98,8 @@ class Screen:
 
         for unit in [swordsman, archer, cavalry, dragon]:
             index = [swordsman, archer, cavalry, dragon].index(unit) + 1
-            unit.set_view_stock(self.sc, (
-                round(self.board.cell_size * 0.9),
-                index * (self.board.cell_size * 1.23) + round(self.board.cell_size / 2.6)),
+            unit.set_view_stock(self.sc, (round(self.board.cell_size * 0.9),
+                                          index * (self.board.cell_size * 1.23) + round(self.board.cell_size / 2.6)),
                                 round(self.board.cell_size / 1.4))
 
         enemys.swordsmans.draw(self.sc)
@@ -114,18 +121,27 @@ class Screen:
         self.icon_money.render(self.sc, self.money)
 
     def choose_unit(self, mouse_pos):
-        if (self.icon_swordsman.rect.left <= mouse_pos[0] <= self.icon_swordsman.rect.right and
-                self.icon_swordsman.rect.top <= mouse_pos[1] <= self.icon_swordsman.rect.bottom):
-            self.choose_unit = 'swordsman'
-        if (self.icon_archer.rect.left <= mouse_pos[0] <= self.icon_archer.rect.right and
-                self.icon_archer.rect.top <= mouse_pos[1] <= self.icon_archer.rect.bottom):
-            self.choose_unit = 'archer'
-        if (self.icon_cavalry.rect.left <= mouse_pos[0] <= self.icon_cavalry.rect.right and
-                self.icon_cavalry.rect.top <= mouse_pos[1] <= self.icon_cavalry.rect.bottom):
-            self.choose_unit = 'cavalry'
-        if (self.icon_dragon.rect.left <= mouse_pos[0] <= self.icon_dragon.rect.right and
-                self.icon_dragon.rect.top <= mouse_pos[1] <= self.icon_dragon.rect.bottom):
-            self.choose_unit = 'dragon'
+        units = ['swordsman', 'archer', 'cavalry', 'dragon']
+        if ((self.icon_swordsman.rect.left <= mouse_pos[0] <= self.icon_swordsman.rect.right and
+             self.icon_swordsman.rect.top <= mouse_pos[1] <= self.icon_swordsman.rect.bottom) and
+                self.icon_swordsman.stock > 0):
+            self.choose_unit = units[0]
+            self.choose_unit_surface[1] = [self.icon_swordsman.rect.x, self.icon_swordsman.rect.y]
+        if ((self.icon_archer.rect.left <= mouse_pos[0] <= self.icon_archer.rect.right and
+             self.icon_archer.rect.top <= mouse_pos[1] <= self.icon_archer.rect.bottom) and
+                self.icon_archer.stock > 0):
+            self.choose_unit = units[1]
+            self.choose_unit_surface[1] = [self.icon_archer.rect.x, self.icon_archer.rect.y]
+        if ((self.icon_cavalry.rect.left <= mouse_pos[0] <= self.icon_cavalry.rect.right and
+             self.icon_cavalry.rect.top <= mouse_pos[1] <= self.icon_cavalry.rect.bottom)
+                and self.icon_cavalry.stock > 0):
+            self.choose_unit = units[2]
+            self.choose_unit_surface[1] = [self.icon_cavalry.rect.x, self.icon_cavalry.rect.y]
+        if ((self.icon_dragon.rect.left <= mouse_pos[0] <= self.icon_dragon.rect.right and
+             self.icon_dragon.rect.top <= mouse_pos[1] <= self.icon_dragon.rect.bottom)
+                and self.icon_dragon.stock > 0):
+            self.choose_unit = units[3]
+            self.choose_unit_surface[1] = [self.icon_dragon.rect.x, self.icon_dragon.rect.y]
 
         return self.choose_unit
 
@@ -145,6 +161,7 @@ class Screen:
 class Board:
     def __init__(self, width, height, size):
         self.level = '1'
+        self.choosen_unit = 'swordsman'
 
         self.width = width
         self.height = height
