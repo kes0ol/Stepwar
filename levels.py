@@ -46,8 +46,13 @@ class Levels_menu(mapping.Window):
 
     def render(self):
         self.screen.blit(self.fon, (0, 0))
-        for button in self.lst_buttons:
-            button.render(self.screen)
+        self.back_button.render(self.screen)
+        if 1 in self.main_screen.progress:
+            self.first_level_button.render(self.screen)
+        if 2 in self.main_screen.progress:
+            self.second_level_button.render(self.screen)
+        if 3 in self.main_screen.progress:
+            self.thirst_level_button.render(self.screen)
         self.main_screen.sc.blit(self.screen, (0, 0))
         self.main_screen.render_cursor()
 

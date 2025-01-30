@@ -1,4 +1,8 @@
+import random
+
 import pygame
+
+from global_vars import ANIMATION_IDLE
 
 
 class AnimationParams:
@@ -32,7 +36,7 @@ class AnimationChain:
 
 
 class AnimatedSprite(pygame.sprite.Sprite):
-    def __init__(self, animations, x, y, group, scale_to, default_animation):
+    def __init__(self, animations, x, y, group, scale_to, default_animation, mirror_animation=False):
         super().__init__(group)
         self.scale_to = scale_to
         self.rect = pygame.Rect(0, 0, scale_to, scale_to)
@@ -40,23 +44,26 @@ class AnimatedSprite(pygame.sprite.Sprite):
         self.frames = dict()
         self.animations = animations
         for k, v in animations.items():
-            self.frames[k] = self.cut_sheet(v.sheet, v.columns, v.rows, v.w, v.h, v.ltop_x, v.ltop_y)
+            mirror = k == ANIMATION_IDLE and mirror_animation
+            self.frames[k] = self.cut_sheet(v.sheet, v.columns, v.rows, v.w, v.h, v.ltop_x, v.ltop_y, mirror)
         self.current_animation = default_animation
         self.frame_idx = 0
         self.image = self.frames[self.current_animation][0]
         self.mirror_current_animation = False
+        self.mirror_animation = mirror_animation
         self.callback = None
-        self.gc = 0
+        self.gc = 0 + random.randint(0, 10)
 
-    def cut_sheet(self, sheet, columns, rows, w, h, ltop_x, ltop_y):
+    def cut_sheet(self, sheet, columns, rows, w, h, ltop_x, ltop_y, mirror):
         frames = []
-        mirror_frames = []
         for j in range(rows):
             for i in range(columns):
                 frame_location = (ltop_x + w * i, ltop_y + h * j)
                 image = sheet.subsurface(pygame.Rect(frame_location, (w, h)))
 
                 image = pygame.transform.scale(image, (self.scale_to, self.scale_to))
+                if mirror:
+                    image = pygame.transform.flip(image, True, False)
                 frames.append(image)
         return frames
 
@@ -97,8 +104,8 @@ class AnimatedSprite(pygame.sprite.Sprite):
 
 
 class MovableAnimatedSprite(AnimatedSprite):
-    def __init__(self, animations, x, y, group, scale_to, default_animation):
-        super().__init__(animations, x, y, group, scale_to, default_animation)
+    def __init__(self, animations, x, y, group, scale_to, default_animation, mirror_animation=False):
+        super().__init__(animations, x, y, group, scale_to, default_animation, mirror_animation)
         self.derired_position = None
         self.dx = 0
         self.dy = 0

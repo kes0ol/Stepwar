@@ -9,7 +9,7 @@ import start_window
 
 class Main:
     def __init__(self):
-        self.size = pygame.display.get_desktop_sizes()[0]
+        self.size = pygame.display.get_desktop_sizes()[-1]
         self.screen = mapping.Screen(self.size, self)
 
     def go_start_window(self):

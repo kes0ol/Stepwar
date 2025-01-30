@@ -6,7 +6,7 @@ import settings
 import levels
 import reference
 import shop
-from bone_dragon import BoneDragon
+import score
 
 from widgets import Button
 
@@ -23,16 +23,19 @@ class Start_window(mapping.Window):
                                      color=(255, 255, 0), dark_color=(50, 50, 50))
         self.ref_button = Button('Справка', round(self.one_size * 1.5), self.width // 2, self.one_size * 8,
                                  color=(255, 255, 0), dark_color=(0, 255, 0))
+        self.score_button = Button('Счёт', round(self.one_size * 1.5), self.width // 10, self.one_size * 1.2,
+                                   color=(255, 255, 0), dark_color=(0, 255, 0))
         self.exit_button = Button('Выйти', round(self.one_size * 1.5), self.width // 2, self.one_size * 10,
                                   color=(255, 255, 0), dark_color=(100, 0, 0))
 
         self.lst_buttons = [self.setting_button, self.exit_button, self.choose_level_button,
-                            self.ref_button, self.shop_button]
+                            self.ref_button, self.shop_button, self.score_button]
 
         self.settings_screen = settings.Settings_window(self.main_screen, self.size, main)
         self.ref_screen = reference.Reference_window(self.main_screen, self.size, main)
         self.levels_menu = levels.Levels_menu(self.main_screen, self.size, main)
         self.store = shop.Store(self.main_screen, self.size, main)
+        self.score = score.Score_window(self.main_screen, self.size, main)
 
         self.fon = pygame.image.load('images/backgrounds/fon.PNG')
         self.fon = pygame.transform.scale(self.fon, (self.width, self.height))
@@ -49,6 +52,8 @@ class Start_window(mapping.Window):
                     self.ref_screen.start()
                 if button == self.shop_button:
                     self.store.start()
+                if button == self.score_button:
+                    self.score.start()
                 if button == self.exit_button:
                     self.running = False
                     pygame.quit()
