@@ -22,6 +22,9 @@ class Unit(MovableAnimatedSprite):
         self.name = ''
         self.title = ''
 
+    def __repr__(self):
+        return f"[{id(self)} | {super().__repr__()}]"
+
     def init_stats(self, step, distance_attack, attack_type, hp, damage, name, title, stock):
         self.default_step = step
         self.step = step

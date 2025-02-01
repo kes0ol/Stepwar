@@ -397,7 +397,7 @@ def give_damage(screen, select_coords, select_cell, actor):
                 target = 3
             if actor in enemies_group:
                 target = 4
-            if screen.board.board[select_cell[1]][select_cell[0]] == target:
+            if screen.board.board[select_cell[1]][select_cell[0]] == target and unit.name == "castle":
                 unit.recieve_damage(actor)
                 if unit.is_dead:
                     for i in range(len(screen.board.board)):
