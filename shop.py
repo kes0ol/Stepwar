@@ -16,8 +16,15 @@ class Store(mapping.Window):
         self.screen = pygame.surface.Surface((self.width, self.height))
 
         self.lst_units = [swordsman, archer, cavalry, dragon]
-        self.lst_products = [('images/team_images/swordsman.png', 25), ('images/team_images/archer.png', 40),
-                             ('images/team_images/cavalry.png', 55), ('images/team_images/dragon.png', 120)]
+
+        self.lst_products = []
+        for i in [('images/team_images/Crusader.png', 25, (0, 0), (100, 100)), ('images/team_images/Sharpshooter.png', 40, (0, 0), (100, 100)),
+                  ('images/team_images/Champion.png', 55, (0, 0), (130, 130)), ('images/team_images/bone_dragon.png', 120, (0, 0), (125, 125))]:
+            im, cost, ltop, sz = i
+            image = pygame.image.load(im)
+            image = image.subsurface(pygame.Rect(ltop, sz))
+            image = pygame.transform.scale(image, (self.one_size * 3, self.one_size * 3))
+            self.lst_products.append((image, cost))
 
         self.back_button = Button('Назад', round(self.one_size * 1.2),
                                   round(self.one_size * 1.7), self.height - 100,
@@ -40,12 +47,8 @@ class Store(mapping.Window):
                 i * round(self.one_size * 4.5) + round(self.one_size * 4.35), round(self.one_size)), self.one_size)
 
         for index in range(len(self.lst_products)):
-            im, cost = self.lst_products[index]
+            image, cost = self.lst_products[index]
             surf = pygame.surface.Surface((round(self.one_size * 4), round(self.one_size * 6)))
-
-            image = pygame.image.load(im)
-            image = pygame.transform.scale(image, (self.one_size * 3, self.one_size * 3))
-            image.set_colorkey((0xb3, 0x22, 0xb7))
 
             font = pygame.font.Font(None, round(self.one_size * 1.2))
             text = font.render(str(cost), True, 'yellow')
@@ -79,7 +82,7 @@ class Store(mapping.Window):
         self.main_screen.render_cursor()
 
     def start(self):
-        fps = 120
+        fps = 60
         clock = pygame.time.Clock()
 
         self.running = True

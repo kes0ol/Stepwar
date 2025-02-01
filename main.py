@@ -9,7 +9,7 @@ import start_window
 
 class Main:
     def __init__(self):
-        self.size = pygame.display.get_desktop_sizes()[0]
+        self.size = pygame.display.get_desktop_sizes()[-1]
         self.screen = mapping.Screen(self.size, self)
 
     def go_start_window(self):
@@ -24,7 +24,7 @@ class Main:
         self.screen.board.level = level
         self.screen.board.clear_board(self.screen)
 
-        fps = 120
+        fps = 60
         clock = pygame.time.Clock()
 
         self.running = True
@@ -41,16 +41,22 @@ class Main:
                         start_game.return_units()
                         self.screen.board.clear_board(self.screen)
                         self.start_screen.levels_menu.start()
-                    elif event.key == pygame.K_SPACE:
-                        self.screen.gameplay = True
                     elif event.key == pygame.K_1:
                         self.screen.choose_unit = 'swordsman'
+                        self.screen.choose_unit_surface[1] = [self.screen.icon_swordsman.rect.x,
+                                                              self.screen.icon_swordsman.rect.y]
                     elif event.key == pygame.K_2:
                         self.screen.choose_unit = 'archer'
+                        self.screen.choose_unit_surface[1] = [self.screen.icon_archer.rect.x,
+                                                              self.screen.icon_archer.rect.y]
                     elif event.key == pygame.K_3:
                         self.screen.choose_unit = 'cavalry'
+                        self.screen.choose_unit_surface[1] = [self.screen.icon_cavalry.rect.x,
+                                                              self.screen.icon_cavalry.rect.y]
                     elif event.key == pygame.K_4:
                         self.screen.choose_unit = 'dragon'
+                        self.screen.choose_unit_surface[1] = [self.screen.icon_dragon.rect.x,
+                                                              self.screen.icon_dragon.rect.y]
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.screen.get_click(event.pos, event.button)

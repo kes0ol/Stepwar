@@ -30,11 +30,9 @@ class Levels_menu(mapping.Window):
         for button in lst:
             if button.check_click(mouse_pos):
                 if button == self.first_level_button and 1 in self.main_screen.progress:
-                    self.main_screen.choose_level = 1
                     self.running = False
                     self.main.start('1')
                 if button == self.second_level_button and 2 in self.main_screen.progress:
-                    self.main_screen.choose_level = 2
                     self.running = False
                     self.main.start('2')
                 if button == self.thirst_level_button and 3 in self.main_screen.progress:
@@ -46,13 +44,18 @@ class Levels_menu(mapping.Window):
 
     def render(self):
         self.screen.blit(self.fon, (0, 0))
-        for button in self.lst_buttons:
-            button.render(self.screen)
+        self.back_button.render(self.screen)
+        if 1 in self.main_screen.progress:
+            self.first_level_button.render(self.screen)
+        if 2 in self.main_screen.progress:
+            self.second_level_button.render(self.screen)
+        if 3 in self.main_screen.progress:
+            self.thirst_level_button.render(self.screen)
         self.main_screen.sc.blit(self.screen, (0, 0))
         self.main_screen.render_cursor()
 
     def start(self):
-        fps = 120
+        fps = 60
         clock = pygame.time.Clock()
 
         self.running = True
@@ -66,6 +69,17 @@ class Levels_menu(mapping.Window):
                     if event.key == pygame.K_ESCAPE:
                         self.running = False
                         self.main.go_start_window()
+                    if event.key == pygame.K_1 and 1 in self.main_screen.progress:
+                        self.main_screen.choose_level = 1
+                        self.running = False
+                        self.main.start('1')
+                    if event.key == pygame.K_2 and 2 in self.main_screen.progress:
+                        self.main_screen.choose_level = 2
+                        self.running = False
+                        self.main.start('2')
+                    if event.key == pygame.K_3 and 3 in self.main_screen.progress:
+                        self.running = False
+                        self.main.start('3')
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.check_click(event.pos, self.lst_buttons)
 

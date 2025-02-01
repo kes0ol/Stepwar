@@ -32,18 +32,15 @@ class Button(RectCoord):
         self.rect = pygame.Rect(0, 0, *self.surfaces[0].get_rect().size)
         self.set_rect_coord(self.rect, x, y, coord_type)
 
-    def check_collidepoint(self):
-        return self.rect.collidepoint(pygame.mouse.get_pos())
-
     def render(self, sc):
         if self.fill_type == FILL_TYPE_BORDER:
             x, y = self.rect.center
             w = h = self.size_font
             pygame.draw.rect(sc, self.color, (x - w / 2, y - h / 2, w, h), 1)
-        sc.blit(self.surfaces[self.check_collidepoint()], self.rect)
+        sc.blit(self.surfaces[self.check_click(pygame.mouse.get_pos())], self.rect)
 
     def check_click(self, mouse_pos):
-        return self.rect.left <= mouse_pos[0] <= self.rect.right and self.rect.top <= mouse_pos[1] <= self.rect.bottom
+        return self.rect.collidepoint(mouse_pos)
 
 
 class View(RectCoord):
