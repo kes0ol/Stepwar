@@ -232,21 +232,26 @@ class Board:
                 for j in range(len(field_lst[i])):
                     x, y = self.get_cell_coords((j, i))
 
-                    landscapes.Landscape('grass', 'Трава', x, y, 'images/landscapes/grass.png',
-                                         self.cell_size, 0, 0, landscape_group)
-
-                    if field_lst[i][j] == 'm':
-                        landscapes.Landscape('mountains', 'Гора', x, y, 'images/landscapes/mountains.png',
-                                             self.cell_size, 0, 'нельзя', landscape_group)
-                        self.field[i][j] = 1
-                    elif field_lst[i][j] == 'h':
-                        landscapes.Landscape('hill', 'Холм', x, y, 'images/landscapes/hill.png',
-                                             self.cell_size, 15, -1, landscape_group)
-                        self.field[i][j] = 2
-                    elif field_lst[i][j] == 'r':
-                        landscapes.Landscape('river', 'Река', x, y, 'images/landscapes/river.png',
+                    if field_lst[i][j] in ['m', 'h']:
+                        landscapes.Landscape('grass', 'Трава', x, y, 'images/landscapes/grass.png',
                                              self.cell_size, 0, 0, landscape_group)
-                        self.field[i][j] = 3
+                        if field_lst[i][j] == 'm':
+                            landscapes.Landscape('mountains', 'Гора', x, y, 'images/landscapes/mountains.png',
+                                                 self.cell_size, 0, 'нельзя', landscape_group)
+                            self.field[i][j] = 1
+                        elif field_lst[i][j] == 'h':
+                            landscapes.Landscape('hill', 'Холм', x, y, 'images/landscapes/hill.png',
+                                                 self.cell_size, 15, -1, landscape_group)
+                            self.field[i][j] = 2
+
+                    elif field_lst[i][j] in ['r']:
+                        if field_lst[i][j] == 'r':
+                            landscapes.Landscape('river', 'Река', x, y, 'images/landscapes/river.png',
+                                                 self.cell_size, 0, 0, landscape_group)
+                            self.field[i][j] = 3
+                    else:
+                        landscapes.Landscape('grass', 'Трава', x, y, 'images/landscapes/grass.png',
+                                             self.cell_size, 0, 0, landscape_group)
 
     def get_cell(self, mouse_pos):
         xmax = self.left + self.width * self.cell_size
@@ -264,7 +269,7 @@ class Board:
 
     def on_click(self, cell_coords, mouse_button):
         x, y = cell_coords
-        if mouse_button == 1 and (x >= 0, y >= 0):
+        if mouse_button == 1:
             if x <= 6 and self.board[y][x] == 0 and self.field[y][x] == 0:
                 if self.choosen_unit == 'swordsman' and swordsman.stock > 0:
                     swordsman.Swordsman(x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,

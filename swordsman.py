@@ -1,6 +1,5 @@
 import pygame
 
-import start_game
 from animation import AnimationParams
 from global_vars import ANIMATION_IDLE, ANIMATION_ATTACK, ANIMATION_BEGIN_MOVE, ANIMATION_MOVE, ANIMATION_END_MOVE, \
     ANIMATION_DEATH, MELEE_ATTACK
