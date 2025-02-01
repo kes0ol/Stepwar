@@ -176,14 +176,15 @@ def enemys_move(screen):
         lst_steps, _ = select_surfaces(screen.board, unit, cell, False)
 
         if len(lst_steps):
-            choose_cell = lst_steps[0]
+            random.shuffle(lst_steps)
+            choose_cell = random.choice(lst_steps)
             castle_unit_coords = None
             for i in my_units_group:
                 if i.name == "castle":
                     castle_unit_coords = screen.board.get_cell((i.rect.x, i.rect.y))
                     break
             for step in lst_steps[1:]:
-                if abs(step[0] - castle_unit_coords[0]) <= abs(choose_cell[0] - castle_unit_coords[1]):
+                if abs(step[0] - castle_unit_coords[0]) < abs(choose_cell[0] - castle_unit_coords[0]):
                     choose_cell = step
 
             increment_action_in_progress()
@@ -191,6 +192,7 @@ def enemys_move(screen):
         else:
             increment_action_in_progress()
             enemys_attack(screen, unit, cell)
+
 
 def show_stats(screen):
     stats_surface = pygame.Surface((200, 100))
@@ -341,7 +343,7 @@ def give_damage(screen, select_coords, select_cell, actor):
                 target = 3
             if actor in enemies_group:
                 target = 4
-            if screen.board.board[select_cell[1]][select_cell[0]] == target:
+            if screen.board.board[select_cell[1]][select_cell[0]] == target and unit.name == "castle":
                 unit.recieve_damage(actor)
                 if unit.is_dead:
                     for i in range(len(screen.board.board)):

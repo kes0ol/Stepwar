@@ -70,11 +70,9 @@ class Levels_menu(mapping.Window):
                         self.running = False
                         self.main.go_start_window()
                     if event.key == pygame.K_1 and 1 in self.main_screen.progress:
-                        self.main_screen.choose_level = 1
                         self.running = False
                         self.main.start('1')
                     if event.key == pygame.K_2 and 2 in self.main_screen.progress:
-                        self.main_screen.choose_level = 2
                         self.running = False
                         self.main.start('2')
                     if event.key == pygame.K_3 and 3 in self.main_screen.progress:
