@@ -15,17 +15,19 @@ class Start_window(mapping.Window):
     def __init__(self, screen, size, main):
         super().__init__(screen, size, main)
 
-        self.choose_level_button = Button('Уровни', round(self.one_size * 1.5), self.width // 2, self.one_size * 2,
+        y_pos = self.one_size * 1.8
+
+        self.choose_level_button = Button('Уровни', round(self.one_size * 1.5), self.width // 2, y_pos,
                                           color=(255, 255, 0), dark_color=(0, 255, 0))
-        self.shop_button = Button('Магазин', round(self.one_size * 1.5), self.width // 2, self.one_size * 4,
+        self.shop_button = Button('Магазин', round(self.one_size * 1.5), self.width // 2, y_pos * 2,
                                   color=(255, 255, 0), dark_color=(0, 255, 0))
-        self.setting_button = Button('Настройки', round(self.one_size * 1.5), self.width // 2, self.one_size * 6,
+        self.setting_button = Button('Настройки', round(self.one_size * 1.5), self.width // 2, y_pos * 3,
                                      color=(255, 255, 0), dark_color=(50, 50, 50))
-        self.ref_button = Button('Справка', round(self.one_size * 1.5), self.width // 2, self.one_size * 8,
+        self.ref_button = Button('Справка', round(self.one_size * 1.5), self.width // 2, y_pos * 4,
                                  color=(255, 255, 0), dark_color=(0, 255, 0))
-        self.score_button = Button('Счёт', round(self.one_size * 1.5), self.width // 10, self.one_size * 1.2,
+        self.score_button = Button('Счёт', round(self.one_size * 1.5), self.width // 2, y_pos * 5,
                                    color=(255, 255, 0), dark_color=(0, 255, 0))
-        self.exit_button = Button('Выйти', round(self.one_size * 1.5), self.width // 2, self.one_size * 10,
+        self.exit_button = Button('Выйти', round(self.one_size * 1.5), self.width // 2, y_pos * 6,
                                   color=(255, 255, 0), dark_color=(100, 0, 0))
 
         self.lst_buttons = [self.setting_button, self.exit_button, self.choose_level_button,
@@ -66,7 +68,7 @@ class Start_window(mapping.Window):
         self.main_screen.render_cursor()
 
     def start(self):
-        fps = 120
+        fps = 60
         clock = pygame.time.Clock()
 
         self.running = True

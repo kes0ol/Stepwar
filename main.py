@@ -24,7 +24,7 @@ class Main:
         self.screen.board.level = level
         self.screen.board.clear_board(self.screen)
 
-        fps = 120
+        fps = 60
         clock = pygame.time.Clock()
 
         self.running = True

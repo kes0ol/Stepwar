@@ -5,7 +5,7 @@ import landscapes
 import money
 
 import start_game
-from global_vars import my_units_group, enemies_group, shop_group
+from global_vars import my_units_group, enemies_group, shop_group, landscape_group
 from widgets import Button
 
 
@@ -37,7 +37,7 @@ class Screen:
         self.steps = 0
         self.score = 0
         self.money = 0
-        self.progress = [1]
+        self.progress = {1}
         self.choose_level = 1
 
         self.icon_swordsman = swordsman.Swordsman(self.board.cell_size * 1.4, 1 * (self.board.cell_size * 1.2),
@@ -78,7 +78,7 @@ class Screen:
         self.sc.blit(self.cursor, pygame.mouse.get_pos())
 
     def render(self):
-        landscapes.landscapes.draw(self.sc)
+        landscape_group.draw(self.sc)
 
         self.board.render(self.sc)
 
@@ -139,14 +139,14 @@ class Screen:
     def reset_progress(self):
         self.steps = 0
         self.money = 0
-        self.progress = [1]
+        self.progress = {1}
         self.choose_level = 1
         self.board.clear_board(self)
 
-        swordsman.stock = self.icon_swordsman.stock
-        archer.stock = self.icon_archer.stock
-        cavalry.stock = self.icon_cavalry.stock
-        dragon.stock = self.icon_dragon.stock
+        swordsman.stock = self.icon_swordsman.default_stock
+        archer.stock = self.icon_archer.default_stock
+        cavalry.stock = self.icon_cavalry.default_stock
+        dragon.stock = self.icon_dragon.default_stock
 
 
 class Board:
@@ -231,24 +231,24 @@ class Board:
 
                     if field_lst[i][j] == 'm':
                         landscapes.Landscape('grass', 'Трава', x, y, 'images/landscapes/grass.png', self.cell_size, 0,
-                                             0, landscapes.landscapes)
+                                             0, landscape_group)
                         landscapes.Landscape('mountains', 'Гора', x, y, 'images/landscapes/mountains.png',
                                              self.cell_size,
-                                             0, 'нельзя', landscapes.landscapes)
+                                             0, 'нельзя', landscape_group)
                         self.field[i][j] = 1
                     elif field_lst[i][j] == 'h':
                         landscapes.Landscape('grass', 'Трава', x, y, 'images/landscapes/grass.png', self.cell_size, 0,
-                                             0, landscapes.landscapes)
+                                             0, landscape_group)
                         landscapes.Landscape('hill', 'Холм', x, y, 'images/landscapes/hill.png', self.cell_size, 15, -1,
-                                             landscapes.landscapes)
+                                             landscape_group)
                         self.field[i][j] = 2
                     elif field_lst[i][j] == 'r':
                         landscapes.Landscape('river', 'Река', x, y, 'images/landscapes/river.png', self.cell_size, 0, 0,
-                                             landscapes.landscapes)
+                                             landscape_group)
                         self.field[i][j] = 3
                     else:
                         landscapes.Landscape('grass', 'Трава', x, y, 'images/landscapes/grass.png', self.cell_size, 0,
-                                             0, landscapes.landscapes)
+                                             0, landscape_group)
 
     def get_cell(self, mouse_pos):
         xmax = self.left + self.width * self.cell_size
@@ -341,26 +341,9 @@ class Board:
         self.board = [[0] * self.width for _ in range(self.height)]
         self.field = [[0] * self.width for _ in range(self.height)]
 
-        # swordsman.swordsmans.empty()
-        # archer.archers.empty()
-        # cavalry.cavalrys.empty()
-        # dragon.dragons.empty()
-        # castle.castles.empty()
         my_units_group.empty()
-        # shop_group.empty()
-
-        shop_group.add()
-        # swordsman.swordsmans.add(screen.icon_swordsman)
-        # archer.archers.add(screen.icon_archer)
-        # cavalry.cavalrys.add(screen.icon_cavalry)
-        # dragon.dragons.add(screen.icon_dragon)
-
-        # enemys.swordsmans.empty()
-        # enemys.archers.empty()
-        # enemys.cavalrys.empty()
-        # enemys.dragons.empty()
-        # enemys.castles.empty()
         enemies_group.empty()
+        landscape_group.empty()
 
         self.set_map()
 

@@ -3,7 +3,6 @@ import pygame
 FILL_TYPE_NONE = 0
 FILL_TYPE_BORDER = 1
 
-
 COORD_CENTER = 0
 COORD_LEFTBOTTOM = 1
 COORD_LEFTTOP = 2
@@ -22,5 +21,6 @@ RANGE_ATTACK = "range"
 my_units_group = pygame.sprite.Group()
 enemies_group = pygame.sprite.Group()
 shop_group = pygame.sprite.Group()
+landscape_group = pygame.sprite.Group()
 
 action_in_progress = False

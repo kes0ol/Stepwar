@@ -68,7 +68,7 @@ class Reference_window(mapping.Window):
         self.main_screen.render_cursor()
 
     def start(self):
-        fps = 120
+        fps = 60
         clock = pygame.time.Clock()
 
         self.running = True
@@ -198,7 +198,7 @@ class Description(mapping.Window):
         self.main_screen.render_cursor()
 
     def start(self):
-        fps = 120
+        fps = 60
         clock = pygame.time.Clock()
 
         self.running = True

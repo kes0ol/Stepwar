@@ -17,5 +17,3 @@ class Landscape(pygame.sprite.Sprite):
         self.damage = damage
         self.move = move
 
-
-landscapes = pygame.sprite.Group()

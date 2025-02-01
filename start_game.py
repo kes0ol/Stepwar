@@ -6,7 +6,7 @@ import pygame
 
 import swordsman, archer, cavalry, dragon
 import landscapes
-from global_vars import my_units_group, enemies_group, RANGE_ATTACK, shop_group, action_in_progress
+from global_vars import my_units_group, enemies_group, RANGE_ATTACK, shop_group, action_in_progress, landscape_group
 
 is_win = None
 money_now = 0
@@ -17,7 +17,7 @@ def start(screen):
     # enemys_move(screen)
     money_now = 0
 
-    fps = 120
+    fps = 60
     clock = pygame.time.Clock()
     running = True
     while screen.gameplay and running:
@@ -76,7 +76,7 @@ def end(screen):
     screen.money += money_now
     surf = pygame.Surface((screen.board.cell_size * 8, screen.board.cell_size * 4))
 
-    fps = 120
+    fps = 60
     clock = pygame.time.Clock()
 
     running = True
@@ -199,7 +199,7 @@ def show_stats(screen):
             ]
 
     if len(stats) == 0:
-        for land in landscapes.landscapes:
+        for land in landscape_group:
             if land.rect.collidepoint(pygame.mouse.get_pos()):
                 stats = [
                     f'Ландшафт: {land.title}',
@@ -342,8 +342,7 @@ def give_damage(screen, select_coords, select_cell, actor):
                     if actor in my_units_group:
                         money_now += 100
                         is_win = True
-                        screen.progress.append(screen.choose_level + 1)
-                        screen.progress = list(set(screen.progress))
+                        screen.progress.add(screen.board.level + 1)
                         end(screen)
                     if actor in enemies_group:
                         is_win = False
@@ -392,8 +391,9 @@ def select_surfaces(board, unit, cell, is_attack):
                                         coords = board.get_cell_coords((cell_x + dx, cell_y + dy))
                                         surface = pygame.surface.Surface((board.cell_size, board.cell_size))
                                         lst_surfaces.append((surface, coords, (board.cell_size, board.cell_size)))
-                                    if board.field[cell_y + dy][cell_x + dx] == 2:
-                                        minus += 1
+                                    if unit.name != 'dragon':
+                                        if board.field[cell_y + dy][cell_x + dx] == 2:
+                                            minus += 1
                                     if ran - minus > 0:
                                         add(ran - minus, (cell_x + dx, cell_y + dy))
 

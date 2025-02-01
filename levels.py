@@ -30,11 +30,9 @@ class Levels_menu(mapping.Window):
         for button in lst:
             if button.check_click(mouse_pos):
                 if button == self.first_level_button and 1 in self.main_screen.progress:
-                    self.main_screen.choose_level = 1
                     self.running = False
                     self.main.start('1')
                 if button == self.second_level_button and 2 in self.main_screen.progress:
-                    self.main_screen.choose_level = 2
                     self.running = False
                     self.main.start('2')
                 if button == self.thirst_level_button and 3 in self.main_screen.progress:
@@ -57,7 +55,7 @@ class Levels_menu(mapping.Window):
         self.main_screen.render_cursor()
 
     def start(self):
-        fps = 120
+        fps = 60
         clock = pygame.time.Clock()
 
         self.running = True
