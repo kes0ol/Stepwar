@@ -7,58 +7,62 @@ import pygame
 import swordsman, archer, cavalry, dragon
 from global_vars import my_units_group, enemies_group, RANGE_ATTACK, shop_group, action_in_progress, landscape_group
 
+'''Создание глобальных переменных'''
 is_win = None
 money_now = 0
 
 
 def start(screen):
-    global is_win, money_now
-    enemys_move(screen)
+    '''Функция старта главное цикла геймплея'''
+    global is_win, money_now  # вызов глобальных переменных
+
+    enemys_move(screen)  # первый ход юнитов
     money_now = 0
 
     fps = 60
     clock = pygame.time.Clock()
     running = True
+    '''Старт цикла'''
     while screen.gameplay and running:
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if event.type == pygame.QUIT:  # проверка выхода
                 pygame.quit()
                 sys.exit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE and not action_in_progress:
+            if event.type == pygame.KEYDOWN:  # при нажатии кнопки
+                if event.key == pygame.K_ESCAPE and not action_in_progress:  # нажатие escape (назад)
                     running = False
                     screen.gameplay = False
                     return_units()
                     new_step()
                     screen.board.clear_board()
-                if event.key == pygame.K_SPACE and not action_in_progress:
+                if event.key == pygame.K_SPACE and not action_in_progress:  # нажатие пробела (новый ход)
                     screen.steps += 1
                     new_step()
                     enemys_move(screen)
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONDOWN:  # при нажатии мышкой
                 select_button = check_click(screen, event.pos)
-                if select_button == 'new_step' and not action_in_progress:
+                if select_button == 'new_step' and not action_in_progress:  # нажатие на кнопку след. хода
                     screen.steps += 1
                     new_step()
                     enemys_move(screen)
-                if select_button == 'back_to_menu' and not action_in_progress:
+                if select_button == 'back_to_menu' and not action_in_progress:  # нажатие на кнопку 'назад'
                     running = False
                     screen.gameplay = False
                     return_units()
                     new_step()
                     screen.board.clear_board()
 
-                if screen.setting_button.check_click(event.pos):
+                if screen.setting_button.check_click(event.pos):  # кнопка настроек
                     screen.main.start_screen.settings_screen.start()
-                if screen.ref_button.check_click(event.pos):
+                if screen.ref_button.check_click(event.pos):  # кнопка справки
                     screen.main.start_screen.ref_screen.start()
 
                 cell_coords = screen.board.get_cell(event.pos)
                 unit = choose_unit(screen, cell_coords)
-                if unit and event.button == 1:
+                if unit and event.button == 1:  # ЛКМ по персонажам
                     choose_step(screen, unit, cell_coords)
-                if unit and event.button == 3:
+                if unit and event.button == 3:  # ПКМ по персонажам
                     choose_attack(screen, unit, cell_coords)
 
         screen.sc.fill((0, 0, 0))
@@ -71,7 +75,9 @@ def start(screen):
 
 
 def end(screen):
+    '''Финальное окно со счётом и зараотанными монетами'''
     global money_now
+
     screen.money += money_now
     surf = pygame.Surface((screen.board.cell_size * 8, screen.board.cell_size * 4))
 
@@ -79,33 +85,34 @@ def end(screen):
     clock = pygame.time.Clock()
 
     running = True
+    '''Старт цикла экрана'''
     while running:
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if event.type == pygame.QUIT:  # проверка на выход
                 pygame.quit()
                 sys.exit()
 
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE and not action_in_progress:
+            if event.type == pygame.KEYDOWN:  # проверка на нажатие клавиш
+                if event.key == pygame.K_ESCAPE and not action_in_progress:  # при нажатии на escape
                     running = False
                     screen.gameplay = False
                     return_units()
                     new_step()
                     screen.board.clear_board()
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONDOWN:  # при нажати мышкой
                 select_button = check_click(screen, event.pos)
 
-                if select_button == 'back_to_menu' and not action_in_progress:
+                if select_button == 'back_to_menu' and not action_in_progress:  # нажатие кнопки 'назад'
                     running = False
                     screen.gameplay = False
                     return_units()
                     new_step()
                     screen.board.clear_board()
 
-                if screen.setting_button.check_click(event.pos):
+                if screen.setting_button.check_click(event.pos):  # нажатие кнопки настроек
                     screen.main.start_screen.settings_screen.start()
-                if screen.ref_button.check_click(event.pos):
+                if screen.ref_button.check_click(event.pos):  # нажатие кнопки справки
                     screen.main.start_screen.ref_screen.start()
 
         screen.sc.fill((0, 0, 0))
@@ -118,19 +125,20 @@ def end(screen):
 
 
 def draw_end_surface(screen, main_surf):
+    '''Отображение информации на экране окончания'''
     global money_now
     one_size = screen.board.cell_size
     lst = []
 
-    surf = pygame.surface.Surface((one_size * 6, one_size * 2))
+    surf = pygame.surface.Surface((one_size * 6, one_size * 2))  # создание полотна
 
     surf.fill('white')
     main_surf.fill('black')
 
-    if is_win:
+    if is_win:  # инфо при победе
         font = pygame.font.Font(None, round(one_size * 1.4))
         text = font.render('Вы победили!', True, 'white')
-    else:
+    else:  # инфо при поражении
         font = pygame.font.Font(None, round(one_size * 1.3))
         text = font.render('Вас уничтожили!', True, 'white')
     main_surf.blit(text, (one_size // 5, one_size // 5))
@@ -138,7 +146,7 @@ def draw_end_surface(screen, main_surf):
     lst.append((f'Заработанные монеты: {money_now}', one_size // 2))
     lst.append((f'Счёт: {screen.score * (20 // screen.steps)}', one_size // 2))
 
-    for i in range(len(lst)):
+    for i in range(len(lst)):  # отображение инфы
         font = pygame.font.Font(None, lst[i][1])
         text = font.render(lst[i][0], True, 'black')
         surf.blit(text, (10, i * 50 + 20))
@@ -148,15 +156,17 @@ def draw_end_surface(screen, main_surf):
 
 
 def check_click(screen, mouse_pos):
+    '''Проверка на нажатие кнопок'''
     if (screen.button_next_step.rect.left <= mouse_pos[0] <= screen.button_next_step.rect.right
             and screen.button_next_step.rect.top <= mouse_pos[1] <= screen.button_next_step.rect.bottom):
-        return 'new_step'
+        return 'new_step'  # кнопка след. хода
     if (screen.back_button.rect.left <= mouse_pos[0] <= screen.back_button.rect.right
             and screen.back_button.rect.top <= mouse_pos[1] <= screen.back_button.rect.bottom):
-        return 'back_to_menu'
+        return 'back_to_menu'  # кнопка назад
 
 
 def choose_unit(screen, cell_coords):
+    '''Функция выбора юнита при нажатии на него (проверка на нажатие)'''
     cell_x, cell_y = cell_coords
     coords = cell_x * screen.board.cell_size + screen.board.left, cell_y * screen.board.cell_size + screen.board.top
 
@@ -168,15 +178,18 @@ def choose_unit(screen, cell_coords):
 
 
 def check_borders(board, cell_x, cell_y, dx, dy):
+    '''Проверка границ поля'''
     return (dx, dy) != (0, 0) and 0 <= cell_x + dx < len(board.board[0]) and 0 <= cell_y + dy < len(board.board)
 
 
 def new_step():
+    '''Начало новго хода (обновление юнито)'''
     for unit in itertools.chain(my_units_group, enemies_group):
         unit.refresh()
 
 
 def return_units():
+    '''Возвращение юнитов с поля боя в инвентарь при выходе/победе/поражении'''
     dct = {'swordsman': swordsman,
            'archer': archer,
            'cavalry': cavalry,
@@ -187,6 +200,7 @@ def return_units():
 
 
 def render_surfaces(screen, lst_surfaces, color):
+    '''Отображение полотен (surfaces) на поле'''
     for surf in lst_surfaces:
         surface, surface_coords = surf
         surface.fill(color)
@@ -195,6 +209,7 @@ def render_surfaces(screen, lst_surfaces, color):
 
 
 def can_move(screen):
+    '''Проверка на возможность хода юнитом'''
     surfaces_can_move = []
     for un in my_units_group:
         if un.step != 0 and (un.rect.x >= screen.board.left and un.rect.y >= screen.board.top):
@@ -204,22 +219,23 @@ def can_move(screen):
 
 
 def enemys_move(screen):
+    '''Функция обработки ходов юнитов'''
     for unit in enemies_group:
-        if unit.step == 0:
+        if unit.step == 0:  # проверка на возможность хода
             continue
 
         cell = screen.board.get_cell((unit.rect.x, unit.rect.y))
         lst_steps, _ = select_surfaces(screen.board, unit, cell, False)
 
-        if len(lst_steps):
-            random.shuffle(lst_steps)
-            choose_cell = random.choice(lst_steps)
+        if len(lst_steps):  # если есть возможные ходы
+            random.shuffle(lst_steps)  # перемешиваем ходы
+            choose_cell = random.choice(lst_steps)  # берем рандомный (рандом x2)
             castle_unit_coords = None
             for i in my_units_group:
-                if i.name == "castle":
+                if i.name == "castle":  # проверка на башню
                     castle_unit_coords = screen.board.get_cell((i.rect.x, i.rect.y))
                     break
-            for step in lst_steps:
+            for step in lst_steps:  # выбор оптимального хода по манхэттеновскому расстоянию
                 if abs(step[0] - castle_unit_coords[0]) <= abs(choose_cell[0] - castle_unit_coords[0]):
                     choose_cell = step
 
@@ -231,10 +247,11 @@ def enemys_move(screen):
 
 
 def enemys_attack(screen, unit, now_cell):
+    '''Функция атаки вражеских юнитов'''
     decrement_action_in_progress()
     lst_steps, _ = select_surfaces(screen.board, unit, now_cell, True)
 
-    if len(lst_steps):
+    if len(lst_steps):  # если есть кого атаковать
         select_attack = random.choice(lst_steps)
 
         increment_action_in_progress()
@@ -242,48 +259,50 @@ def enemys_attack(screen, unit, now_cell):
 
 
 def show_stats(screen):
+    '''Отображение статистики клетки/персоанажа при наведении мышкой'''
     stats_surface = pygame.Surface((200, 100))
     font = pygame.font.Font(None, 25)
     stats = []
 
-    for un in itertools.chain(enemies_group, my_units_group, shop_group):
+    for un in itertools.chain(enemies_group, my_units_group, shop_group):  # запись инфы с юнита
         if un.rect.collidepoint(pygame.mouse.get_pos()):
             stats = [
-                f'Тип юнита: {un.title}',
-                f'Здоровье: {un.hp}',
-                f'Урон: {un.damage}' + (f' + {un.damage_plus}' if un.attack_type == RANGE_ATTACK else ''),
-                f'Передвижение: {un.step}',
-                f'Дистанция атаки: {un.distance_attack}'
+                f'Тип юнита: {un.title}',  # название
+                f'Здоровье: {un.hp}',  # хп
+                f'Урон: {un.damage}' + (f' + {un.damage_plus}' if un.attack_type == RANGE_ATTACK else ''),  # урон
+                f'Передвижение: {un.step}',  # шаги
+                f'Дистанция атаки: {un.distance_attack}'  # дистанция атаки
             ]
 
-    if len(stats) == 0:
-        for land in landscape_group:
+    if not len(stats):  # если навели не на юнита (значит на ландшафт)
+        for land in landscape_group:  # запись инфы с ландшафта
             if land.rect.collidepoint(pygame.mouse.get_pos()):
                 stats = [
-                    f'Ландшафт: {land.title}',
-                    f'Доп. урон: {land.damage}',
-                    f'Передвижение: {land.move}'
+                    f'Ландшафт: {land.title}',  # название
+                    f'Доп. урон: {land.damage}',  # доп. урон
+                    f'Передвижение: {land.move}'  # шаги
                 ]
 
-    for i in range(len(stats)):
+    for i in range(len(stats)):  # отобржение инфы о юните/клетки
         text = font.render(stats[i], True, (255, 255, 255))
         stats_surface.blit(text, (0, i * 20, 100, 100))
-    screen.sc.blit(stats_surface, (screen.board.left // 2 - 100, screen.height // 2))
+    screen.sc.blit(stats_surface, (screen.board.left // 2 - 100, screen.height // 2)) # отображение полотна
 
 
 def choose_step(screen, unit, cell_coords):
+    '''Выбор хода игроком (перемещение - ЛКМ)'''
     lst_steps, lst_surfaces = select_surfaces(screen.board, unit, cell_coords, False)
 
-    if unit.step > 0:
-        while True:
+    if unit.step > 0:  # есть ли ходы
+        while True:  # запуск микро-цикла на выбор клетки (для перемещения юнита)
             for event in pygame.event.get():
-                if event.type == pygame.QUIT:
+                if event.type == pygame.QUIT:  # проверка на выход из игры
                     pygame.quit()
                     sys.exit()
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    choose_cell = screen.board.get_cell(event.pos)
+                if event.type == pygame.MOUSEBUTTONDOWN:  # проверка на нажатие мышкой
+                    choose_cell = screen.board.get_cell(event.pos)  # получение координатов выбранной клетки
                     for coords in lst_steps:
-                        if coords == choose_cell:
+                        if coords == choose_cell:  # перемещение юнита в выбранную клетку
                             increment_action_in_progress()
                             unit.make_step(cell_coords, choose_cell, screen, decrement_action_in_progress, [])
                     return
@@ -297,15 +316,16 @@ def choose_step(screen, unit, cell_coords):
 
 
 def choose_attack(screen, unit, cell_coords):
+    '''Выбор хода игроком (перемещение - ПКМ)'''
     lst_steps, lst_surfaces = select_surfaces(screen.board, unit, cell_coords, True)
 
     if unit.do_damage:
-        while True:
+        while True:  # запуск микро-цикла на выбор клетки (для атаки юнитом)
             for event in pygame.event.get():
-                if event.type == pygame.QUIT:
+                if event.type == pygame.QUIT:  # проверка на выход
                     pygame.quit()
                     sys.exit()
-                if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.type == pygame.MOUSEBUTTONDOWN:  # проверка на нажатие мышкой
                     choose_cell = screen.board.get_cell(event.pos)
                     for coords in lst_steps:
                         if coords == choose_cell:
@@ -322,15 +342,18 @@ def choose_attack(screen, unit, cell_coords):
 
 
 def increment_action_in_progress():
+    '''Начало анимции (проверка)'''
     global action_in_progress
     action_in_progress += 1
 
 
 class BadActionInProgressState(Exception):
+    '''Обход ошибки'''
     pass
 
 
 def decrement_action_in_progress():
+    '''Конец анимации (проверка)'''
     global action_in_progress
     action_in_progress -= 1
     if action_in_progress < 0:
@@ -338,19 +361,20 @@ def decrement_action_in_progress():
 
 
 def select_surfaces(board, unit, cell, is_attack):
+    '''Функция выбора и отображения выбранных клетов (подсветка)'''
     lst_surfaces = []
     lst_steps = []
-    if not is_attack:
-        def add(ran, cell_coords):
+    if not is_attack:  # если перемещние (не атака)
+        def add(ran, cell_coords):  # создание рекурсивной функции (умное перемещение)
             cell_x, cell_y = cell_coords
 
-            for dx in (-1, 0, 1):
+            for dx in (-1, 0, 1):  # обработка в радиусе 1 клетки
                 for dy in (-1, 0, 1):
                     minus = 1
                     if abs(dx) != abs(dy):
-                        if check_borders(board, cell_x, cell_y, dx, dy):
+                        if check_borders(board, cell_x, cell_y, dx, dy):  # проверка на выход за границы
                             if ((board.board[cell_y + dy][cell_x + dx] == 0 and
-                                 board.field[cell_y + dy][cell_x + dx] != 1)):
+                                 board.field[cell_y + dy][cell_x + dx] != 1)):  # проверка на занятость поля
                                 if board.field[cell_y + dy][cell_x + dx] != 3 or \
                                         board.field[cell_y + dy][cell_x + dx] == 3 and unit.name == 'dragon':
                                     if (cell_x + dx, cell_y + dy) not in lst_steps:
@@ -359,22 +383,22 @@ def select_surfaces(board, unit, cell, is_attack):
                                         coords = board.get_cell_coords((cell_x + dx, cell_y + dy))
                                         surface = pygame.surface.Surface((board.cell_size, board.cell_size))
                                         lst_surfaces.append((surface, coords))
-                                    if unit.name != 'dragon':
+                                    if unit.name != 'dragon':  # исключение для дракона на реке
                                         if board.field[cell_y + dy][cell_x + dx] == 2:
                                             minus += 1
-                                    if ran - minus > 0:
+                                    if ran - minus > 0:  # запуск рекурсии (для следующего радиуса соседних клеток)
                                         add(ran - minus, (cell_x + dx, cell_y + dy))
 
-        add(unit.step, cell)
+        add(unit.step, cell)  # первый запуск функции
 
-    else:
-        if unit in my_units_group:
+    else:  # если атака
+        if unit in my_units_group:  # если юниты игрока
             enemies = (2, 3)
-        else:
+        else:  # если юниты врага
             enemies = (1, 4)
 
         cell_x, cell_y = cell
-        for dx in range(-unit.distance_attack, unit.distance_attack + 1):
+        for dx in range(-unit.distance_attack, unit.distance_attack + 1):  # проверка по радиусу атаки
             for dy in range(-unit.distance_attack, unit.distance_attack + 1):
                 if check_borders(board, cell_x, cell_y, dx, dy):
                     if board.board[cell_y + dy][cell_x + dx] in enemies:
@@ -388,15 +412,16 @@ def select_surfaces(board, unit, cell, is_attack):
 
 
 def give_damage(screen, select_coords, select_cell, actor):
+    '''Нанесение дамага по юниту'''
     global is_win, money_now
     target = 0
 
     for group in [my_units_group, enemies_group]:
         for unit in group:
             if actor in my_units_group:
-                target = 3
+                target = 3  # индекс выбранного юнита
             if actor in enemies_group:
-                target = 4
+                target = 4  # индекс выбранного юнита
             if screen.board.board[select_cell[1]][select_cell[0]] == target and unit.name == "castle":
                 unit.recieve_damage(actor)
                 if unit.is_dead:
@@ -404,21 +429,21 @@ def give_damage(screen, select_coords, select_cell, actor):
                         for j in range(len(screen.board.board[i])):
                             if screen.board.board[i][j] == target:
                                 screen.board.board[i][j] = 0
-                    if actor in my_units_group:
-                        money_now += 100
-                        is_win = True
-                        screen.progress.add(screen.board.level + 1)
+                    if actor in my_units_group:  # конец игры - победа, запуск финального окна
+                        money_now += 100  # деньги за башню
+                        is_win = True  # победа
+                        screen.progress.add(int(screen.board.level) + 1)
                         end(screen)
-                    if actor in enemies_group:
-                        is_win = False
+                    if actor in enemies_group:  # конец игры - поражение, запуск финального окна
+                        is_win = False  # поражение
                         end(screen)
                     return
-            if (unit.rect.x, unit.rect.y) == select_coords:
+            if (unit.rect.x, unit.rect.y) == select_coords:  # проверка клетки
                 unit.recieve_damage(actor)
-                if unit.is_dead:
+                if unit.is_dead:  # удаление убитого юнита
                     screen.board.board[select_cell[1]][select_cell[0]] = 0
 
-                    if actor in my_units_group:
+                    if actor in my_units_group:  # получение наград (очков и монет) за убийство
                         dct = {'swordsman': (10, 5),
                                'archer': (15, 25),
                                'cavalry': (20, 20),

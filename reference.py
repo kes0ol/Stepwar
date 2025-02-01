@@ -9,15 +9,20 @@ from widgets import Button, View
 
 
 class Reference_window(mapping.Window):
-    def __init__(self, screen, size, main):
-        super().__init__(screen, size, main)
-        self.ref_screen = Description(self.main_screen, self.size, self.main)
-        self.next_page_button = Button('->', 200, self.width - 80, self.height - 80,
-                                       color=(100, 0, 0), dark_color=(50, 0, 0))
-        self.back_button = Button('Назад', 80, 120, self.height - 70, color=(100, 0, 0), dark_color=(50, 0, 0))
-        self.lst_buttons = [self.back_button, self.next_page_button]
+    '''Создание класса первого окна справки'''
 
-        self.control_view = View('Управление', self.one_size, self.width // 2, self.one_size, color=(100, 0, 0))
+    def __init__(self, screen, size, main):
+        '''Инициализация класса'''
+        super().__init__(screen, size, main)
+        self.ref_screen = Description(self.main_screen, self.size, self.main)  # создание второго окна
+        self.next_page_button = Button('->', 200, self.width - 80, self.height - 80,
+                                       color=(100, 0, 0), dark_color=(50, 0, 0))  # создание кнопки на след. страницу
+        self.back_button = Button('Назад', 80, 120, self.height - 70, color=(100, 0, 0),
+                                  dark_color=(50, 0, 0))  # создание кнопки Назад
+        self.lst_buttons = [self.back_button, self.next_page_button]  # список кнопок
+
+        self.control_view = View('Управление', self.one_size, self.width // 2, self.one_size,
+                                 color=(100, 0, 0))  # создание надписи
 
         t = ('''Выход на предыдущий экран (назад): Esc\nВыбор юнита в инвентаре: 1/2/3/4\nСледующий ход: Space\n\nВ главном меню:
         Список уровней: 1
@@ -26,7 +31,7 @@ class Reference_window(mapping.Window):
         Справка: 4\n\nВ списке уровней:
         Первый уровень: 1
         Второй уровень: 2
-        Третий уровень: 3''')
+        Третий уровень: 3''')  # задание текста справки
 
         self.lst = t.split('\n')
 
@@ -34,6 +39,7 @@ class Reference_window(mapping.Window):
         self.fon = pygame.transform.scale(self.fon, (self.width, self.height))
 
     def parse_text(self, text, width):
+        '''Функция парсинга текста (при надобности)'''
         lst = text.split()
         res = []
         w = width
@@ -52,14 +58,16 @@ class Reference_window(mapping.Window):
         return res
 
     def check_click(self, mouse_pos, lst):
+        '''Функция проверка клика мышки'''
         for button in lst:
             if button.check_click(mouse_pos):
-                if button == self.next_page_button:
+                if button == self.next_page_button:  # при нажатии на кнопку следующей страницы
                     self.ref_screen.start()
-                if button == self.back_button:
+                if button == self.back_button:  # при нажатии на кнопку Назад
                     self.running = False
 
     def render(self):
+        '''Рендер содержимого страницы'''
         y = self.one_size
         self.main_screen.sc.blit(self.fon, (0, 0))
         for i in self.lst:
@@ -73,20 +81,21 @@ class Reference_window(mapping.Window):
         self.main_screen.render_cursor()
 
     def start(self):
+        '''Функция старта основного цикла'''
         fps = 60
         clock = pygame.time.Clock()
 
         self.running = True
-        while self.running:
+        while self.running:  # старт цикла
             for event in pygame.event.get():
-                if event.type == pygame.QUIT:
+                if event.type == pygame.QUIT:  # проверка выхода
                     self.running = False
                     pygame.quit()
                     sys.exit()
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
+                if event.type == pygame.KEYDOWN:  # при нажатии на клавиши
+                    if event.key == pygame.K_ESCAPE:  # если нажат escape
                         self.running = False
-                if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.type == pygame.MOUSEBUTTONDOWN:  # при нажатии мышкой
                     self.check_click(event.pos, self.lst_buttons)
 
             self.main_screen.sc.fill((0, 0, 0))

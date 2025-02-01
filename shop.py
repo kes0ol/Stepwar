@@ -11,15 +11,21 @@ from widgets import Button
 
 
 class Store(mapping.Window):
+    '''Создание класса страницы магазина'''
+
     def __init__(self, screen, size, main):
+        '''Инициализация класса'''
         super().__init__(screen, size, main)
-        self.screen = pygame.surface.Surface((self.width, self.height))
+        self.screen = pygame.surface.Surface((self.width, self.height))  # создание полотна
 
-        self.lst_units = [swordsman, archer, cavalry, dragon]
+        self.lst_units = [swordsman, archer, cavalry, dragon]  # список всех юнитов
 
+        # загрузка всех карточек юнитов в список
         self.lst_products = []
-        for i in [('images/team_images/swordsman.png', 25, (0, 0), (100, 100)), ('images/team_images/archer.png', 40, (0, 0), (100, 100)),
-                  ('images/team_images/cavalry.png', 55, (0, 0), (130, 130)), ('images/team_images/dragon.png', 120, (0, 0), (125, 125))]:
+        for i in [('images/team_images/swordsman.png', 25, (0, 0), (100, 100)),
+                  ('images/team_images/archer.png', 40, (0, 0), (100, 100)),
+                  ('images/team_images/cavalry.png', 55, (0, 0), (130, 130)),
+                  ('images/team_images/dragon.png', 120, (0, 0), (125, 125))]:
             im, cost, ltop, sz = i
             image = pygame.image.load(im)
             image = image.subsurface(pygame.Rect(ltop, sz))
@@ -28,20 +34,23 @@ class Store(mapping.Window):
 
         self.back_button = Button('Назад', round(self.one_size * 1.2),
                                   round(self.one_size * 1.7), self.height - 100,
-                                  color=(200, 75, 75), dark_color=(150, 25, 25))
+                                  color=(200, 75, 75), dark_color=(150, 25, 25))  # создание кнопки Назад
 
-        self.lst_buttons = [self.back_button]
+        self.lst_buttons = [self.back_button]  # список всех кнопок
 
         for i in range(len(self.lst_units)):
             self.buy_btn = Button('Купить', self.one_size,
                                   i * round(self.one_size * 4.62) + round(self.one_size * 4.35),
-                                  round(self.one_size * 9.5), color=(255, 255, 0), dark_color=(0, 255, 0))
+                                  round(self.one_size * 9.5), color=(255, 255, 0),
+                                  dark_color=(0, 255, 0))  # создание кнопок Купить
             self.lst_buttons.append(self.buy_btn)
 
+        # задание фона
         self.fon = pygame.image.load('images/backgrounds/store.png')
         self.fon = pygame.transform.scale(self.fon, (self.size[0], self.size[1]))
 
     def render_products(self):
+        '''Функция отображение карточек юнитов'''
         for i in range(len(self.lst_units)):
             self.lst_units[i].set_view_stock(self.screen, (
                 i * round(self.one_size * 4.5) + round(self.one_size * 4.35), round(self.one_size)), self.one_size)
@@ -63,6 +72,7 @@ class Store(mapping.Window):
                 index * round(self.one_size * 4.5) + round(self.one_size * 2.5), round(self.one_size * 2.5)))
 
     def check_click(self, mouse_pos, lst):
+        '''Функция проверки клика мышки'''
         for button in lst:
             if button.check_click(mouse_pos):
                 if button == self.back_button:
@@ -74,6 +84,7 @@ class Store(mapping.Window):
                         self.lst_units[self.lst_buttons.index(button) - 1].stock += 1
 
     def render(self):
+        '''Рендер всего содержимого магазина'''
         self.screen.blit(self.fon, (0, 0))
         self.render_products()
         for button in self.lst_buttons:
@@ -82,20 +93,21 @@ class Store(mapping.Window):
         self.main_screen.render_cursor()
 
     def start(self):
+        '''Функция старта основного цикла'''
         fps = 60
         clock = pygame.time.Clock()
 
         self.running = True
-        while self.running:
+        while self.running:  # старт цикла
             for event in pygame.event.get():
-                if event.type == pygame.QUIT:
+                if event.type == pygame.QUIT:  # проверка выхода
                     self.running = False
                     pygame.quit()
                     sys.exit()
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
+                if event.type == pygame.KEYDOWN:  # при нажатии клавиш
+                    if event.key == pygame.K_ESCAPE:  # если нажат escape
                         self.running = False
-                if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.type == pygame.MOUSEBUTTONDOWN:  # если клик мышки
                     self.check_click(event.pos, self.lst_buttons)
 
             self.screen.fill((0, 0, 0))

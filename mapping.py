@@ -10,142 +10,158 @@ from widgets import Button
 
 
 class Screen:
+    '''Создание класса основного экрана'''
+
     def __init__(self, size, main):
+        '''Инициализация класса'''
+        # задание переменных
         self.gameplay = False
         self.back_to_menu = False
-        self.choose_unit = 'swordsman'
+        self.choose_unit = None
 
-        self.main = main
+        self.main = main  # объект main
 
-        self.size = self.width, self.height = size
-        self.sc = pygame.display.set_mode(self.size, pygame.FULLSCREEN)
+        self.size = self.width, self.height = size  # размер экрана
+        self.sc = pygame.display.set_mode(self.size, pygame.FULLSCREEN)  # сам дисплей
 
-        self.board = Board(18, 10, self.size)
+        self.board = Board(18, 10, self.size)  # создание поля
 
         self.button_start_game = Button('Начать игру', self.board.cell_size // 2, self.board.cell_size * 15,
-                                        self.board.cell_size, coord_type="bottomleft")
+                                        self.board.cell_size, coord_type="bottomleft")  # кнопка начала игры
         self.button_next_step = Button('Следующий ход', self.board.cell_size // 2, self.board.cell_size * 15,
-                                       self.board.cell_size, coord_type="bottomleft")
+                                       self.board.cell_size, coord_type="bottomleft")  # кнопка след. хода
         self.setting_button = Button('Настройки', self.board.cell_size // 2, self.board.cell_size * 4,
                                      self.board.cell_size, color=(255, 255, 0), dark_color=(50, 50, 50),
-                                     coord_type="bottomleft")
+                                     coord_type="bottomleft")  # кнопка настроек
         self.ref_button = Button('Справка', self.board.cell_size // 2, self.board.cell_size * 7, self.board.cell_size,
-                                 color=(255, 255, 0), dark_color=(50, 50, 50), coord_type="bottomleft")
+                                 color=(255, 255, 0), dark_color=(50, 50, 50),
+                                 coord_type="bottomleft")  # кнопка справки
         self.back_button = Button('Назад', self.board.cell_size // 2, self.width / 20, self.board.cell_size,
-                                  color=(200, 75, 75), dark_color=(150, 25, 25), coord_type="bottomleft")
+                                  color=(200, 75, 75), dark_color=(150, 25, 25),
+                                  coord_type="bottomleft")  # кнопка назад
 
-        self.steps = 0
-        self.score = 0
-        self.money = 0
-        self.progress = {1}
-        self.choose_level = 1
+        self.steps = 0  # кол-во шагов за 1 уровень
+        self.score = 0  # очки
+        self.money = 0  # монеты
+        self.progress = {1}  # пройденные уровни
+        self.choose_level = 1  # выбранный уровень (по умолчанию 1)
 
         self.icon_swordsman = swordsman.Swordsman(self.board.cell_size * 1.4, 1 * (self.board.cell_size * 1.2),
-                                                  self.board.cell_size * 1.2, shop_group)
+                                                  self.board.cell_size * 1.2, shop_group)  # иконка рыцаря (для выбора)
         self.icon_archer = archer.Archer(self.board.cell_size * 1.4, 2 * (self.board.cell_size * 1.2),
-                                         self.board.cell_size * 1.2, shop_group)
+                                         self.board.cell_size * 1.2, shop_group)  # иконка лучника (для выбора)
         self.icon_cavalry = cavalry.Cavalry(self.board.cell_size * 1.4, 3 * (self.board.cell_size * 1.2),
-                                            self.board.cell_size * 1.2, shop_group)
+                                            self.board.cell_size * 1.2, shop_group)  # иконка кавалерии (для выбора)
         self.icon_dragon = dragon.Dragon(self.board.cell_size * 1.4, 4 * (self.board.cell_size * 1.2),
-                                         self.board.cell_size * 1.2, shop_group)
+                                         self.board.cell_size * 1.2, shop_group)  # иконка дракона (для выбора)
+        self.icon_money = money.Money(self.width - 100, 20, self.board.cell_size, money.moneys)  # иконка монет
 
+        # запись кол-ва юнитов в инвентаре
         swordsman.stock = self.icon_swordsman.default_stock
         archer.stock = self.icon_archer.default_stock
         cavalry.stock = self.icon_cavalry.default_stock
         dragon.stock = self.icon_dragon.default_stock
-        self.icon_money = money.Money(self.width - 100, 20, self.board.cell_size, money.moneys)
 
-        self.choose_unit_surface = None
+        self.choose_unit_surface = None  # выбранный юнит (surface)
         for shop_unit in [self.icon_swordsman, self.icon_archer, self.icon_cavalry, self.icon_dragon]:
             if shop_unit.default_stock > 0:
                 self.choose_unit_surface = [
                     pygame.surface.Surface((self.board.cell_size * 1.2, self.board.cell_size * 1.2)),
-                    [shop_unit.rect.x, shop_unit.rect.y]]
+                    [shop_unit.rect.x, shop_unit.rect.y]]  # полотно выбранного юнита
                 break
 
+        # загрузка и настройка курсора
         self.cursor = pygame.image.load('images/different/cursor.png')
         self.cursor.set_colorkey((255, 255, 255))
         self.cursor = pygame.transform.scale(self.cursor, (20, 20))
 
     def get_click(self, mouse_pos, mouse_button):
+        '''Проверка на клик мышкой'''
         self.board.get_click(mouse_pos, mouse_button, self)
-        if not self.gameplay and self.button_start_game.check_click(mouse_pos):
+        if not self.gameplay and self.button_start_game.check_click(mouse_pos):  # при нажатии Начать игру
             self.gameplay = True
-        if not self.back_to_menu and self.back_button.check_click(mouse_pos):
+        if not self.back_to_menu and self.back_button.check_click(mouse_pos):  # при нажатии Назад
             self.back_to_menu = True
             start_game.return_units()
-            self.board.clear_board()
+            self.board.clear_board()  # очистка поля
             self.main.start_screen.levels_menu.start()
-        if self.setting_button.check_click(mouse_pos):
+        if self.setting_button.check_click(mouse_pos):  # при нажатии настроек
             self.main.start_screen.settings_screen.start()
-        if self.ref_button.check_click(mouse_pos):
+        if self.ref_button.check_click(mouse_pos):  # при нажатии справки
             self.main.start_screen.ref_screen.start()
 
     def render_cursor(self):
-        pygame.mouse.set_visible(False)
+        '''Функция отображения курсора'''
+        pygame.mouse.set_visible(False)  # отображение видимости обычного курсора
         self.sc.blit(self.cursor, pygame.mouse.get_pos())
 
     def render(self):
-        landscape_group.draw(self.sc)
+        '''Отображение ресурсов на экране'''
+        landscape_group.draw(self.sc)  # отображение ландшафта
 
-        self.board.render(self.sc)
+        self.board.render(self.sc)  # отображение доски
 
-        if self.choose_unit_surface:
+        if self.choose_unit_surface:  # отображение зеленого полотна выбранного юнита
             self.choose_unit_surface[0].fill('green')
             self.choose_unit_surface[0].set_alpha(80)
             self.sc.blit(self.choose_unit_surface[0], self.choose_unit_surface[1])
 
-        my_units_group.draw(self.sc)
-        shop_group.draw(self.sc)
+        my_units_group.draw(self.sc)  # отображение юнитов игрока
+        shop_group.draw(self.sc)  # отображение иконок юнитов игрока
 
         for unit in [swordsman, archer, cavalry, dragon]:
             index = [swordsman, archer, cavalry, dragon].index(unit) + 1
             unit.set_view_stock(self.sc, (round(self.board.cell_size * 0.9),
                                           index * (self.board.cell_size * 1.23) + round(self.board.cell_size / 2.6)),
-                                round(self.board.cell_size / 1.4))
+                                round(self.board.cell_size / 1.4))  # отображение кол-ва юнитов каждого типа в инвентаре
 
-        enemies_group.draw(self.sc)
+        enemies_group.draw(self.sc)  # отображение вражеских юнитов
 
+        # отображение всех кнопок
         self.back_button.render(self.sc)
         self.setting_button.render(self.sc)
         self.ref_button.render(self.sc)
 
-        if not self.gameplay:
+        if not self.gameplay:  # кнопка Начать игру
             self.button_start_game.render(self.sc)
             self.board.render_area(self.sc)
-        else:
+        else:  # кнопка Следующий ход
             self.button_next_step.render(self.sc)
 
-        self.icon_money.render(self.sc, self.money)
+        self.icon_money.render(self.sc, self.money)  # отображение монет
 
+        # обновление групп спрайтов
         my_units_group.update()
         enemies_group.update()
         shop_group.update()
 
     def choose_unit(self, mouse_pos):
-        if self.icon_swordsman.rect.collidepoint(mouse_pos) and swordsman.stock > 0:
+        '''Функция выбора юнитов'''
+        if self.icon_swordsman.rect.collidepoint(mouse_pos) and swordsman.stock > 0:  # выбор рыцаря
             self.choose_unit = 'swordsman'
             self.choose_unit_surface[1] = [self.icon_swordsman.rect.x, self.icon_swordsman.rect.y]
-        if self.icon_archer.rect.collidepoint(mouse_pos) and archer.stock > 0:
+        if self.icon_archer.rect.collidepoint(mouse_pos) and archer.stock > 0:  # выбор лучника
             self.choose_unit = 'archer'
             self.choose_unit_surface[1] = [self.icon_archer.rect.x, self.icon_archer.rect.y]
-        if self.icon_cavalry.rect.collidepoint(mouse_pos) and cavalry.stock > 0:
+        if self.icon_cavalry.rect.collidepoint(mouse_pos) and cavalry.stock > 0:  # выбор кавалерии
             self.choose_unit = 'cavalry'
             self.choose_unit_surface[1] = [self.icon_cavalry.rect.x, self.icon_cavalry.rect.y]
-        if self.icon_dragon.rect.collidepoint(mouse_pos) and dragon.stock > 0:
+        if self.icon_dragon.rect.collidepoint(mouse_pos) and dragon.stock > 0:  # выбор дракона
             self.choose_unit = 'dragon'
             self.choose_unit_surface[1] = [self.icon_dragon.rect.x, self.icon_dragon.rect.y]
 
         return self.choose_unit
 
     def reset_progress(self):
+        '''Сброс прогресса (reset)'''
         self.steps = 0
         self.money = 0
         self.progress = {1}
         self.choose_level = 1
 
-        self.board.clear_board()
+        self.board.clear_board()  # очистка доски
 
+        # возвращение базового кол-ва юнитов
         swordsman.stock = self.icon_swordsman.default_stock
         archer.stock = self.icon_archer.default_stock
         cavalry.stock = self.icon_cavalry.default_stock
@@ -153,24 +169,28 @@ class Screen:
 
 
 class Board:
+    '''Создание класса игрового поля (board)'''
+
     def __init__(self, width, height, size):
-        self.level = '1'
-        self.choosen_unit = 'swordsman'
+        '''Инициализация класса'''
+        self.level = '1'  # уровень по умолчанию
+        self.choosen_unit = 'swordsman'  # юнит по умолчанию
 
-        self.width = width
-        self.height = height
+        self.width = width  # ширина
+        self.height = height  # высота
 
-        self.cell_size = round(size[0] / 22)
-        self.left = self.cell_size * 4
-        self.top = round(self.cell_size * 1.5)
+        self.cell_size = round(size[0] / 22)  # размер клетки
+        self.left = self.cell_size * 4  # размер отступа слева
+        self.top = round(self.cell_size * 1.5)  # размер отступа сверху
 
-        self.board = [[0] * width for _ in range(height)]
-        self.field = [[0] * width for _ in range(height)]
+        self.board = [[0] * width for _ in range(height)]  # создание двумерного списка поля юнитов
+        self.field = [[0] * width for _ in range(height)]  # создание двумерного списка поля ландшафтов
 
         self.allow_area = pygame.Surface((7 * self.cell_size, self.height * self.cell_size))
         self.allow_area.set_alpha(80)
 
     def render(self, screen):
+        '''Рендер сетки поля'''
         for i in range(len(self.board)):
             for j in range(len(self.board[i])):
                 x = j * self.cell_size + self.left
@@ -179,6 +199,7 @@ class Board:
                 pygame.draw.rect(screen, 'white', (x, y, self.cell_size, self.cell_size), 1)
 
     def render_area(self, screen):
+        '''Отображение допустимого расстояния размещения юнитов от башни'''
         for i in range(len(self.board)):
             for j in range(7):
                 if self.field[i][j] == 0 and self.board[i][j] == 0:
@@ -190,11 +211,13 @@ class Board:
                     screen.blit(surface, (surface_coords_x, surface_coords_y))
 
     def set_map(self):
+        '''Установка карты'''
         self.set_team()
         self.set_enemys()
         self.set_landscapes()
 
     def set_team(self):
+        '''Установка юнитов (башни)'''
         for i in range(len(self.board)):
             for j in range(len(self.board[i])):
                 if (i, j) == (0, 4):
@@ -203,57 +226,60 @@ class Board:
                     self.board[j][i], self.board[j][i + 1], self.board[j + 1][i], self.board[j + 1][i + 1] = 4, 4, 4, 4
 
     def set_enemys(self):
+        '''Установка врагов'''
         with open(f'levels/{self.level}/enemys.txt', mode='rt', encoding='utf-8') as enemys_board:
-            level_lst = [string.strip('\n').split(', ') for string in enemys_board]
+            level_lst = [string.strip('\n').split(', ') for string in enemys_board]  # получение юнитов из файлов
             for i in range(len(level_lst)):
                 for j in range(len(level_lst[i])):
                     x, y = j * self.cell_size + self.left, i * self.cell_size + self.top
-                    if level_lst[i][j] == 's':
+                    if level_lst[i][j] == 's':  # устновка рыцарей
                         swordsman.Swordsman(x, y, self.cell_size, enemies_group, mirror_animation=True)
                         self.board[i][j] = 2
-                    elif level_lst[i][j] == 'a':
+                    elif level_lst[i][j] == 'a':  # установка лучников
                         archer.Archer(x, y, self.cell_size, enemies_group, mirror_animation=True)
                         self.board[i][j] = 2
-                    elif level_lst[i][j] == 'c':
+                    elif level_lst[i][j] == 'c':  # установка кавалерии
                         cavalry.Cavalry(x, y, self.cell_size, enemies_group, mirror_animation=True)
                         self.board[i][j] = 2
-                    elif level_lst[i][j] == 'd':
+                    elif level_lst[i][j] == 'd':  # установка драконов
                         dragon.Dragon(x, y, self.cell_size, enemies_group, mirror_animation=True)
                         self.board[i][j] = 2
-                    elif level_lst[i][j] == 'X':
+                    elif level_lst[i][j] == 'X':  # установка башни (башен)
                         castle.Castle(x, y, self.cell_size * 2, enemies_group)
                         self.board[i][j], self.board[i + 1][j] = 3, 3
                         self.board[i][j + 1], self.board[i + 1][j + 1] = 3, 3
 
     def set_landscapes(self):
+        '''Установка ландшафтов'''
         with open(f'levels/{self.level}/field.txt', mode='rt', encoding='utf-8') as land:
             field_lst = [string.strip('\n').split(', ') for string in land]
             for i in range(len(field_lst)):
                 for j in range(len(field_lst[i])):
                     x, y = self.get_cell_coords((j, i))
 
-                    if field_lst[i][j] in ['m', 'h']:
+                    if field_lst[i][j] in ['m', 'h']:  # если наземные
                         landscapes.Landscape('grass', 'Трава', x, y, 'images/landscapes/grass.png',
-                                             self.cell_size, 0, 0, landscape_group)
-                        if field_lst[i][j] == 'm':
+                                             self.cell_size, 0, 0, landscape_group)  # установка травы
+                        if field_lst[i][j] == 'm':  # установка гор
                             landscapes.Landscape('mountains', 'Гора', x, y, 'images/landscapes/mountains.png',
                                                  self.cell_size, 0, 'нельзя', landscape_group)
                             self.field[i][j] = 1
-                        elif field_lst[i][j] == 'h':
+                        elif field_lst[i][j] == 'h':  # установка гор
                             landscapes.Landscape('hill', 'Холм', x, y, 'images/landscapes/hill.png',
                                                  self.cell_size, 15, -1, landscape_group)
                             self.field[i][j] = 2
 
-                    elif field_lst[i][j] in ['r']:
-                        if field_lst[i][j] == 'r':
+                    elif field_lst[i][j] in ['r']:  # если не назменые
+                        if field_lst[i][j] == 'r':  # если река
                             landscapes.Landscape('river', 'Река', x, y, 'images/landscapes/river.png',
                                                  self.cell_size, 0, 0, landscape_group)
                             self.field[i][j] = 3
-                    else:
+                    else:  # иначе установка травы
                         landscapes.Landscape('grass', 'Трава', x, y, 'images/landscapes/grass.png',
                                              self.cell_size, 0, 0, landscape_group)
 
     def get_cell(self, mouse_pos):
+        '''Фцнкция получения клетки по координатам мышки'''
         xmax = self.left + self.width * self.cell_size
         ymax = self.top + self.height * self.cell_size
         if not (self.left <= mouse_pos[0] <= xmax and self.top <= mouse_pos[1] <= ymax):
@@ -264,63 +290,63 @@ class Board:
         return n_x, n_y
 
     def get_cell_coords(self, cell):
+        '''Функция получения координатов по клетке'''
         x, y = cell
         return x * self.cell_size + self.left, y * self.cell_size + self.top
 
     def on_click(self, cell_coords, mouse_button):
+        '''Функция размещения/возвращения юнитов на поле/с поля'''
         x, y = cell_coords
-        if mouse_button == 1:
+        if mouse_button == 1:  # при ЛКМ
             if x <= 6 and self.board[y][x] == 0 and self.field[y][x] == 0:
-                if self.choosen_unit == 'swordsman' and swordsman.stock > 0:
+                if self.choosen_unit == 'swordsman' and swordsman.stock > 0:  # рыцарь
                     swordsman.Swordsman(x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
                                         my_units_group)
                     swordsman.stock -= 1
                     self.board[y][x] = 1
-                if self.choosen_unit == 'archer' and archer.stock > 0:
+
+                if self.choosen_unit == 'archer' and archer.stock > 0:  # лучник
                     archer.Archer(x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
                                   my_units_group)
                     archer.stock -= 1
                     self.board[y][x] = 1
 
-                if self.choosen_unit == 'cavalry' and cavalry.stock > 0:
+                if self.choosen_unit == 'cavalry' and cavalry.stock > 0:  # кавалерия
                     cavalry.Cavalry(x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
                                     my_units_group)
                     cavalry.stock -= 1
                     self.board[y][x] = 1
-                if self.choosen_unit == 'dragon' and dragon.stock > 0:
+
+                if self.choosen_unit == 'dragon' and dragon.stock > 0:  # дракон
                     dragon.Dragon(x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
                                   my_units_group)
                     dragon.stock -= 1
                     self.board[y][x] = 1
 
-        if mouse_button == 3:
+        if mouse_button == 3:  # при ПКМ - возврат юнита в инвентарь
             if self.board[y][x] == 1:
                 coords = x * self.cell_size + self.left, y * self.cell_size + self.top
 
-                for unit in my_units_group:
+                dct = {'swordsman': swordsman,
+                       'archer': archer,
+                       'cavalry': cavalry,
+                       'dragon': dragon}
+                for unit in my_units_group:  # возврат юнита
                     if unit.rect.collidepoint(coords):
-                        if unit.name == "swordsman":
-                            my_units_group.remove(unit)
-                            swordsman.stock += 1
-                        if unit.name == "archer":
-                            my_units_group.remove(unit)
-                            archer.stock += 1
-                        if unit.name == "cavalry":
-                            my_units_group.remove(unit)
-                            cavalry.stock += 1
-                        if unit.name == "dragon":
-                            my_units_group.remove(unit)
-                            dragon.stock += 1
+                        my_units_group.remove(unit)
+                        dct[unit.name].stock += 1
 
                 self.board[y][x] = 0
 
     def get_click(self, mouse_pos, mouse_button, screen):
+        '''Функция получения клетки и проверка на размещение юнита'''
         cell = self.get_cell(mouse_pos)
         self.choosen_unit = Screen.choose_unit(screen, mouse_pos)
         if cell[0] >= 0 and cell[1] >= 0:
             self.on_click(cell, mouse_button)
 
     def clear_board(self):
+        '''Функция очистки поля'''
         self.board = [[0] * self.width for _ in range(self.height)]
         self.field = [[0] * self.width for _ in range(self.height)]
 
@@ -332,7 +358,10 @@ class Board:
 
 
 class Window:
+    '''Родительский класс окон'''
+
     def __init__(self, screen, size, main):
+        '''Инициализация класа'''
         self.size = self.width, self.height = size
         self.main_screen = screen
         self.main = main
