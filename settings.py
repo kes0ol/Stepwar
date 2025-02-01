@@ -30,7 +30,7 @@ class Settings_window(mapping.Window):
                             self.back_button]
         self.lst_views = [self.volume_title, self.percent_view]
 
-        self.fon = pygame.image.load('images/backgrounds/settingsfon.jpg')
+        self.fon = pygame.image.load('images/backgrounds/settings_background.jpg')
         self.fon = pygame.transform.scale(self.fon, (self.size[0], self.size[1]))
 
     def check_click(self, mouse_pos, lst):
@@ -52,7 +52,7 @@ class Settings_window(mapping.Window):
                 if button == self.reset_button:
                     self.running = False
                     self.main_screen.reset_progress()
-                    self.main.start_window.start()
+                    self.main.go_start_window()
 
     def render(self):
         self.screen.blit(self.fon, (0, 0))

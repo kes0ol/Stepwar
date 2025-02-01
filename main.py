@@ -22,7 +22,7 @@ class Main:
         self.screen.back_to_menu = False
 
         self.screen.board.level = level
-        self.screen.board.clear_board(self.screen)
+        self.screen.board.clear_board()
 
         fps = 60
         clock = pygame.time.Clock()
@@ -39,7 +39,7 @@ class Main:
                     if event.key == pygame.K_ESCAPE:
                         self.screen.back_to_menu = True
                         start_game.return_units()
-                        self.screen.board.clear_board(self.screen)
+                        self.screen.board.clear_board()
                         self.start_screen.levels_menu.start()
                     elif event.key == pygame.K_1:
                         self.screen.choose_unit = 'swordsman'

@@ -8,7 +8,7 @@ from unit import Unit
 
 class Archer(Unit):
     def __init__(self, x, y, image_size, group, mirror_animation=False):
-        sheet = pygame.image.load('images/team_images/Sharpshooter.png')
+        sheet = pygame.image.load('images/team_images/archer.png')
         animations = {
             ANIMATION_IDLE: AnimationParams(sheet, 4, 1, 100, 100, 0, 0, 10),
             ANIMATION_ATTACK: AnimationParams(sheet, 8, 1, 100, 100, 0, 100, 8),

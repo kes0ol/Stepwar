@@ -30,7 +30,7 @@ class Reference_window(mapping.Window):
 
         self.lst = t.split('\n')
 
-        self.fon = pygame.image.load('images/backgrounds/reffon.jpg')
+        self.fon = pygame.image.load('images/backgrounds/ref_background.jpg')
         self.fon = pygame.transform.scale(self.fon, (self.width, self.height))
 
     def parse_text(self, text, width):
@@ -157,7 +157,7 @@ class Description(mapping.Window):
 
         self.stats = []
 
-        self.fon = pygame.image.load('images/backgrounds/reffon.jpg')
+        self.fon = pygame.image.load('images/backgrounds/ref_background.jpg')
         self.fon = pygame.transform.scale(self.fon, (self.width, self.height))
 
     def check_click(self, mouse_pos, lst):

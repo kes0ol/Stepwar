@@ -8,7 +8,7 @@ from unit import Unit
 
 class Cavalry(Unit):
     def __init__(self, x, y, image_size, group, mirror_animation=False):
-        sheet = pygame.image.load('images/team_images/Champion.png')
+        sheet = pygame.image.load('images/team_images/cavalry.png')
         animations = {
             ANIMATION_IDLE: AnimationParams(sheet, 9, 1, 130, 130, 0, 0, 10),
             ANIMATION_ATTACK: AnimationParams(sheet, 9, 1, 130, 130, 0, 130, 8),

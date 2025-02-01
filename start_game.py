@@ -5,7 +5,6 @@ import sys
 import pygame
 
 import swordsman, archer, cavalry, dragon
-import landscapes
 from global_vars import my_units_group, enemies_group, RANGE_ATTACK, shop_group, action_in_progress, landscape_group
 
 is_win = None
@@ -14,7 +13,7 @@ money_now = 0
 
 def start(screen):
     global is_win, money_now
-    # enemys_move(screen)
+    enemys_move(screen)
     money_now = 0
 
     fps = 60
@@ -26,31 +25,30 @@ def start(screen):
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    if not action_in_progress:
-                        running = False
-                        return_units()
-                        new_step()
-                        screen.board.clear_board(screen)
-                if event.key == pygame.K_SPACE:
-                    if not action_in_progress:
-                        screen.steps += 1
-                        new_step()
-                        enemys_move(screen)
+                if event.key == pygame.K_ESCAPE and not action_in_progress:
+                    running = False
+                    screen.gameplay = False
+                    return_units()
+                    new_step()
+                    screen.board.clear_board()
+                if event.key == pygame.K_SPACE and not action_in_progress:
+                    screen.steps += 1
+                    new_step()
+                    enemys_move(screen)
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 select_button = check_click(screen, event.pos)
-                if select_button == 'new_step':
-                    if not action_in_progress:
-                        screen.steps += 1
-                        new_step()
-                        enemys_move(screen)
-                if select_button == 'back_to_menu':
-                    if not action_in_progress:
-                        running = False
-                        return_units()
-                        new_step()
-                        screen.board.clear_board(screen)
+                if select_button == 'new_step' and not action_in_progress:
+                    screen.steps += 1
+                    new_step()
+                    enemys_move(screen)
+                if select_button == 'back_to_menu' and not action_in_progress:
+                    running = False
+                    screen.gameplay = False
+                    return_units()
+                    new_step()
+                    screen.board.clear_board()
+
                 if screen.setting_button.check_click(event.pos):
                     screen.main.start_screen.settings_screen.start()
                 if screen.ref_button.check_click(event.pos):
@@ -58,13 +56,14 @@ def start(screen):
 
                 cell_coords = screen.board.get_cell(event.pos)
                 unit = choose_unit(screen, cell_coords)
-                if unit is not None and event.button == 1:
+                if unit and event.button == 1:
                     choose_step(screen, unit, cell_coords)
-                if unit is not None and event.button == 3:
+                if unit and event.button == 3:
                     choose_attack(screen, unit, cell_coords)
 
         screen.sc.fill((0, 0, 0))
         screen.render()
+        can_move(screen)
         screen.render_cursor()
         show_stats(screen)
         clock.tick(fps)
@@ -87,24 +86,23 @@ def end(screen):
                 sys.exit()
 
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    if not action_in_progress:
-                        running = False
-                        screen.gameplay = False
-                        return_units()
-                        new_step()
-                        screen.board.clear_board(screen)
+                if event.key == pygame.K_ESCAPE and not action_in_progress:
+                    running = False
+                    screen.gameplay = False
+                    return_units()
+                    new_step()
+                    screen.board.clear_board()
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 select_button = check_click(screen, event.pos)
 
-                if select_button == 'back_to_menu':
-                    if not action_in_progress:
-                        running = False
-                        screen.gameplay = False
-                        return_units()
-                        new_step()
-                        screen.board.clear_board(screen)
+                if select_button == 'back_to_menu' and not action_in_progress:
+                    running = False
+                    screen.gameplay = False
+                    return_units()
+                    new_step()
+                    screen.board.clear_board()
+
                 if screen.setting_button.check_click(event.pos):
                     screen.main.start_screen.settings_screen.start()
                 if screen.ref_button.check_click(event.pos):
@@ -149,22 +147,60 @@ def draw_end_surface(screen, main_surf):
     screen.sc.blit(main_surf, (one_size * 8, one_size * 4))
 
 
-def return_units():
+def check_click(screen, mouse_pos):
+    if (screen.button_next_step.rect.left <= mouse_pos[0] <= screen.button_next_step.rect.right
+            and screen.button_next_step.rect.top <= mouse_pos[1] <= screen.button_next_step.rect.bottom):
+        return 'new_step'
+    if (screen.back_button.rect.left <= mouse_pos[0] <= screen.back_button.rect.right
+            and screen.back_button.rect.top <= mouse_pos[1] <= screen.back_button.rect.bottom):
+        return 'back_to_menu'
+
+
+def choose_unit(screen, cell_coords):
+    cell_x, cell_y = cell_coords
+    coords = cell_x * screen.board.cell_size + screen.board.left, cell_y * screen.board.cell_size + screen.board.top
+
     for unit in my_units_group:
-        if unit.name == "swordsman":
-            swordsman.stock += 1
-        if unit.name == "archer":
-            archer.stock += 1
-        if unit.name == "cavalry":
-            cavalry.stock += 1
-        if unit.name == "dragon":
-            dragon.stock += 1
+        if unit.rect.collidepoint(coords):
+            return unit
+
+    return None
 
 
 def check_borders(board, cell_x, cell_y, dx, dy):
-    return ((dx, dy) != (0, 0) and
-            0 <= cell_x + dx < len(board.board[0]) and
-            0 <= cell_y + dy < len(board.board))
+    return (dx, dy) != (0, 0) and 0 <= cell_x + dx < len(board.board[0]) and 0 <= cell_y + dy < len(board.board)
+
+
+def new_step():
+    for unit in itertools.chain(my_units_group, enemies_group):
+        unit.refresh()
+
+
+def return_units():
+    dct = {'swordsman': swordsman,
+           'archer': archer,
+           'cavalry': cavalry,
+           'dragon': dragon}
+    for unit in my_units_group:
+        if unit.name != 'castle':
+            dct[unit.name].stock += 1
+
+
+def render_surfaces(screen, lst_surfaces, color):
+    for surf in lst_surfaces:
+        surface, surface_coords = surf
+        surface.fill(color)
+        surface.set_alpha(60)
+        screen.sc.blit(surface, surface_coords)
+
+
+def can_move(screen):
+    surfaces_can_move = []
+    for un in my_units_group:
+        if un.step != 0 and (un.rect.x >= screen.board.left and un.rect.y >= screen.board.top):
+            surfaces_can_move.append(
+                (pygame.surface.Surface((screen.board.cell_size, screen.board.cell_size)), (un.rect.x, un.rect.y)))
+    render_surfaces(screen, surfaces_can_move, 'orange')
 
 
 def enemys_move(screen):
@@ -176,14 +212,15 @@ def enemys_move(screen):
         lst_steps, _ = select_surfaces(screen.board, unit, cell, False)
 
         if len(lst_steps):
-            choose_cell = lst_steps[0]
+            random.shuffle(lst_steps)
+            choose_cell = random.choice(lst_steps)
             castle_unit_coords = None
             for i in my_units_group:
                 if i.name == "castle":
                     castle_unit_coords = screen.board.get_cell((i.rect.x, i.rect.y))
                     break
-            for step in lst_steps[1:]:
-                if abs(step[0] - castle_unit_coords[0]) <= abs(choose_cell[0] - castle_unit_coords[1]):
+            for step in lst_steps:
+                if abs(step[0] - castle_unit_coords[0]) <= abs(choose_cell[0] - castle_unit_coords[0]):
                     choose_cell = step
 
             increment_action_in_progress()
@@ -191,6 +228,18 @@ def enemys_move(screen):
         else:
             increment_action_in_progress()
             enemys_attack(screen, unit, cell)
+
+
+def enemys_attack(screen, unit, now_cell):
+    decrement_action_in_progress()
+    lst_steps, _ = select_surfaces(screen.board, unit, now_cell, True)
+
+    if len(lst_steps):
+        select_attack = random.choice(lst_steps)
+
+        increment_action_in_progress()
+        unit.make_attack(select_attack, screen, decrement_action_in_progress, [])
+
 
 def show_stats(screen):
     stats_surface = pygame.Surface((200, 100))
@@ -222,30 +271,9 @@ def show_stats(screen):
     screen.sc.blit(stats_surface, (screen.board.left // 2 - 100, screen.height // 2))
 
 
-def check_click(screen, mouse_pos):
-    if (screen.button_next_step.rect.left <= mouse_pos[0] <= screen.button_next_step.rect.right
-            and screen.button_next_step.rect.top <= mouse_pos[1] <= screen.button_next_step.rect.bottom):
-        return 'new_step'
-    if (screen.back_button.rect.left <= mouse_pos[0] <= screen.back_button.rect.right
-            and screen.back_button.rect.top <= mouse_pos[1] <= screen.back_button.rect.bottom):
-        return 'back_to_menu'
-
-
-def choose_unit(screen, cell_coords):
-    cell_x, cell_y = cell_coords
-    coords = cell_x * screen.board.cell_size + screen.board.left, cell_y * screen.board.cell_size + screen.board.top
-
-    for unit in my_units_group:
-        if unit.rect.collidepoint(coords):
-            return unit
-
-    return None
-
-
 def choose_step(screen, unit, cell_coords):
-    # is_attack = False
-    # lst_surfaces = []
     lst_steps, lst_surfaces = select_surfaces(screen.board, unit, cell_coords, False)
+
     if unit.step > 0:
         while True:
             for event in pygame.event.get():
@@ -268,25 +296,9 @@ def choose_step(screen, unit, cell_coords):
             pygame.display.flip()
 
 
-def increment_action_in_progress():
-    global action_in_progress
-    action_in_progress += 1
-
-
-class BadActionInProgressState(Exception):
-    pass
-
-
-def decrement_action_in_progress():
-    global action_in_progress
-    action_in_progress -= 1
-    if action_in_progress < 0:
-        raise BadActionInProgressState()
-
-
 def choose_attack(screen, unit, cell_coords):
-    # lst_surfaces = []
     lst_steps, lst_surfaces = select_surfaces(screen.board, unit, cell_coords, True)
+
     if unit.do_damage:
         while True:
             for event in pygame.event.get():
@@ -309,31 +321,75 @@ def choose_attack(screen, unit, cell_coords):
             pygame.display.flip()
 
 
-def new_step():
-    for unit in itertools.chain(my_units_group, enemies_group):
-        unit.refresh()
+def increment_action_in_progress():
+    global action_in_progress
+    action_in_progress += 1
 
 
-def render_surfaces(screen, lst_surfaces, color):
-    for surf in lst_surfaces:
-        surface, surface_coords, surface_size = surf
-        surface.fill(color)
-        surface.set_alpha(60)
-        screen.sc.blit(surface, surface_coords)
+class BadActionInProgressState(Exception):
+    pass
 
 
-def enemys_attack(screen, unit, now_cell):
-    decrement_action_in_progress()
-    lst_steps, _ = select_surfaces(screen.board, unit, now_cell, True)
-    if len(lst_steps):
-        select_attack = random.choice(lst_steps)
+def decrement_action_in_progress():
+    global action_in_progress
+    action_in_progress -= 1
+    if action_in_progress < 0:
+        raise BadActionInProgressState()
 
-        increment_action_in_progress()
-        unit.make_attack(select_attack, screen, decrement_action_in_progress, [])
+
+def select_surfaces(board, unit, cell, is_attack):
+    lst_surfaces = []
+    lst_steps = []
+    if not is_attack:
+        def add(ran, cell_coords):
+            cell_x, cell_y = cell_coords
+
+            for dx in (-1, 0, 1):
+                for dy in (-1, 0, 1):
+                    minus = 1
+                    if abs(dx) != abs(dy):
+                        if check_borders(board, cell_x, cell_y, dx, dy):
+                            if ((board.board[cell_y + dy][cell_x + dx] == 0 and
+                                 board.field[cell_y + dy][cell_x + dx] != 1)):
+                                if board.field[cell_y + dy][cell_x + dx] != 3 or \
+                                        board.field[cell_y + dy][cell_x + dx] == 3 and unit.name == 'dragon':
+                                    if (cell_x + dx, cell_y + dy) not in lst_steps:
+                                        lst_steps.append((cell_x + dx, cell_y + dy))
+
+                                        coords = board.get_cell_coords((cell_x + dx, cell_y + dy))
+                                        surface = pygame.surface.Surface((board.cell_size, board.cell_size))
+                                        lst_surfaces.append((surface, coords))
+                                    if unit.name != 'dragon':
+                                        if board.field[cell_y + dy][cell_x + dx] == 2:
+                                            minus += 1
+                                    if ran - minus > 0:
+                                        add(ran - minus, (cell_x + dx, cell_y + dy))
+
+        add(unit.step, cell)
+
+    else:
+        if unit in my_units_group:
+            enemies = (2, 3)
+        else:
+            enemies = (1, 4)
+
+        cell_x, cell_y = cell
+        for dx in range(-unit.distance_attack, unit.distance_attack + 1):
+            for dy in range(-unit.distance_attack, unit.distance_attack + 1):
+                if check_borders(board, cell_x, cell_y, dx, dy):
+                    if board.board[cell_y + dy][cell_x + dx] in enemies:
+                        lst_steps.append((cell_x + dx, cell_y + dy))
+
+                        coords = board.get_cell_coords((cell_x + dx, cell_y + dy))
+                        surface = pygame.surface.Surface((board.cell_size, board.cell_size))
+                        lst_surfaces.append((surface, coords))
+
+    return lst_steps, lst_surfaces
 
 
 def give_damage(screen, select_coords, select_cell, actor):
     global is_win, money_now
+    target = 0
 
     for group in [my_units_group, enemies_group]:
         for unit in group:
@@ -363,63 +419,12 @@ def give_damage(screen, select_coords, select_cell, actor):
                     screen.board.board[select_cell[1]][select_cell[0]] = 0
 
                     if actor in my_units_group:
-                        if unit.name == 'swordsman':
-                            money_now += 10
-                            screen.score += 5
-                        if unit.name == 'archer':
-                            money_now += 15
-                            screen.score += 25
-                        if unit.name == 'cavalry':
-                            money_now += 20
-                            screen.score += 20
-                        if unit.name == 'dragon':
-                            money_now += 50
-                            screen.score += 40
+                        dct = {'swordsman': (10, 5),
+                               'archer': (15, 25),
+                               'cavalry': (20, 20),
+                               'dragon': (50, 40)}
+
+                        money, score = dct[unit.name]
+                        money_now += money
+                        screen.score += score
                 return
-
-
-def select_surfaces(board, unit, cell, is_attack):
-    lst_surfaces = []
-    lst_steps = []
-    if not is_attack:
-        def add(ran, cell_coords):
-            cell_x, cell_y = cell_coords
-
-            for dx in (-1, 0, 1):
-                for dy in (-1, 0, 1):
-                    minus = 1
-                    if abs(dx) != abs(dy):
-                        if check_borders(board, cell_x, cell_y, dx, dy):
-                            if ((board.board[cell_y + dy][cell_x + dx] == 0 and
-                                 board.field[cell_y + dy][cell_x + dx] != 1)):
-                                if board.field[cell_y + dy][cell_x + dx] != 3 or \
-                                        board.field[cell_y + dy][cell_x + dx] == 3 and unit.name == 'dragon':
-                                    if (cell_x + dx, cell_y + dy) not in lst_steps:
-                                        lst_steps.append((cell_x + dx, cell_y + dy))
-
-                                        coords = board.get_cell_coords((cell_x + dx, cell_y + dy))
-                                        surface = pygame.surface.Surface((board.cell_size, board.cell_size))
-                                        lst_surfaces.append((surface, coords, (board.cell_size, board.cell_size)))
-                                    if unit.name != 'dragon':
-                                        if board.field[cell_y + dy][cell_x + dx] == 2:
-                                            minus += 1
-                                    if ran - minus > 0:
-                                        add(ran - minus, (cell_x + dx, cell_y + dy))
-
-        add(unit.step, cell)
-    else:
-        if unit in my_units_group:
-            enemies = (2, 3)
-        else:
-            enemies = (1, 4)
-        cell_x, cell_y = cell
-        for dx in range(-unit.distance_attack, unit.distance_attack + 1):
-            for dy in range(-unit.distance_attack, unit.distance_attack + 1):
-                if check_borders(board, cell_x, cell_y, dx, dy):
-                    if board.board[cell_y + dy][cell_x + dx] in enemies:
-                        lst_steps.append((cell_x + dx, cell_y + dy))
-
-                        coords = board.get_cell_coords((cell_x + dx, cell_y + dy))
-                        surface = pygame.surface.Surface((board.cell_size, board.cell_size))
-                        lst_surfaces.append((surface, coords, (board.cell_size, board.cell_size)))
-    return lst_steps, lst_surfaces

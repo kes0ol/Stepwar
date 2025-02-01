@@ -18,8 +18,8 @@ class Store(mapping.Window):
         self.lst_units = [swordsman, archer, cavalry, dragon]
 
         self.lst_products = []
-        for i in [('images/team_images/Crusader.png', 25, (0, 0), (100, 100)), ('images/team_images/Sharpshooter.png', 40, (0, 0), (100, 100)),
-                  ('images/team_images/Champion.png', 55, (0, 0), (130, 130)), ('images/team_images/bone_dragon.png', 120, (0, 0), (125, 125))]:
+        for i in [('images/team_images/swordsman.png', 25, (0, 0), (100, 100)), ('images/team_images/archer.png', 40, (0, 0), (100, 100)),
+                  ('images/team_images/cavalry.png', 55, (0, 0), (130, 130)), ('images/team_images/dragon.png', 120, (0, 0), (125, 125))]:
             im, cost, ltop, sz = i
             image = pygame.image.load(im)
             image = image.subsurface(pygame.Rect(ltop, sz))

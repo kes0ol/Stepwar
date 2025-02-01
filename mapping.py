@@ -13,7 +13,7 @@ class Screen:
     def __init__(self, size, main):
         self.gameplay = False
         self.back_to_menu = False
-        self.choose_unit = None
+        self.choose_unit = 'swordsman'
 
         self.main = main
 
@@ -63,7 +63,7 @@ class Screen:
                     [shop_unit.rect.x, shop_unit.rect.y]]
                 break
 
-        self.cursor = pygame.image.load('images/different/cursor.PNG')
+        self.cursor = pygame.image.load('images/different/cursor.png')
         self.cursor.set_colorkey((255, 255, 255))
         self.cursor = pygame.transform.scale(self.cursor, (20, 20))
 
@@ -74,7 +74,7 @@ class Screen:
         if not self.back_to_menu and self.back_button.check_click(mouse_pos):
             self.back_to_menu = True
             start_game.return_units()
-            self.board.clear_board(self)
+            self.board.clear_board()
             self.main.start_screen.levels_menu.start()
         if self.setting_button.check_click(mouse_pos):
             self.main.start_screen.settings_screen.start()
@@ -90,7 +90,7 @@ class Screen:
 
         self.board.render(self.sc)
 
-        if self.choose_unit_surface is not None:
+        if self.choose_unit_surface:
             self.choose_unit_surface[0].fill('green')
             self.choose_unit_surface[0].set_alpha(80)
             self.sc.blit(self.choose_unit_surface[0], self.choose_unit_surface[1])
@@ -104,11 +104,6 @@ class Screen:
                                           index * (self.board.cell_size * 1.23) + round(self.board.cell_size / 2.6)),
                                 round(self.board.cell_size / 1.4))
 
-        # enemys.swordsmans.draw(self.sc)
-        # enemys.archers.draw(self.sc)
-        # enemys.cavalrys.draw(self.sc)
-        # enemys.dragons.draw(self.sc)
-        # enemys.castles.draw(self.sc)
         enemies_group.draw(self.sc)
 
         self.back_button.render(self.sc)
@@ -123,10 +118,6 @@ class Screen:
 
         self.icon_money.render(self.sc, self.money)
 
-        # swordsman.swordsmans.update()
-        # archer.archers.update()
-        # cavalry.cavalrys.update()
-        # dragon.dragons.update()
         my_units_group.update()
         enemies_group.update()
         shop_group.update()
@@ -145,7 +136,6 @@ class Screen:
             self.choose_unit = 'dragon'
             self.choose_unit_surface[1] = [self.icon_dragon.rect.x, self.icon_dragon.rect.y]
 
-
         return self.choose_unit
 
     def reset_progress(self):
@@ -153,7 +143,8 @@ class Screen:
         self.money = 0
         self.progress = {1}
         self.choose_level = 1
-        self.board.clear_board(self)
+
+        self.board.clear_board()
 
         swordsman.stock = self.icon_swordsman.default_stock
         archer.stock = self.icon_archer.default_stock
@@ -207,9 +198,8 @@ class Board:
         for i in range(len(self.board)):
             for j in range(len(self.board[i])):
                 if (i, j) == (0, 4):
-                    # castle.add_start_castle(i * self.cell_size + self.left, j * self.cell_size + self.top,
-                    #                         self.cell_size)
-                    castle.Castle(i * self.cell_size + self.left, j * self.cell_size + self.top, self.cell_size * 2, my_units_group)
+                    castle.Castle(i * self.cell_size + self.left, j * self.cell_size + self.top, self.cell_size * 2,
+                                  my_units_group)
                     self.board[j][i], self.board[j][i + 1], self.board[j + 1][i], self.board[j + 1][i + 1] = 4, 4, 4, 4
 
     def set_enemys(self):
@@ -242,26 +232,21 @@ class Board:
                 for j in range(len(field_lst[i])):
                     x, y = self.get_cell_coords((j, i))
 
+                    landscapes.Landscape('grass', 'Трава', x, y, 'images/landscapes/grass.png',
+                                         self.cell_size, 0, 0, landscape_group)
+
                     if field_lst[i][j] == 'm':
-                        landscapes.Landscape('grass', 'Трава', x, y, 'images/landscapes/grass.png', self.cell_size, 0,
-                                             0, landscape_group)
                         landscapes.Landscape('mountains', 'Гора', x, y, 'images/landscapes/mountains.png',
-                                             self.cell_size,
-                                             0, 'нельзя', landscape_group)
+                                             self.cell_size, 0, 'нельзя', landscape_group)
                         self.field[i][j] = 1
                     elif field_lst[i][j] == 'h':
-                        landscapes.Landscape('grass', 'Трава', x, y, 'images/landscapes/grass.png', self.cell_size, 0,
-                                             0, landscape_group)
-                        landscapes.Landscape('hill', 'Холм', x, y, 'images/landscapes/hill.png', self.cell_size, 15, -1,
-                                             landscape_group)
+                        landscapes.Landscape('hill', 'Холм', x, y, 'images/landscapes/hill.png',
+                                             self.cell_size, 15, -1, landscape_group)
                         self.field[i][j] = 2
                     elif field_lst[i][j] == 'r':
-                        landscapes.Landscape('river', 'Река', x, y, 'images/landscapes/river.png', self.cell_size, 0, 0,
-                                             landscape_group)
+                        landscapes.Landscape('river', 'Река', x, y, 'images/landscapes/river.png',
+                                             self.cell_size, 0, 0, landscape_group)
                         self.field[i][j] = 3
-                    else:
-                        landscapes.Landscape('grass', 'Трава', x, y, 'images/landscapes/grass.png', self.cell_size, 0,
-                                             0, landscape_group)
 
     def get_cell(self, mouse_pos):
         xmax = self.left + self.width * self.cell_size
@@ -274,12 +259,12 @@ class Board:
         return n_x, n_y
 
     def get_cell_coords(self, cell):
-        j, i = cell
-        return j * self.cell_size + self.left, i * self.cell_size + self.top
+        x, y = cell
+        return x * self.cell_size + self.left, y * self.cell_size + self.top
 
     def on_click(self, cell_coords, mouse_button):
         x, y = cell_coords
-        if mouse_button == 1:
+        if mouse_button == 1 and (x >= 0, y >= 0):
             if x <= 6 and self.board[y][x] == 0 and self.field[y][x] == 0:
                 if self.choosen_unit == 'swordsman' and swordsman.stock > 0:
                     swordsman.Swordsman(x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
@@ -322,26 +307,6 @@ class Board:
                             my_units_group.remove(unit)
                             dragon.stock += 1
 
-                # for sword in swordsman.swordsmans:
-                #     if (sword.rect.x, sword.rect.y) == coords:
-                #         swordsman.swordsmans.remove(sword)
-                #         swordsman.stock += 1
-                #
-                # for arc in archer.archers:
-                #     if (arc.rect.x, arc.rect.y) == coords:
-                #         archer.archers.remove(arc)
-                #         archer.stock += 1
-                #
-                # for cav in cavalry.cavalrys:
-                #     if (cav.rect.x, cav.rect.y) == coords:
-                #         cavalry.cavalrys.remove(cav)
-                #         cavalry.stock += 1
-                #
-                # for drg in dragon.dragons:
-                #     if (drg.rect.x, drg.rect.y) == coords:
-                #         dragon.dragons.remove(drg)
-                #         dragon.stock += 1
-
                 self.board[y][x] = 0
 
     def get_click(self, mouse_pos, mouse_button, screen):
@@ -350,7 +315,7 @@ class Board:
         if cell[0] >= 0 and cell[1] >= 0:
             self.on_click(cell, mouse_button)
 
-    def clear_board(self, screen):
+    def clear_board(self):
         self.board = [[0] * self.width for _ in range(self.height)]
         self.field = [[0] * self.width for _ in range(self.height)]
 
