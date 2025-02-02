@@ -9,17 +9,14 @@ from development.different.widgets import Button
 
 class Score_window(window.Window):
     def __init__(self, screen, size, main):
-        super().__init__(screen, size, main)
+        super().__init__(screen, size, main, '../../images/backgrounds/score.PNG')
         self.volume = 1
         self.screen = pygame.surface.Surface((self.width, self.height))
 
         self.back_button = Button('Назад', self.one_size, self.one_size * 2, self.one_size * 11, color=(150, 0, 0),
                                   dark_color=(100, 0, 0))
 
-        self.lst_buttons = [self.back_button]
-
-        self.fon = pygame.image.load('../../images/backgrounds/score.PNG')
-        self.fon = pygame.transform.scale(self.fon, (self.size[0], self.size[1]))
+        window.Window.set_lists(self, [self.back_button,])
 
     def check_click(self, mouse_pos, lst):
         for button in lst:
@@ -47,6 +44,7 @@ class Score_window(window.Window):
         self.main_screen.sc.blit(t2, (self.one_size * 9.5, self.one_size * 4))
         f3 = pygame.font.Font(None, 100)
         t3 = f3.render('lvl 3', True, 'red')
+
         self.main_screen.sc.blit(t3, (self.one_size * 13.5, self.one_size * 4))
         self.main_screen.render_cursor()
 

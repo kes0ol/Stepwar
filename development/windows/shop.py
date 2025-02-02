@@ -15,7 +15,7 @@ class Store(window.Window):
 
     def __init__(self, screen, size, main):
         '''Инициализация класса'''
-        super().__init__(screen, size, main)
+        super().__init__(screen, size, main, '../../images/backgrounds/store.png')
         self.screen = pygame.surface.Surface((self.width, self.height))  # создание полотна
 
         self.lst_units = [swordsman, archer, cavalry, dragon]  # список всех юнитов
@@ -36,7 +36,7 @@ class Store(window.Window):
                                   round(self.one_size * 1.7), self.height - 100,
                                   color=(200, 75, 75), dark_color=(150, 25, 25))  # создание кнопки Назад
 
-        self.lst_buttons = [self.back_button]  # список всех кнопок
+        window.Window.set_lists(self, [self.back_button,])
 
         for i in range(len(self.lst_units)):
             self.buy_btn = Button('Купить', self.one_size,
@@ -44,10 +44,6 @@ class Store(window.Window):
                                   round(self.one_size * 9.5), color=(255, 255, 0),
                                   dark_color=(0, 255, 0))  # создание кнопок Купить
             self.lst_buttons.append(self.buy_btn)
-
-        # задание фона
-        self.fon = pygame.image.load('../../images/backgrounds/store.png')
-        self.fon = pygame.transform.scale(self.fon, (self.size[0], self.size[1]))
 
     def render_products(self):
         '''Функция отображение карточек юнитов'''

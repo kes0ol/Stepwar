@@ -10,9 +10,8 @@ from development.different.widgets import Button, View
 
 class Settings_window(window.Window):
     def __init__(self, screen, size, main):
-        super().__init__(screen, size, main)
+        super().__init__(screen, size, main, '../../images/backgrounds/settings_background.jpg')
         self.volume = 1
-        self.screen = pygame.surface.Surface((self.width, self.height))
 
         self.volume_title = View('Громкость', self.one_size, self.width // 2, self.one_size, color=(255, 255, 0))
         self.plus_button = Button('+', self.one_size * 2, self.width // 2 + self.one_size * 3, self.one_size * 3,
@@ -26,12 +25,8 @@ class Settings_window(window.Window):
         self.back_button = Button('Назад', self.one_size, self.one_size * 2, self.one_size * 11, color=(150, 0, 0),
                                   dark_color=(100, 0, 0))
 
-        self.lst_buttons = [self.plus_button, self.minus_button, self.reset_button,
-                            self.back_button]
-        self.lst_views = [self.volume_title, self.percent_view]
-
-        self.fon = pygame.image.load('../../images/backgrounds/settings_background.jpg')
-        self.fon = pygame.transform.scale(self.fon, (self.size[0], self.size[1]))
+        window.Window.set_lists(self, [self.plus_button, self.minus_button, self.reset_button,
+                                       self.back_button], [self.volume_title, self.percent_view])
 
     def check_click(self, mouse_pos, lst):
         for button in lst:
@@ -60,6 +55,7 @@ class Settings_window(window.Window):
             button.render(self.screen)
         for view in self.lst_views:
             view.render(self.screen)
+
         self.main_screen.sc.blit(self.screen, (0, 0))
         self.main_screen.render_cursor()
 

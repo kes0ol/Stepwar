@@ -12,9 +12,7 @@ class Final_window(window.Window):
 
     def __init__(self, screen, size, main):
         '''Инициализация класса'''
-        super().__init__(screen, size, main)
-
-        self.screen = pygame.surface.Surface((self.width, self.height))
+        super().__init__(screen, size, main, '../../images/backgrounds/final_background.png')
 
         self.back_button = Button('Назад', round(self.one_size * 1.2), round(self.one_size * 1.7), self.height - 100,
                                   color=(200, 75, 75), dark_color=(150, 25, 25))  # кнопка выхода
@@ -22,9 +20,7 @@ class Final_window(window.Window):
         self.win_view = View('Поздравляем!', self.one_size, self.width // 2, self.one_size * 5,
                              color=(255, 255, 0))  # сообщение поздравления
 
-        # добавление фона
-        self.fon = pygame.image.load('../../images/backgrounds/final_background.png')
-        self.fon = pygame.transform.scale(self.fon, (self.size[0], self.size[1]))
+        window.Window.set_lists(self, [self.back_button,], [self.win_view,])
 
     def check_click(self, mouse_pos):
         '''Функция проверка клика на кнопку выхода'''
@@ -36,10 +32,10 @@ class Final_window(window.Window):
     def render(self):
         '''Отображение содержимого на экране'''
         self.screen.blit(self.fon, (0, 0))
-
-        self.back_button.render(self.screen)
-        self.win_view.render(self.screen)
-
+        for button in self.lst_buttons:
+            button.render(self.screen)
+        for view in self.lst_views:
+            view.render(self.screen)
         self.main_screen.sc.blit(self.screen, (0, 0))
         self.main_screen.render_cursor()
 

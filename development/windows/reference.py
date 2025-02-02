@@ -2,7 +2,6 @@ import pygame
 
 import sys
 
-
 from development.windows import window
 
 from development.different import landscapes
@@ -16,16 +15,18 @@ class Reference_window(window.Window):
 
     def __init__(self, screen, size, main):
         '''Инициализация класса'''
-        super().__init__(screen, size, main)
-        self.ref_screen = Description(self.main_screen, self.size, self.main)  # создание второго окна
+        super().__init__(screen, size, main, '../../images/backgrounds/ref_background.jpg')
+
         self.next_page_button = Button('->', 200, self.width - 80, self.height - 80,
                                        color=(100, 0, 0), dark_color=(50, 0, 0))  # создание кнопки на след. страницу
         self.back_button = Button('Назад', 80, 120, self.height - 70, color=(100, 0, 0),
                                   dark_color=(50, 0, 0))  # создание кнопки Назад
-        self.lst_buttons = [self.back_button, self.next_page_button]  # список кнопок
-
         self.control_view = View('Управление', self.one_size, self.width // 2, self.one_size,
                                  color=(100, 0, 0))  # создание надписи
+
+        window.Window.set_lists(self, [self.back_button, self.next_page_button], [self.control_view, ])
+
+        self.ref_screen = Description(self.main_screen, self.size, self.main)  # создание второго окна
 
         t = ('''Выход на предыдущий экран (назад): Esc\nВыбор юнита в инвентаре: 1/2/3/4\nСледующий ход: Space\n\nВ главном меню:
         Список уровней: 1
@@ -37,9 +38,6 @@ class Reference_window(window.Window):
         Третий уровень: 3''')  # задание текста справки
 
         self.lst = t.split('\n')
-
-        self.fon = pygame.image.load('../../images/backgrounds/ref_background.jpg')
-        self.fon = pygame.transform.scale(self.fon, (self.width, self.height))
 
     def check_click(self, mouse_pos, lst):
         '''Функция проверка клика мышки'''
@@ -53,15 +51,19 @@ class Reference_window(window.Window):
     def render(self):
         '''Рендер содержимого страницы'''
         y = self.one_size
-        self.main_screen.sc.blit(self.fon, (0, 0))
+        self.screen.blit(self.fon, (0, 0))
         for i in self.lst:
             font = pygame.font.Font(None, round(self.one_size / 1.7))
             text = font.render(i, True, 'black')
-            self.main_screen.sc.blit(text, (self.one_size, self.one_size + y))
+            self.screen.blit(text, (self.one_size, self.one_size + y))
             y += round(self.one_size / 1.7)
+
         for button in self.lst_buttons:
-            button.render(self.main_screen.sc)
-        self.control_view.render(self.main_screen.sc)
+            button.render(self.screen)
+        for view in self.lst_views:
+            view.render(self.screen)
+
+        self.main_screen.sc.blit(self.screen, (0, 0))
         self.main_screen.render_cursor()
 
     def start(self):
@@ -91,7 +93,7 @@ class Reference_window(window.Window):
 
 class Description(window.Window):
     def __init__(self, screen, size, main):
-        super().__init__(screen, size, main)
+        super().__init__(screen, size, main, '../../images/backgrounds/ref_background.jpg')
         self.back_button = Button('<-', round(self.one_size * 2.4), self.one_size,
                                   self.height - self.one_size, color=(100, 0, 0),
                                   dark_color=(50, 0, 0))
@@ -125,9 +127,9 @@ class Description(window.Window):
 
         self.icons_units = pygame.sprite.Group()
 
-        self.lst_buttons = [self.back_button, self.swordsman_button, self.archer_button, self.cavalry_button,
-                            self.dragon_button, self.castle_button, self.grass_button, self.rock_button,
-                            self.hill_button, self.river_button]
+        window.Window.set_lists(self, [self.back_button, self.swordsman_button, self.archer_button, self.cavalry_button,
+                                       self.dragon_button, self.castle_button, self.grass_button, self.rock_button,
+                                       self.hill_button, self.river_button])
 
         self.dct_units = {self.swordsman_button: swordsman.Swordsman,
                           self.archer_button: archer.Archer,
@@ -141,17 +143,14 @@ class Description(window.Window):
                           self.rock_button: ('mountains', 'Гора', self.one_size * 16.1, self.one_size * 4.1,
                                              '../../images/landscapes/mountains.png', self.one_size * 4, 0, 'нельзя',
                                              self.icons_units),
-                          self.hill_button: ('../../hill', 'Холм', self.one_size * 16.1, self.one_size * 4.1,
-                                             'images/landscapes/hill.png', self.one_size * 4, 15, -1,
+                          self.hill_button: ('hill', 'Холм', self.one_size * 16.1, self.one_size * 4.1,
+                                             '../../images/landscapes/hill.png', self.one_size * 4, 15, -1,
                                              self.icons_units),
-                          self.river_button: ('../../river', 'Река', self.one_size * 16.1, self.one_size * 4.1,
-                                              'images/landscapes/river.png', self.one_size * 4, 0, 'Частично',
+                          self.river_button: ('river', 'Река', self.one_size * 16.1, self.one_size * 4.1,
+                                              '../../images/landscapes/river.png', self.one_size * 4, 0, 'Частично',
                                               self.icons_units)}
 
         self.stats = []
-
-        self.fon = pygame.image.load('../../images/backgrounds/ref_background.jpg')
-        self.fon = pygame.transform.scale(self.fon, (self.width, self.height))
 
     def check_click(self, mouse_pos, lst):
         self.icons_units.empty()
@@ -179,23 +178,25 @@ class Description(window.Window):
         f = pygame.font.Font(None, round(self.one_size * 1.3))
         t = f.render('Информация', True, 'black')
 
-        self.main_screen.sc.blit(self.fon, (0, 0))
+        self.screen.blit(self.fon, (0, 0))
         if len(self.icons_units):
-            pygame.draw.rect(self.main_screen.sc, (66, 44, 33), (self.one_size * 10, self.one_size,
-                                                                 self.one_size * 11, self.one_size * 9), 8)
-            pygame.draw.rect(self.main_screen.sc, (0, 0, 0), (self.one_size * 16, self.one_size * 4,
-                                                              self.one_size * 4.2, self.one_size * 4.2), 8)
+            pygame.draw.rect(self.screen, (66, 44, 33), (self.one_size * 10, self.one_size,
+                                                         self.one_size * 11, self.one_size * 9), 8)
+            pygame.draw.rect(self.screen, (0, 0, 0), (self.one_size * 16, self.one_size * 4,
+                                                      self.one_size * 4.2, self.one_size * 4.2), 8)
             for i in reversed(self.stats):
                 font = pygame.font.Font(None, round(self.one_size * 0.5))
                 text = font.render(i, True, 'black')
-                self.main_screen.sc.blit(text, (self.one_size * 11, self.one_size * 8 - y))
+                self.screen.blit(text, (self.one_size * 11, self.one_size * 8 - y))
                 y += 50
 
-            self.main_screen.sc.blit(t, (self.one_size * 11, self.one_size * 2))
-            self.icons_units.draw(self.main_screen.sc)
+            self.screen.blit(t, (self.one_size * 11, self.one_size * 2))
+            self.icons_units.draw(self.screen)
 
         for button in self.lst_buttons:
-            button.render(self.main_screen.sc)
+            button.render(self.screen)
+
+        self.main_screen.sc.blit(self.screen, (0, 0))
         self.main_screen.render_cursor()
 
     def start(self):
