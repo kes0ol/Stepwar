@@ -1,11 +1,13 @@
+import pygame
+
 import itertools
 import random
 import sys
 
-import pygame
+from development.units import swordsman, archer, cavalry, dragon
 
-import swordsman, cavalry, archer, dragon
-from global_vars import my_units_group, enemies_group, RANGE_ATTACK, shop_group, landscape_group
+from development.different.global_vars import my_units_group, enemies_group, RANGE_ATTACK, shop_group, \
+    landscape_group, action_in_progress
 
 '''Создание глобальных переменных'''
 is_win = None
@@ -60,10 +62,11 @@ def start(screen):
 
                 cell_coords = screen.board.get_cell(event.pos)
                 unit = choose_unit(screen, cell_coords)
-                if unit and event.button == 1:  # ЛКМ по персонажам
-                    choose_step(screen, unit, cell_coords)
-                if unit and event.button == 3:  # ПКМ по персонажам
-                    choose_attack(screen, unit, cell_coords)
+                if not action_in_progress:
+                    if unit and event.button == 1:  # ЛКМ по персонажам
+                        choose_step(screen, unit, cell_coords)
+                    if unit and event.button == 3:  # ПКМ по персонажам
+                        choose_attack(screen, unit, cell_coords)
 
         screen.sc.fill((0, 0, 0))
         screen.render()

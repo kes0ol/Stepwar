@@ -1,12 +1,12 @@
-import sys
-
 import pygame
 
-import mapping
+import sys
 
-import settings, levels, reference, shop, score
+from development.basic import mapping
 
-from widgets import Button
+from development.different.widgets import Button
+
+from development.windows import levels, reference, score, settings, shop
 
 
 class Start_window(mapping.Window):
@@ -42,7 +42,7 @@ class Start_window(mapping.Window):
         self.score = score.Score_window(self.main_screen, self.size, main)  # экран очков
 
         # задание фона
-        self.fon = pygame.image.load('images/backgrounds/fon.PNG')
+        self.fon = pygame.image.load('../../images/backgrounds/fon.PNG')
         self.fon = pygame.transform.scale(self.fon, (self.width, self.height))
 
     def check_click(self, mouse_pos, lst):

@@ -2,7 +2,7 @@ import random
 
 import pygame
 
-from global_vars import ANIMATION_IDLE
+from development.different.global_vars import ANIMATION_IDLE
 
 
 class AnimationParams:

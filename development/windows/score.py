@@ -1,10 +1,10 @@
-import sys
-
 import pygame
 
-import mapping
+import sys
 
-from widgets import Button
+from development.basic import mapping
+
+from development.different.widgets import Button
 
 
 class Score_window(mapping.Window):
@@ -18,7 +18,7 @@ class Score_window(mapping.Window):
 
         self.lst_buttons = [self.back_button]
 
-        self.fon = pygame.image.load('images/backgrounds/score.PNG')
+        self.fon = pygame.image.load('../../images/backgrounds/score.PNG')
         self.fon = pygame.transform.scale(self.fon, (self.size[0], self.size[1]))
 
     def check_click(self, mouse_pos, lst):
@@ -49,7 +49,6 @@ class Score_window(mapping.Window):
         t3 = f3.render('lvl 3', True, 'red')
         self.main_screen.sc.blit(t3, (self.one_size * 13.5, self.one_size * 4))
         self.main_screen.render_cursor()
-
 
     def start(self):
         fps = 60

@@ -1,6 +1,6 @@
-from animation import AnimationChain, MovableAnimatedSprite
-from global_vars import ANIMATION_ATTACK, ANIMATION_IDLE, ANIMATION_MOVE, ANIMATION_END_MOVE, ANIMATION_BEGIN_MOVE, \
-    RANGE_ATTACK, MELEE_ATTACK, ANIMATION_DEATH
+from development.different.animation import AnimationChain, MovableAnimatedSprite
+from development.different.global_vars import ANIMATION_ATTACK, ANIMATION_IDLE, ANIMATION_MOVE, \
+    ANIMATION_END_MOVE, ANIMATION_BEGIN_MOVE, RANGE_ATTACK, MELEE_ATTACK, ANIMATION_DEATH
 
 
 class Unit(MovableAnimatedSprite):

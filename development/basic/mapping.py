@@ -1,15 +1,12 @@
 import pygame
 
-import archer
-import castle
-import cavalry
-import dragon
-import landscapes
-import money
+from development.units import swordsman, archer, castle, cavalry, dragon
+from development.different import landscapes, money
+
+from development.different.global_vars import my_units_group, enemies_group, shop_group, landscape_group
+from development.different.widgets import Button
+
 import start_game
-import swordsman
-from global_vars import my_units_group, enemies_group, shop_group, landscape_group
-from widgets import Button
 
 
 class Screen:
@@ -74,7 +71,7 @@ class Screen:
                 break
 
         # загрузка и настройка курсора
-        self.cursor = pygame.image.load('images/different/cursor.png')
+        self.cursor = pygame.image.load('../../images/different/cursor.png')
         self.cursor.set_colorkey((255, 255, 255))
         self.cursor = pygame.transform.scale(self.cursor, (20, 20))
 
@@ -232,7 +229,7 @@ class Board:
 
     def set_enemys(self):
         '''Установка врагов'''
-        with open(f'levels/{self.level}/enemys.txt', mode='rt', encoding='utf-8') as enemys_board:
+        with open(f'../../levels/{self.level}/enemys.txt', mode='rt', encoding='utf-8') as enemys_board:
             level_lst = [string.strip('\n').split(', ') for string in enemys_board]  # получение юнитов из файлов
             for i in range(len(level_lst)):
                 for j in range(len(level_lst[i])):
@@ -256,31 +253,31 @@ class Board:
 
     def set_landscapes(self):
         '''Установка ландшафтов'''
-        with open(f'levels/{self.level}/field.txt', mode='rt', encoding='utf-8') as land:
+        with open(f'../../levels/{self.level}/field.txt', mode='rt', encoding='utf-8') as land:
             field_lst = [string.strip('\n').split(', ') for string in land]
             for i in range(len(field_lst)):
                 for j in range(len(field_lst[i])):
                     x, y = self.get_cell_coords((j, i))
 
                     if field_lst[i][j] in ['m', 'h']:  # если наземные
-                        landscapes.Landscape('grass', 'Трава', x, y, 'images/landscapes/grass.png',
+                        landscapes.Landscape('grass', 'Трава', x, y, '../../images/landscapes/grass.png',
                                              self.cell_size, 0, 0, landscape_group)  # установка травы
                         if field_lst[i][j] == 'm':  # установка гор
-                            landscapes.Landscape('mountains', 'Гора', x, y, 'images/landscapes/mountains.png',
+                            landscapes.Landscape('mountains', 'Гора', x, y, '../../images/landscapes/mountains.png',
                                                  self.cell_size, 0, 'нельзя', landscape_group)
                             self.field[i][j] = 1
                         elif field_lst[i][j] == 'h':  # установка гор
-                            landscapes.Landscape('hill', 'Холм', x, y, 'images/landscapes/hill.png',
+                            landscapes.Landscape('hill', 'Холм', x, y, '../../images/landscapes/hill.png',
                                                  self.cell_size, 15, -1, landscape_group)
                             self.field[i][j] = 2
 
                     elif field_lst[i][j] in ['r']:  # если не назменые
                         if field_lst[i][j] == 'r':  # если река
-                            landscapes.Landscape('river', 'Река', x, y, 'images/landscapes/river.png',
+                            landscapes.Landscape('river', 'Река', x, y, '../../images/landscapes/river.png',
                                                  self.cell_size, 0, 0, landscape_group)
                             self.field[i][j] = 3
                     else:  # иначе установка травы
-                        landscapes.Landscape('grass', 'Трава', x, y, 'images/landscapes/grass.png',
+                        landscapes.Landscape('grass', 'Трава', x, y, '../../images/landscapes/grass.png',
                                              self.cell_size, 0, 0, landscape_group)
 
     def get_cell(self, mouse_pos):

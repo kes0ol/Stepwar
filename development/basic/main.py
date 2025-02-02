@@ -4,7 +4,7 @@ import pygame
 
 import mapping
 import start_game
-import start_window
+from development.windows import start_window
 
 
 class Main:
@@ -98,7 +98,7 @@ if __name__ == '__main__':
     pygame.init()  # инициализация pygame
     pygame.display.set_caption('StepWar')  # устновка названия
 
-    set_music('music/walking.wav', -1, 20)  # запуск музыки
+    set_music('../../music/walking.wav', -1, 20)  # запуск музыки
 
     main_screen = Main()  # создание объекта главного класса игры
     main_screen.go_start_window()  # старт начального экрана

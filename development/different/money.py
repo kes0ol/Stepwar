@@ -9,7 +9,7 @@ class Money(pygame.sprite.Sprite):
         super().__init__(group)
 
         # загрузка изображения
-        self.image = pygame.image.load('images/different/money.png')
+        self.image = pygame.image.load('../../images/different/money.png')
         self.image = pygame.transform.scale(self.image, (image_size, image_size))
         self.image.set_colorkey((0xb3, 0x22, 0xb7))
 

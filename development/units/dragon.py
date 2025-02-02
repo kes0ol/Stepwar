@@ -1,14 +1,14 @@
 import pygame
+from development.different.animation import AnimationParams
+from development.different.global_vars import ANIMATION_ATTACK, ANIMATION_IDLE, ANIMATION_MOVE, \
+    ANIMATION_BEGIN_MOVE, ANIMATION_END_MOVE, ANIMATION_DEATH, MELEE_ATTACK
 
-from animation import AnimationParams
-from global_vars import ANIMATION_ATTACK, ANIMATION_IDLE, ANIMATION_MOVE, ANIMATION_BEGIN_MOVE, ANIMATION_END_MOVE, \
-    ANIMATION_DEATH, MELEE_ATTACK
-from unit import Unit
+from development.units.unit import Unit
 
 
 class Dragon(Unit):
     def __init__(self, x, y, image_size, group, mirror_animation=False):
-        sheet = pygame.image.load('images/team_images/dragon.png')
+        sheet = pygame.image.load('../../images/team_images/dragon.png')
         animations = {
             ANIMATION_IDLE: AnimationParams(sheet, 4, 1, 125, 125, 0, 0, 10),
             ANIMATION_ATTACK: AnimationParams(sheet, 7, 1, 170, 170, 0, 170, 8),

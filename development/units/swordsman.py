@@ -1,14 +1,15 @@
 import pygame
 
-from animation import AnimationParams
-from global_vars import ANIMATION_IDLE, ANIMATION_ATTACK, ANIMATION_BEGIN_MOVE, ANIMATION_MOVE, ANIMATION_END_MOVE, \
-    ANIMATION_DEATH, MELEE_ATTACK
-from unit import Unit
+from development.different.animation import AnimationParams
+from development.different.global_vars import ANIMATION_IDLE, ANIMATION_ATTACK, ANIMATION_BEGIN_MOVE, \
+    ANIMATION_MOVE, ANIMATION_END_MOVE, ANIMATION_DEATH, MELEE_ATTACK
+
+from development.units.unit import Unit
 
 
 class Swordsman(Unit):
     def __init__(self, x, y, image_size, group, mirror_animation=False):
-        sheet = pygame.image.load('images/team_images/swordsman.png')
+        sheet = pygame.image.load('../../images/team_images/swordsman.png')
         animations = {
             ANIMATION_IDLE: AnimationParams(sheet, 5, 1, 100, 100, 0, 0, 10),
             ANIMATION_ATTACK: AnimationParams(sheet, 7, 1, 100, 100, 0, 100, 15),
