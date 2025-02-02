@@ -1,5 +1,7 @@
 import pygame
 
+import sys
+
 
 class Window:
     '''Родительский класс окон'''
@@ -40,11 +42,48 @@ class Window:
         self.lst_buttons = list(lst_buttons)
         self.lst_views = list(lst_views)
 
-    def render(self):  # СДЕЛАТЬ ДЕКОРАТОРОМ
-        self.screen.blit(self.fon, (0, 0))
-        for button in self.lst_buttons:
-            button.render(self.screen)
-        for view in self.lst_views:
-            view.render(self.screen)
-        self.main_screen.sc.blit(self.screen, (0, 0))
-        self.main_screen.render_cursor()
+    def render_decorator(func):
+        '''Декоратор функции рендера экрана'''
+
+        def wrapper(*args):
+            self = args[0]
+            self.screen.blit(self.fon, (0, 0))
+
+            func(*args)
+
+            for button in self.lst_buttons:
+                button.render(self.screen)
+            for view in self.lst_views:
+                view.render(self.screen)
+
+            self.main_screen.sc.blit(self.screen, (0, 0))
+            self.main_screen.render_cursor()
+
+        return wrapper
+
+    def start_decoration(func):
+        '''Декоратор функции старта цикла экрана'''
+
+        def wrapper(*args):
+            self = args[0]
+
+            fps = 60
+            clock = pygame.time.Clock()
+
+            self.running = True
+            while self.running:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        self.running = False
+                        pygame.quit()
+                        sys.exit()
+
+                    func(*args, event)
+
+                self.screen.fill((0, 0, 0))
+                self.render()
+
+                clock.tick(fps)
+                pygame.display.flip()
+
+        return wrapper

@@ -1,7 +1,5 @@
 import pygame
 
-import sys
-
 from development.windows import window
 
 from development.different import landscapes
@@ -48,47 +46,25 @@ class Reference_window(window.Window):
                 if button == self.back_button:  # при нажатии на кнопку Назад
                     self.running = False
 
+    @window.Window.render_decorator
     def render(self):
         '''Рендер содержимого страницы'''
         y = self.one_size
-        self.screen.blit(self.fon, (0, 0))
+
         for i in self.lst:
             font = pygame.font.Font(None, round(self.one_size / 1.7))
             text = font.render(i, True, 'black')
             self.screen.blit(text, (self.one_size, self.one_size + y))
             y += round(self.one_size / 1.7)
 
-        for button in self.lst_buttons:
-            button.render(self.screen)
-        for view in self.lst_views:
-            view.render(self.screen)
-
-        self.main_screen.sc.blit(self.screen, (0, 0))
-        self.main_screen.render_cursor()
-
-    def start(self):
+    @window.Window.start_decoration
+    def start(self, event):
         '''Функция старта основного цикла'''
-        fps = 60
-        clock = pygame.time.Clock()
-
-        self.running = True
-        while self.running:  # старт цикла
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:  # проверка выхода
-                    self.running = False
-                    pygame.quit()
-                    sys.exit()
-                if event.type == pygame.KEYDOWN:  # при нажатии на клавиши
-                    if event.key == pygame.K_ESCAPE:  # если нажат escape
-                        self.running = False
-                if event.type == pygame.MOUSEBUTTONDOWN:  # при нажатии мышкой
-                    self.check_click(event.pos, self.lst_buttons)
-
-            self.main_screen.sc.fill((0, 0, 0))
-            self.render()
-
-            clock.tick(fps)
-            pygame.display.flip()
+        if event.type == pygame.KEYDOWN:  # при нажатии на клавиши
+            if event.key == pygame.K_ESCAPE:  # если нажат escape
+                self.running = False
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            self.check_click(event.pos, self.lst_buttons)
 
 
 class Description(window.Window):
@@ -173,12 +149,10 @@ class Description(window.Window):
                         f'Доп. урон: {self.icon_land.damage}',
                         f'Передвижение: {self.icon_land.move}']
 
+    @window.Window.render_decorator
     def render(self):
         y = 50
-        f = pygame.font.Font(None, round(self.one_size * 1.3))
-        t = f.render('Информация', True, 'black')
 
-        self.screen.blit(self.fon, (0, 0))
         if len(self.icons_units):
             pygame.draw.rect(self.screen, (66, 44, 33), (self.one_size * 10, self.one_size,
                                                          self.one_size * 11, self.one_size * 9), 8)
@@ -190,34 +164,12 @@ class Description(window.Window):
                 self.screen.blit(text, (self.one_size * 11, self.one_size * 8 - y))
                 y += 50
 
-            self.screen.blit(t, (self.one_size * 11, self.one_size * 2))
             self.icons_units.draw(self.screen)
 
-        for button in self.lst_buttons:
-            button.render(self.screen)
-
-        self.main_screen.sc.blit(self.screen, (0, 0))
-        self.main_screen.render_cursor()
-
-    def start(self):
-        fps = 60
-        clock = pygame.time.Clock()
-
-        self.running = True
-        while self.running:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    self.running = False
-                    pygame.quit()
-                    sys.exit()
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        self.running = False
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    self.check_click(event.pos, self.lst_buttons)
-
-            self.main_screen.sc.fill((0, 0, 0))
-            self.render()
-
-            clock.tick(fps)
-            pygame.display.flip()
+    @window.Window.start_decoration
+    def start(self, event):
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                self.running = False
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            self.check_click(event.pos, self.lst_buttons)

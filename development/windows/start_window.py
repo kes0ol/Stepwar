@@ -41,6 +41,11 @@ class Start_window(window.Window):
         self.store = shop.Store(self.main_screen, self.size, main)  # экран магазина
         self.score = score.Score_window(self.main_screen, self.size, main)  # экран очков
 
+        self.dct_buttons = {pygame.K_1: self.levels_menu.start,
+                            pygame.K_2: self.store.start,
+                            pygame.K_3: self.settings_screen.start,
+                            pygame.K_4: self.ref_screen.start}
+
     def check_click(self, mouse_pos, lst):
         '''Проверка на клик по кнопкам мышкой'''
         dct = {self.choose_level_button: self.levels_menu.start,
@@ -58,43 +63,20 @@ class Start_window(window.Window):
                 else:  # в зависимости от кнопки вызов функции
                     dct[button]()
 
+    @window.Window.render_decorator
     def render(self):
         '''Рендер стартового экрана'''
-        self.screen.blit(self.fon, (0, 0))
-        for button in self.lst_buttons:
-            button.render(self.screen)
+        pass
 
-        self.main_screen.sc.blit(self.screen, (0, 0))
-        self.main_screen.render_cursor()
-
-    def start(self):
+    @window.Window.start_decoration
+    def start(self, event):
         '''Функция старта основного цикла стартового окна'''
-        fps = 60
-        clock = pygame.time.Clock()
-
-        dct_buttons = {pygame.K_1: self.levels_menu.start,
-                       pygame.K_2: self.store.start,
-                       pygame.K_3: self.settings_screen.start,
-                       pygame.K_4: self.ref_screen.start}
-
-        self.running = True
-        while self.running:  # страт цикла
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:  # проверка выхоад
-                    self.running = False
-                    pygame.quit()
-                    sys.exit()
-                if event.type == pygame.KEYDOWN:  # проверка нажатия клавиш
-                    if event.key == pygame.K_ESCAPE:  # если нажат escape
-                        self.running = False
-                        pygame.quit()
-                        sys.exit()
-                    if event.key in dct_buttons.keys():  # в зависимости от кнопки
-                        dct_buttons[event.key]()
-                if event.type == pygame.MOUSEBUTTONDOWN:  # при нажатии мышкой
-                    self.check_click(event.pos, self.lst_buttons)
-
-            self.main_screen.sc.fill((0, 0, 0))
-            self.render()
-            clock.tick(fps)
-            pygame.display.flip()
+        if event.type == pygame.KEYDOWN:  # проверка нажатия клавиш
+            if event.key == pygame.K_ESCAPE:  # если нажат escape
+                self.running = False
+                pygame.quit()
+                sys.exit()
+            if event.key in self.dct_buttons.keys():  # в зависимости от кнопки
+                self.dct_buttons[event.key]()
+        if event.type == pygame.MOUSEBUTTONDOWN:  # при нажатии мышкой
+            self.check_click(event.pos, self.lst_buttons)
