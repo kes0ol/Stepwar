@@ -1,3 +1,5 @@
+import pygame.mixer
+
 import start_game
 from animation import AnimationChain, MovableAnimatedSprite
 from global_vars import ANIMATION_ATTACK, ANIMATION_IDLE, ANIMATION_MOVE, ANIMATION_END_MOVE, ANIMATION_BEGIN_MOVE, \
@@ -21,6 +23,11 @@ class Unit(MovableAnimatedSprite):
         self.damage_plus = 0
         self.name = ''
         self.title = ''
+
+        self.swordsman_attack_sound = pygame.mixer.Sound('music/swordsman_hit.wav')
+        self.archer_attack_sound = pygame.mixer.Sound('music/archer_hit.wav')
+        self.cavalry_attack_sound = pygame.mixer.Sound('music/cavalry_hit.wav')
+        self.dragon_attack_sound = pygame.mixer.Sound('music/dragon_hit.wav')
 
     def __repr__(self):
         return f"[{id(self)} | {super().__repr__()}]"
@@ -71,9 +78,11 @@ class Unit(MovableAnimatedSprite):
         self.start_animation_chain(animation_chain)
         self.step = 0
 
-    def make_attack(self, choose_cell, screen, callback=None, callback_args=None):
+    def make_attack(self, unit, choose_cell, screen, callback=None, callback_args=None):
         select_x, select_y = choose_cell
         animation_chain = AnimationChain()
+
+        uname = unit.name
 
         x = select_x * screen.board.cell_size + screen.board.left
         y = select_y * screen.board.cell_size + screen.board.top
@@ -81,6 +90,14 @@ class Unit(MovableAnimatedSprite):
         mirror = x < self.rect.x
         args = [screen, (x, y), (select_x, select_y), self]
         animation_chain.add_step(ANIMATION_ATTACK, start_game.give_damage, args, mirror=mirror)
+        if uname == 'swordsman':
+            self.swordsman_attack_sound.play()
+        elif uname == 'archer':
+            self.archer_attack_sound.play()
+        elif uname == 'cavalry':
+            self.cavalry_attack_sound.play()
+        elif uname == 'dragon':
+            self.dragon_attack_sound.play()
         animation_chain.add_step(ANIMATION_IDLE, callback, callback_args)
 
         self.start_animation_chain(animation_chain)
