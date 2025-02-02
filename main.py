@@ -2,7 +2,7 @@ import sys
 
 import pygame
 
-from Stepwar import mapping
+import mapping
 import start_game
 import start_window
 

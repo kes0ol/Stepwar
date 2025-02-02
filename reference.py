@@ -2,7 +2,7 @@ import sys
 
 import pygame
 
-from Stepwar import mapping
+import mapping
 import swordsman, cavalry, castle, archer, dragon, landscapes
 
 from widgets import Button, View

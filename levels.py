@@ -2,7 +2,7 @@ import sys
 
 import pygame
 
-from Stepwar import mapping
+import mapping
 
 from widgets import Button
 

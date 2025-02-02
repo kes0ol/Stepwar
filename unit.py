@@ -1,8 +1,5 @@
-from Stepwar.main import start_game
-
 from animation import AnimationChain, MovableAnimatedSprite
-from global_vars import ANIMATION_ATTACK, ANIMATION_IDLE, ANIMATION_MOVE, \
-    ANIMATION_END_MOVE, ANIMATION_BEGIN_MOVE, \
+from global_vars import ANIMATION_ATTACK, ANIMATION_IDLE, ANIMATION_MOVE, ANIMATION_END_MOVE, ANIMATION_BEGIN_MOVE, \
     RANGE_ATTACK, MELEE_ATTACK, ANIMATION_DEATH
 
 
@@ -109,3 +106,6 @@ class Unit(MovableAnimatedSprite):
     def refresh(self):
         self.step = self.default_step
         self.do_damage = True
+
+
+import start_game

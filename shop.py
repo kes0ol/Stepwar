@@ -2,7 +2,7 @@ import sys
 
 import pygame
 
-from Stepwar import mapping
+import mapping
 
 import swordsman, money, cavalry, archer, dragon
 
