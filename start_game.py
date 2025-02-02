@@ -422,6 +422,10 @@ def give_damage(screen, select_coords, select_cell, actor):
     global is_win, money_now
     target = 0
 
+    kill_sound = pygame.mixer.Sound('music/kill_hit.wav')
+    win_sound = pygame.mixer.Sound('music/win.wav')
+    lose_sound = pygame.mixer.Sound('music/lose.wav')
+
     for group in [my_units_group, enemies_group]:
         for unit in group:
             if actor in my_units_group:
@@ -438,15 +442,18 @@ def give_damage(screen, select_coords, select_cell, actor):
                     if actor in my_units_group:  # конец игры - победа, запуск финального окна
                         money_now += 100  # деньги за башню
                         is_win = True  # победа
+                        win_sound.play()
                         screen.progress.add(int(screen.board.level) + 1)
                         end(screen)
                     if actor in enemies_group:  # конец игры - поражение, запуск финального окна
                         is_win = False  # поражение
+                        lose_sound.play()
                         end(screen)
                     return
             if (unit.rect.x, unit.rect.y) == select_coords:  # проверка клетки
                 unit.recieve_damage(actor)
                 if unit.is_dead:  # удаление убитого юнита
+                    kill_sound.play()
                     screen.board.board[select_cell[1]][select_cell[0]] = 0
 
                     if actor in my_units_group:  # получение наград (очков и монет) за убийство
