@@ -21,9 +21,12 @@ class Score_window(mapping.Window):
         self.fon = pygame.image.load('images/backgrounds/score.PNG')
         self.fon = pygame.transform.scale(self.fon, (self.size[0], self.size[1]))
 
+        self.click_sound = pygame.mixer.Sound('music/click.wav')
+
     def check_click(self, mouse_pos, lst):
         for button in lst:
             if button.check_click(mouse_pos):
+                self.click_sound.play()
                 if button == self.back_button:
                     self.running = False
 

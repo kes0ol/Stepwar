@@ -26,12 +26,15 @@ class Levels_menu(mapping.Window):
         self.fon = pygame.image.load('images/backgrounds/menu_levels_back_ground.jpg')
         self.fon = pygame.transform.scale(self.fon, (self.size[0], self.size[1]))
 
+        self.click_sound = pygame.mixer.Sound('music/click.wav')
+
     def check_click(self, mouse_pos, lst):
         for button in lst:
             if button.check_click(mouse_pos):
+                self.click_sound.play()
                 if button == self.first_level_button and 1 in self.main_screen.progress:
                     self.running = False
-                    pygame.mixer.music.load('music/final.wav')
+                    pygame.mixer.music.load('music/first.wav')
                     pygame.mixer.music.play(-1)
                     pygame.time.delay(20)
                     self.main.start('1')

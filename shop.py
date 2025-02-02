@@ -49,6 +49,8 @@ class Store(mapping.Window):
         self.fon = pygame.image.load('images/backgrounds/store.png')
         self.fon = pygame.transform.scale(self.fon, (self.size[0], self.size[1]))
 
+        self.click_sound = pygame.mixer.Sound('music/click.wav')
+
     def render_products(self):
         '''Функция отображение карточек юнитов'''
         for i in range(len(self.lst_units)):
@@ -75,6 +77,7 @@ class Store(mapping.Window):
         '''Функция проверки клика мышки'''
         for button in lst:
             if button.check_click(mouse_pos):
+                self.click_sound.play()
                 if button == self.back_button:
                     self.running = False
                 else:

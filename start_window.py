@@ -47,6 +47,8 @@ class Start_window(mapping.Window):
         self.fon = pygame.image.load('images/backgrounds/fon.PNG')
         self.fon = pygame.transform.scale(self.fon, (self.width, self.height))
 
+        self.click_sound = pygame.mixer.Sound('music/click.wav')
+
     def check_click(self, mouse_pos, lst):
         '''Проверка на клик по кнопкам мышкой'''
         dct = {self.choose_level_button: self.levels_menu.start,
@@ -57,6 +59,7 @@ class Start_window(mapping.Window):
                }
         for button in lst:
             if button.check_click(mouse_pos):
+                self.click_sound.play()
                 if button == self.exit_button:  # если кнопка выхода
                     self.running = False
                     pygame.quit()

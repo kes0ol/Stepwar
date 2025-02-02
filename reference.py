@@ -38,6 +38,8 @@ class Reference_window(mapping.Window):
         self.fon = pygame.image.load('images/backgrounds/ref_background.jpg')
         self.fon = pygame.transform.scale(self.fon, (self.width, self.height))
 
+        self.click_sound = pygame.mixer.Sound('music/click.wav')
+
     def parse_text(self, text, width):
         '''Функция парсинга текста (при надобности)'''
         lst = text.split()
@@ -61,6 +63,7 @@ class Reference_window(mapping.Window):
         '''Функция проверка клика мышки'''
         for button in lst:
             if button.check_click(mouse_pos):
+                self.click_sound.play()
                 if button == self.next_page_button:  # при нажатии на кнопку следующей страницы
                     self.ref_screen.start()
                 if button == self.back_button:  # при нажатии на кнопку Назад
@@ -169,10 +172,13 @@ class Description(mapping.Window):
         self.fon = pygame.image.load('images/backgrounds/ref_background.jpg')
         self.fon = pygame.transform.scale(self.fon, (self.width, self.height))
 
+        self.click_sound = pygame.mixer.Sound('music/click.wav')
+
     def check_click(self, mouse_pos, lst):
         self.icons_units.empty()
         for button in lst:
             if button.check_click(mouse_pos):
+                self.click_sound.play()
                 if button == self.back_button:
                     self.running = False
                 elif button in self.dct_units.keys():

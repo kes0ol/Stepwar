@@ -19,6 +19,8 @@ def start(screen):
     enemys_move(screen)  # первый ход юнитов
     money_now = 0
 
+    click_sound = pygame.mixer.Sound('music/click.wav')
+
     fps = 60
     clock = pygame.time.Clock()
     running = True
@@ -41,6 +43,7 @@ def start(screen):
                     enemys_move(screen)
 
             if event.type == pygame.MOUSEBUTTONDOWN:  # при нажатии мышкой
+                click_sound.play()
                 select_button = check_click(screen, event.pos)
                 if select_button == 'new_step' and not action_in_progress:  # нажатие на кнопку след. хода
                     screen.steps += 1
