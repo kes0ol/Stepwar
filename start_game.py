@@ -4,8 +4,8 @@ import sys
 
 import pygame
 
-import swordsman, archer, cavalry, dragon
-from global_vars import my_units_group, enemies_group, RANGE_ATTACK, shop_group, action_in_progress, landscape_group
+import swordsman, cavalry, archer, dragon
+from global_vars import my_units_group, enemies_group, RANGE_ATTACK, shop_group, landscape_group
 
 '''Создание глобальных переменных'''
 is_win = None
@@ -13,7 +13,7 @@ money_now = 0
 
 
 def start(screen):
-    '''Функция старта главное цикла геймплея'''
+    '''Функция старта главноого цикла геймплея'''
     global is_win, money_now  # вызов глобальных переменных
 
     enemys_move(screen)  # первый ход юнитов
@@ -67,7 +67,6 @@ def start(screen):
 
         screen.sc.fill((0, 0, 0))
         screen.render()
-        can_move(screen)
         screen.render_cursor()
         show_stats(screen)
         clock.tick(fps)
@@ -211,8 +210,21 @@ def render_surfaces(screen, lst_surfaces, color):
 def can_move(screen):
     '''Проверка на возможность хода юнитом'''
     surfaces_can_move = []
-    for un in my_units_group:
-        if un.step != 0 and (un.rect.x >= screen.board.left and un.rect.y >= screen.board.top):
+    for un in my_units_group:  # проверка всех юнитов на возможность ходить
+        cell = screen.board.get_cell((un.rect.x, un.rect.y))
+        lst_steps = select_surfaces(screen.board, un, cell, False)[0]
+        if (un.step != 0 and len(lst_steps) and (un.rect.x >= screen.board.left and un.rect.y >= screen.board.top)
+                and not action_in_progress and un.name != 'castle'):
+            surfaces_can_move.append(
+                (pygame.surface.Surface((screen.board.cell_size, screen.board.cell_size)), (un.rect.x, un.rect.y)))
+    render_surfaces(screen, surfaces_can_move, 'yellow')
+
+    surfaces_can_move = []
+    for un in my_units_group:  # проверка всех юнитов на возможность бить
+        cell = screen.board.get_cell((un.rect.x, un.rect.y))
+        lst_attack = select_surfaces(screen.board, un, cell, True)[0]
+        if (un.do_damage and len(lst_attack) and (un.rect.x >= screen.board.left and un.rect.y >= screen.board.top)
+                and not action_in_progress and un.name != 'castle'):
             surfaces_can_move.append(
                 (pygame.surface.Surface((screen.board.cell_size, screen.board.cell_size)), (un.rect.x, un.rect.y)))
     render_surfaces(screen, surfaces_can_move, 'orange')
@@ -286,7 +298,7 @@ def show_stats(screen):
     for i in range(len(stats)):  # отобржение инфы о юните/клетки
         text = font.render(stats[i], True, (255, 255, 255))
         stats_surface.blit(text, (0, i * 20, 100, 100))
-    screen.sc.blit(stats_surface, (screen.board.left // 2 - 100, screen.height // 2)) # отображение полотна
+    screen.sc.blit(stats_surface, (screen.board.left // 2 - 100, screen.height // 2))  # отображение полотна
 
 
 def choose_step(screen, unit, cell_coords):
@@ -294,7 +306,7 @@ def choose_step(screen, unit, cell_coords):
     lst_steps, lst_surfaces = select_surfaces(screen.board, unit, cell_coords, False)
 
     if unit.step > 0:  # есть ли ходы
-        while True:  # запуск микро-цикла на выбор клетки (для перемещения юнита)
+        while True:  # запуск мини-цикла на выбор клетки (для перемещения юнита)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:  # проверка на выход из игры
                     pygame.quit()
@@ -319,8 +331,8 @@ def choose_attack(screen, unit, cell_coords):
     '''Выбор хода игроком (перемещение - ПКМ)'''
     lst_steps, lst_surfaces = select_surfaces(screen.board, unit, cell_coords, True)
 
-    if unit.do_damage:
-        while True:  # запуск микро-цикла на выбор клетки (для атаки юнитом)
+    if unit.do_damage and len(lst_steps):
+        while True:  # запуск мини-цикла на выбор клетки (для атаки юнитом)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:  # проверка на выход
                     pygame.quit()
@@ -444,10 +456,10 @@ def give_damage(screen, select_coords, select_cell, actor):
                     screen.board.board[select_cell[1]][select_cell[0]] = 0
 
                     if actor in my_units_group:  # получение наград (очков и монет) за убийство
-                        dct = {'swordsman': (10, 5),
-                               'archer': (15, 25),
-                               'cavalry': (20, 20),
-                               'dragon': (50, 40)}
+                        dct = {'swordsman': (30, 5),
+                               'archer': (35, 25),
+                               'cavalry': (45, 20),
+                               'dragon': (100, 40)}
 
                         money, score = dct[unit.name]
                         money_now += money

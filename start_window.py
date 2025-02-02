@@ -1,12 +1,10 @@
 import sys
 
 import pygame
-import mapping
-import settings
-import levels
-import reference
-import shop
-import score
+
+from Stepwar import mapping
+
+import settings, levels, reference, shop, score
 
 from widgets import Button
 

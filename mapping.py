@@ -1,10 +1,13 @@
 import pygame
 
-import swordsman, archer, cavalry, dragon, castle
+import archer
+import castle
+import cavalry
+import dragon
 import landscapes
 import money
-
 import start_game
+import swordsman
 from global_vars import my_units_group, enemies_group, shop_group, landscape_group
 from widgets import Button
 
@@ -17,7 +20,7 @@ class Screen:
         # задание переменных
         self.gameplay = False
         self.back_to_menu = False
-        self.choose_unit = None
+        self.choose_unit = 'swordsman'
 
         self.main = main  # объект main
 
@@ -106,7 +109,6 @@ class Screen:
             self.choose_unit_surface[0].set_alpha(80)
             self.sc.blit(self.choose_unit_surface[0], self.choose_unit_surface[1])
 
-        my_units_group.draw(self.sc)  # отображение юнитов игрока
         shop_group.draw(self.sc)  # отображение иконок юнитов игрока
 
         for unit in [swordsman, archer, cavalry, dragon]:
@@ -127,10 +129,13 @@ class Screen:
             self.board.render_area(self.sc)
         else:  # кнопка Следующий ход
             self.button_next_step.render(self.sc)
+            start_game.can_move(self)
+
+        my_units_group.draw(self.sc)  # отображение юнитов игрока
 
         self.icon_money.render(self.sc, self.money)  # отображение монет
 
-        # обновление групп спрайтов
+        # обновление анимаций групп спрайтов
         my_units_group.update()
         enemies_group.update()
         shop_group.update()
@@ -201,7 +206,7 @@ class Board:
     def render_area(self, screen):
         '''Отображение допустимого расстояния размещения юнитов от башни'''
         for i in range(len(self.board)):
-            for j in range(7):
+            for j in range(5):
                 if self.field[i][j] == 0 and self.board[i][j] == 0:
                     surface_coords_x = j * self.cell_size + self.left
                     surface_coords_y = i * self.cell_size + self.top
@@ -298,7 +303,7 @@ class Board:
         '''Функция размещения/возвращения юнитов на поле/с поля'''
         x, y = cell_coords
         if mouse_button == 1:  # при ЛКМ
-            if x <= 6 and self.board[y][x] == 0 and self.field[y][x] == 0:
+            if x <= 4 and self.board[y][x] == 0 and self.field[y][x] == 0:
                 if self.choosen_unit == 'swordsman' and swordsman.stock > 0:  # рыцарь
                     swordsman.Swordsman(x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
                                         my_units_group)

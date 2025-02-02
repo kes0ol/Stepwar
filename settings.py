@@ -2,7 +2,7 @@ import sys
 
 import pygame
 
-import mapping
+from Stepwar import mapping
 
 from global_vars import FILL_TYPE_BORDER
 from widgets import Button, View

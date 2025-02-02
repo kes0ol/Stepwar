@@ -18,7 +18,7 @@ class Archer(Unit):
             ANIMATION_DEATH: AnimationParams(sheet, 11, 1, 100, 100, 0, 300, 5)
         }
         super().__init__(animations, x, y, group, image_size, ANIMATION_IDLE, mirror_animation)
-        self.init_stats(1, 3, RANGE_ATTACK, 40, 30, 'archer', 'Лучник', 4)
+        self.init_stats(1, 3, RANGE_ATTACK, 40, 30, 'archer', 'Лучник', 2)
 
 
 def set_view_stock(screen, coords, size):

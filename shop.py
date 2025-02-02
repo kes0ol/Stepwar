@@ -2,11 +2,10 @@ import sys
 
 import pygame
 
-import mapping
+from Stepwar import mapping
 
-import swordsman, archer, cavalry, dragon
+import swordsman, money, cavalry, archer, dragon
 
-import money
 from widgets import Button
 
 
@@ -22,9 +21,9 @@ class Store(mapping.Window):
 
         # загрузка всех карточек юнитов в список
         self.lst_products = []
-        for i in [('images/team_images/swordsman.png', 25, (0, 0), (100, 100)),
+        for i in [('images/team_images/swordsman.png', 30, (0, 0), (100, 100)),
                   ('images/team_images/archer.png', 40, (0, 0), (100, 100)),
-                  ('images/team_images/cavalry.png', 55, (0, 0), (130, 130)),
+                  ('images/team_images/cavalry.png', 60, (0, 0), (130, 130)),
                   ('images/team_images/dragon.png', 120, (0, 0), (125, 125))]:
             im, cost, ltop, sz = i
             image = pygame.image.load(im)
@@ -51,11 +50,11 @@ class Store(mapping.Window):
 
     def render_products(self):
         '''Функция отображение карточек юнитов'''
-        for i in range(len(self.lst_units)):
+        for i in range(len(self.lst_units)):  # отображение кол-ва
             self.lst_units[i].set_view_stock(self.screen, (
                 i * round(self.one_size * 4.5) + round(self.one_size * 4.35), round(self.one_size)), self.one_size)
 
-        for index in range(len(self.lst_products)):
+        for index in range(len(self.lst_products)):  # отображение самой карточки с кнопкой Купить
             image, cost = self.lst_products[index]
             surf = pygame.surface.Surface((round(self.one_size * 4), round(self.one_size * 6)))
 

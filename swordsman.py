@@ -1,7 +1,5 @@
 import pygame
 
-import start_game
-
 from animation import AnimationParams
 from global_vars import ANIMATION_IDLE, ANIMATION_ATTACK, ANIMATION_BEGIN_MOVE, ANIMATION_MOVE, ANIMATION_END_MOVE, \
     ANIMATION_DEATH, MELEE_ATTACK
@@ -20,7 +18,7 @@ class Swordsman(Unit):
             ANIMATION_DEATH: AnimationParams(sheet, 6, 1, 100, 100, 0, 300, 15)
         }
         super().__init__(animations, x, y, group, image_size, ANIMATION_IDLE, mirror_animation)
-        self.init_stats(2, 1, MELEE_ATTACK, 100, 20, 'swordsman', 'Рыцарь', 1)
+        self.init_stats(2, 1, MELEE_ATTACK, 100, 20, 'swordsman', 'Рыцарь', 5)
 
 
 def set_view_stock(screen, coords, size):

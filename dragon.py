@@ -18,7 +18,7 @@ class Dragon(Unit):
             ANIMATION_DEATH: AnimationParams(sheet, 6, 1, 170, 170, 0, 680, 8)
         }
         super().__init__(animations, x, y, group, image_size, ANIMATION_IDLE, mirror_animation)
-        self.init_stats(4, 2, MELEE_ATTACK, 150, 30, 'dragon', 'Дракон', 2)
+        self.init_stats(4, 2, MELEE_ATTACK, 150, 30, 'dragon', 'Дракон', 0)
 
 
 def set_view_stock(screen, coords, size):
