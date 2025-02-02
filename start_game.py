@@ -48,6 +48,9 @@ def start(screen):
                     enemys_move(screen)
                 if select_button == 'back_to_menu' and not action_in_progress:  # нажатие на кнопку 'назад'
                     running = False
+                    pygame.mixer.music.load('music/walking.wav')
+                    pygame.mixer.music.play(-1)
+                    pygame.time.delay(20)
                     screen.gameplay = False
                     return_units()
                     new_step()

@@ -11,7 +11,7 @@ from widgets import Button, View
 class Settings_window(mapping.Window):
     def __init__(self, screen, size, main):
         super().__init__(screen, size, main)
-        self.volume = 1
+        self.volume = 0.4
         self.screen = pygame.surface.Surface((self.width, self.height))
 
         self.volume_title = View('Громкость', self.one_size, self.width // 2, self.one_size, color=(255, 255, 0))
@@ -19,7 +19,7 @@ class Settings_window(mapping.Window):
                                   color=(0, 255, 0), dark_color=(0, 100, 0), fill_type=FILL_TYPE_BORDER)
         self.minus_button = Button('-', self.one_size * 2, self.width // 2 - self.one_size * 3, self.one_size * 3,
                                    color=(255, 0, 0), dark_color=(100, 0, 0), fill_type=FILL_TYPE_BORDER)
-        self.percent_view = View(f'{self.volume * 100}%', self.one_size, self.width // 2, self.one_size * 3,
+        self.percent_view = View(f'{int(self.volume * 100)}%', self.one_size, self.width // 2, self.one_size * 3,
                                  color=(255, 255, 0))
         self.reset_button = Button('Сбросить прогрес', self.one_size, self.one_size * 18, self.one_size * 11,
                                    color=(255, 255, 0), dark_color=(100, 100, 0))

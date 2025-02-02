@@ -31,12 +31,21 @@ class Levels_menu(mapping.Window):
             if button.check_click(mouse_pos):
                 if button == self.first_level_button and 1 in self.main_screen.progress:
                     self.running = False
+                    pygame.mixer.music.load('music/final.wav')
+                    pygame.mixer.music.play(-1)
+                    pygame.time.delay(20)
                     self.main.start('1')
                 if button == self.second_level_button and 2 in self.main_screen.progress:
                     self.running = False
+                    pygame.mixer.music.load('music/second.wav')
+                    pygame.mixer.music.play(-1)
+                    pygame.time.delay(20)
                     self.main.start('2')
                 if button == self.thirst_level_button and 3 in self.main_screen.progress:
                     self.running = False
+                    pygame.mixer.music.load('music/final.wav')
+                    pygame.mixer.music.play(-1)
+                    pygame.time.delay(20)
                     self.main.start('3')
                 if button == self.back_button:
                     self.running = False
