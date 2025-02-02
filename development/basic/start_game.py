@@ -445,10 +445,13 @@ def give_damage(screen, select_coords, select_cell, actor):
                             if screen.board.board[i][j] == target:
                                 screen.board.board[i][j] = 0
                     if actor in my_units_group:  # конец игры - победа, запуск финального окна
-                        money_now += 100  # деньги за башню
-                        is_win = True  # победа
-                        screen.progress.add(int(screen.board.level) + 1)
-                        end(screen)
+                        if 3 in screen.progress: # запуск финального экрана всей игры
+                            screen.main.go_final_window()
+                        else:
+                            money_now += 100  # деньги за башню
+                            is_win = True  # победа
+                            screen.progress.add(int(screen.board.level) + 1)
+                            end(screen)
                     if actor in enemies_group:  # конец игры - поражение, запуск финального окна
                         is_win = False  # поражение
                         end(screen)

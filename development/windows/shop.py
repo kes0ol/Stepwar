@@ -2,7 +2,7 @@ import pygame
 
 import sys
 
-from development.basic import mapping
+from development.windows import window
 
 from development.different import money
 from development.different.widgets import Button
@@ -10,7 +10,7 @@ from development.different.widgets import Button
 from development.units import archer, swordsman, dragon, cavalry
 
 
-class Store(mapping.Window):
+class Store(window.Window):
     '''Создание класса страницы магазина'''
 
     def __init__(self, screen, size, main):

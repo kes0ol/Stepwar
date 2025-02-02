@@ -2,13 +2,13 @@ import pygame
 
 import sys
 
-from development.basic import mapping
+from development.windows import window
 
 from development.different.global_vars import FILL_TYPE_BORDER
 from development.different.widgets import Button, View
 
 
-class Settings_window(mapping.Window):
+class Settings_window(window.Window):
     def __init__(self, screen, size, main):
         super().__init__(screen, size, main)
         self.volume = 1

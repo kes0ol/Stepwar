@@ -2,14 +2,14 @@ import pygame
 
 import sys
 
-from development.basic import mapping
+from development.windows import window
 
 from development.different.widgets import Button
 
 from development.windows import levels, reference, score, settings, shop
 
 
-class Start_window(mapping.Window):
+class Start_window(window.Window):
     '''Создание класса начального экрана'''
 
     def __init__(self, screen, size, main):

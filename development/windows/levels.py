@@ -2,12 +2,12 @@ import pygame
 
 import sys
 
-from development.basic import mapping
+from development.windows import window
 
 from development.different.widgets import Button
 
 
-class Levels_menu(mapping.Window):
+class Levels_menu(window.Window):
     def __init__(self, screen, size, main):
         super().__init__(screen, size, main)
         self.screen = pygame.surface.Surface((self.width, self.height))

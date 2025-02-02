@@ -3,7 +3,7 @@ import pygame
 import sys
 
 
-from development.basic import mapping
+from development.windows import window
 
 from development.different import landscapes
 from development.different.widgets import Button, View
@@ -11,7 +11,7 @@ from development.different.widgets import Button, View
 from development.units import archer, castle, swordsman, dragon, cavalry
 
 
-class Reference_window(mapping.Window):
+class Reference_window(window.Window):
     '''Создание класса первого окна справки'''
 
     def __init__(self, screen, size, main):
@@ -40,25 +40,6 @@ class Reference_window(mapping.Window):
 
         self.fon = pygame.image.load('../../images/backgrounds/ref_background.jpg')
         self.fon = pygame.transform.scale(self.fon, (self.width, self.height))
-
-    def parse_text(self, text, width):
-        '''Функция парсинга текста (при надобности)'''
-        lst = text.split()
-        res = []
-        w = width
-        st = ''
-        while len(lst) > 1:
-            while w > 0 and len(lst) > 1:
-                if len(lst[0]) > 0:
-                    st += lst[0] + ' '
-                    lst = lst[1:]
-                    w -= len(lst[0])
-                else:
-                    break
-            w = width
-            res.append(st)
-            st = ''
-        return res
 
     def check_click(self, mouse_pos, lst):
         '''Функция проверка клика мышки'''
@@ -108,7 +89,7 @@ class Reference_window(mapping.Window):
             pygame.display.flip()
 
 
-class Description(mapping.Window):
+class Description(window.Window):
     def __init__(self, screen, size, main):
         super().__init__(screen, size, main)
         self.back_button = Button('<-', round(self.one_size * 2.4), self.one_size,
