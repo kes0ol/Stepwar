@@ -5,9 +5,11 @@ import random
 import sys
 
 from development.units import swordsman, archer, cavalry, dragon
+from development.db.score_dbo import Score
 
 from development.different.global_vars import my_units_group, enemies_group, RANGE_ATTACK, shop_group, \
     landscape_group, action_in_progress
+import development.different.global_vars as global_vars
 
 '''Создание глобальных переменных'''
 is_win = None
@@ -17,6 +19,9 @@ money_now = 0
 def start(screen):
     '''Функция старта главноого цикла геймплея'''
     global is_win, money_now  # вызов глобальных переменных
+
+    screen.score_db = Score(user_id=global_vars.current_user.id, level=screen.board.level, score_points=0)
+    Score.add(screen.score_db)
 
     enemys_move(screen)  # первый ход юнитов
     money_now = 0
@@ -146,7 +151,7 @@ def draw_end_surface(screen, main_surf):
     main_surf.blit(text, (one_size // 5, one_size // 5))
 
     lst.append((f'Заработанные монеты: {money_now}', one_size // 2))
-    lst.append((f'Счёт: {screen.score * (20 // screen.steps)}', one_size // 2))
+    lst.append((f'Счёт: {resutl_score_points(screen.score, screen.steps)}', one_size // 2))
 
     for i in range(len(lst)):  # отображение инфы
         font = pygame.font.Font(None, lst[i][1])
@@ -448,6 +453,8 @@ def give_damage(screen, select_coords, select_cell, actor):
                         money_now += 100  # деньги за башню
                         is_win = True  # победа
                         screen.progress.add(int(screen.board.level) + 1)
+                        screen.score_db.score_points = resutl_score_points(screen.score, screen.steps)
+                        Score.add(screen.score_db)
                         end(screen)
                     if actor in enemies_group:  # конец игры - поражение, запуск финального окна
                         is_win = False  # поражение
@@ -468,3 +475,6 @@ def give_damage(screen, select_coords, select_cell, actor):
                         money_now += money
                         screen.score += score
                 return
+
+def resutl_score_points(score, steps):
+    return score * (20 // (steps if steps else 1))

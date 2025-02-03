@@ -1,3 +1,5 @@
+import os
+
 import pygame
 
 import sys
@@ -22,10 +24,10 @@ class Store(mapping.Window):
 
         # загрузка всех карточек юнитов в список
         self.lst_products = []
-        for i in [('../../images/team_images/swordsman.png', 30, (0, 0), (100, 100)),
-                  ('../../images/team_images/archer.png', 40, (0, 0), (100, 100)),
-                  ('../../images/team_images/cavalry.png', 60, (0, 0), (130, 130)),
-                  ('../../images/team_images/dragon.png', 120, (0, 0), (125, 125))]:
+        for i in [(os.path.join('images', 'team_images', 'swordsman.png'), 30, (0, 0), (100, 100)),
+                  (os.path.join('images', 'team_images', 'archer.png'), 40, (0, 0), (100, 100)),
+                  (os.path.join('images', 'team_images', 'cavalry.png'), 60, (0, 0), (130, 130)),
+                  (os.path.join('images', 'team_images', 'dragon.png'), 120, (0, 0), (125, 125))]:
             im, cost, ltop, sz = i
             image = pygame.image.load(im)
             image = image.subsurface(pygame.Rect(ltop, sz))
@@ -46,7 +48,7 @@ class Store(mapping.Window):
             self.lst_buttons.append(self.buy_btn)
 
         # задание фона
-        self.fon = pygame.image.load('../../images/backgrounds/store.png')
+        self.fon = pygame.image.load(os.path.join('images', 'backgrounds', 'store.png'))
         self.fon = pygame.transform.scale(self.fon, (self.size[0], self.size[1]))
 
     def render_products(self):

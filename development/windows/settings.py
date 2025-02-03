@@ -1,3 +1,5 @@
+import os
+
 import pygame
 
 import sys
@@ -30,7 +32,7 @@ class Settings_window(mapping.Window):
                             self.back_button]
         self.lst_views = [self.volume_title, self.percent_view]
 
-        self.fon = pygame.image.load('../../images/backgrounds/settings_background.jpg')
+        self.fon = pygame.image.load(os.path.join('images', 'backgrounds', 'settings_background.jpg'))
         self.fon = pygame.transform.scale(self.fon, (self.size[0], self.size[1]))
 
     def check_click(self, mouse_pos, lst):

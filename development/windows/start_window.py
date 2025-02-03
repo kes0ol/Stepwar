@@ -1,3 +1,5 @@
+import os.path
+
 import pygame
 
 import sys
@@ -42,7 +44,7 @@ class Start_window(mapping.Window):
         self.score = score.Score_window(self.main_screen, self.size, main)  # экран очков
 
         # задание фона
-        self.fon = pygame.image.load('../../images/backgrounds/fon.PNG')
+        self.fon = pygame.image.load(os.path.join('images', 'backgrounds', 'fon.PNG'))
         self.fon = pygame.transform.scale(self.fon, (self.width, self.height))
 
     def check_click(self, mouse_pos, lst):

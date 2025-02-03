@@ -1,3 +1,5 @@
+import os
+
 import pygame
 
 from development.different.animation import AnimationParams
@@ -8,8 +10,8 @@ from development.units.unit import Unit
 
 
 class Cavalry(Unit):
-    def __init__(self, x, y, image_size, group, mirror_animation=False):
-        sheet = pygame.image.load('../../images/team_images/cavalry.png')
+    def __init__(self, x, y, image_size, group, damage_func, mirror_animation=False):
+        sheet = pygame.image.load(os.path.join('images', 'team_images', 'cavalry.png'))
         animations = {
             ANIMATION_IDLE: AnimationParams(sheet, 9, 1, 130, 130, 0, 0, 10),
             ANIMATION_ATTACK: AnimationParams(sheet, 9, 1, 130, 130, 0, 130, 8),
@@ -18,7 +20,7 @@ class Cavalry(Unit):
             ANIMATION_END_MOVE: AnimationParams(sheet, 1, 1, 130, 130, 0, 0, 8),
             ANIMATION_DEATH: AnimationParams(sheet, 8, 1, 130, 130, 0, 390, 8)
         }
-        super().__init__(animations, x, y, group, image_size, ANIMATION_IDLE, mirror_animation)
+        super().__init__(animations, x, y, group, image_size, ANIMATION_IDLE, damage_func, mirror_animation)
         self.init_stats(4, 1, MELEE_ATTACK, 80, 35, 'cavalry', 'Кавалерия', 0)
 
 

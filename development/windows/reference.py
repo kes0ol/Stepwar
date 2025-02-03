@@ -1,3 +1,5 @@
+import os
+
 import pygame
 
 import sys
@@ -38,7 +40,7 @@ class Reference_window(mapping.Window):
 
         self.lst = t.split('\n')
 
-        self.fon = pygame.image.load('../../images/backgrounds/ref_background.jpg')
+        self.fon = pygame.image.load(os.path.join('images', 'backgrounds', 'ref_background.jpg'))
         self.fon = pygame.transform.scale(self.fon, (self.width, self.height))
 
     def parse_text(self, text, width):
@@ -155,21 +157,21 @@ class Description(mapping.Window):
                           self.castle_button: castle.Castle}
 
         self.dct_lands = {self.grass_button: ('grass', 'Трава', self.one_size * 16.1, self.one_size * 4.1,
-                                              '../../images/landscapes/grass.png', self.one_size * 4, 0, 0,
-                                              self.icons_units),
+                                              os.path.join('images', 'landscapes', 'grass.png'),
+                                              self.one_size * 4, 0, 0, self.icons_units),
                           self.rock_button: ('mountains', 'Гора', self.one_size * 16.1, self.one_size * 4.1,
-                                             '../../images/landscapes/mountains.png', self.one_size * 4, 0, 'нельзя',
-                                             self.icons_units),
+                                             os.path.join('images', 'landscapes', 'mountains.png'),
+                                             self.one_size * 4, 0, 'нельзя', self.icons_units),
                           self.hill_button: ('../../hill', 'Холм', self.one_size * 16.1, self.one_size * 4.1,
-                                             'images/landscapes/hill.png', self.one_size * 4, 15, -1,
-                                             self.icons_units),
+                                             os.path.join('images', 'landscapes', 'hill.png'),
+                                             self.one_size * 4, 15, -1, self.icons_units),
                           self.river_button: ('../../river', 'Река', self.one_size * 16.1, self.one_size * 4.1,
-                                              'images/landscapes/river.png', self.one_size * 4, 0, 'Частично',
-                                              self.icons_units)}
+                                              os.path.join('images', 'landscapes', 'river.png'),
+                                              self.one_size * 4, 0, 'Частично', self.icons_units)}
 
         self.stats = []
 
-        self.fon = pygame.image.load('../../images/backgrounds/ref_background.jpg')
+        self.fon = pygame.image.load(os.path.join('images', 'backgrounds', 'ref_background.jpg'))
         self.fon = pygame.transform.scale(self.fon, (self.width, self.height))
 
     def check_click(self, mouse_pos, lst):

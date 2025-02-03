@@ -4,8 +4,9 @@ from development.different.global_vars import ANIMATION_ATTACK, ANIMATION_IDLE, 
 
 
 class Unit(MovableAnimatedSprite):
-    def __init__(self, animations, x, y, group, scale_to, default_animation, mirror_animation=False):
+    def __init__(self, animations, x, y, group, scale_to, default_animation, damage_func, mirror_animation=False):
         super().__init__(animations, x, y, group, scale_to, default_animation, mirror_animation)
+        self.damage_func = damage_func
         self.default_stock = 0
 
         self.default_step = 0
@@ -79,7 +80,7 @@ class Unit(MovableAnimatedSprite):
 
         mirror = x < self.rect.x
         args = [screen, (x, y), (select_x, select_y), self]
-        animation_chain.add_step(ANIMATION_ATTACK, start_game.give_damage, args, mirror=mirror)
+        animation_chain.add_step(ANIMATION_ATTACK, self.damage_func, args, mirror=mirror)
         animation_chain.add_step(ANIMATION_IDLE, callback, callback_args)
 
         self.start_animation_chain(animation_chain)
@@ -106,6 +107,3 @@ class Unit(MovableAnimatedSprite):
     def refresh(self):
         self.step = self.default_step
         self.do_damage = True
-
-
-import start_game

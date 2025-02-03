@@ -1,3 +1,5 @@
+import os
+
 import pygame
 
 import sys
@@ -23,7 +25,7 @@ class Levels_menu(mapping.Window):
         self.lst_buttons = [self.first_level_button, self.second_level_button, self.thirst_level_button,
                             self.back_button]
 
-        self.fon = pygame.image.load('../../images/backgrounds/menu_levels_back_ground.jpg')
+        self.fon = pygame.image.load(os.path.join('images', 'backgrounds', 'menu_levels_back_ground.jpg'))
         self.fon = pygame.transform.scale(self.fon, (self.size[0], self.size[1]))
 
     def check_click(self, mouse_pos, lst):

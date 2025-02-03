@@ -8,6 +8,9 @@ COORD_LEFTBOTTOM = 1
 COORD_LEFTTOP = 2
 COORD_MIDTOP = 3
 
+DB_DIR = "db"
+DB_FILENAME = "db.sqlite"
+
 ANIMATION_IDLE = "idle"
 ANIMATION_ATTACK = "attack"
 ANIMATION_BEGIN_MOVE = "begin_move"
@@ -24,3 +27,5 @@ shop_group = pygame.sprite.Group()
 landscape_group = pygame.sprite.Group()
 
 action_in_progress = False
+
+current_user = None

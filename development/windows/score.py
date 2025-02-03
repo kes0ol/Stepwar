@@ -1,10 +1,15 @@
+import os
+from datetime import datetime
+
 import pygame
 
 import sys
 
 from development.basic import mapping
+from development.db.score_dbo import Score
 
 from development.different.widgets import Button
+import development.different.global_vars as global_vars
 
 
 class Score_window(mapping.Window):
@@ -15,10 +20,24 @@ class Score_window(mapping.Window):
 
         self.back_button = Button('Назад', self.one_size, self.one_size * 2, self.one_size * 11, color=(150, 0, 0),
                                   dark_color=(100, 0, 0))
+        self.next_page_button = Button('>', self.one_size, self.one_size * 21, self.one_size * 11, color=(150, 0, 0),
+                                       dark_color=(100, 0, 0))
+        self.pref_page_button = Button('<', self.one_size, self.one_size * 20, self.one_size * 11, color=(150, 0, 0),
+                                       dark_color=(100, 0, 0))
+        self.page = 0
 
-        self.lst_buttons = [self.back_button]
+        self.page_titles = ['Все результаты',
+                            'Все результаты 1 уровень',
+                            'Все результаты 2 уровень',
+                            'Все результаты 3 уровень',
+                            'Мои результаты',
+                            'Мои результаты 1 уровень',
+                            'Мои результаты 2 уровень',
+                            'Мои результаты 3 уровень']
 
-        self.fon = pygame.image.load('../../images/backgrounds/score.PNG')
+        self.lst_buttons = [self.back_button, self.next_page_button, self.pref_page_button]
+
+        self.fon = pygame.image.load(os.path.join('images', 'backgrounds', 'score.PNG'))
         self.fon = pygame.transform.scale(self.fon, (self.size[0], self.size[1]))
 
     def check_click(self, mouse_pos, lst):
@@ -26,29 +45,56 @@ class Score_window(mapping.Window):
             if button.check_click(mouse_pos):
                 if button == self.back_button:
                     self.running = False
+                if button == self.next_page_button:
+                    self.page += 1
+                    self.page %= len(self.page_titles)
+                if button == self.pref_page_button:
+                    self.page -= 1
+                    self.page %= len(self.page_titles)
 
     def render(self):
         self.screen.blit(self.fon, (0, 0))
         for button in self.lst_buttons:
             button.render(self.screen)
         self.main_screen.sc.blit(self.screen, (0, 0))
-        pygame.draw.rect(self.main_screen.sc, (0, 0, 0), (self.width / 5, self.height / 2.5,
-                                                          self.one_size * 12, self.one_size * 6), 8)
-        pygame.draw.rect(self.main_screen.sc, (0, 0, 0), (self.one_size * 8.1, self.height / 2.5,
-                                                          self.one_size * 4.3, self.one_size * 6), 8)
-        f = pygame.font.Font(None, 100)
-        t = f.render('Лучшие результаты', True, 'red')
-        self.main_screen.sc.blit(t, (self.one_size * 7, self.one_size * 2))
-        f1 = pygame.font.Font(None, 100)
-        t1 = f1.render('lvl 1', True, 'red')
-        self.main_screen.sc.blit(t1, (self.one_size * 5.5, self.one_size * 4))
-        f2 = pygame.font.Font(None, 100)
-        t2 = f2.render('lvl 2', True, 'red')
-        self.main_screen.sc.blit(t2, (self.one_size * 9.5, self.one_size * 4))
-        f3 = pygame.font.Font(None, 100)
-        t3 = f3.render('lvl 3', True, 'red')
-        self.main_screen.sc.blit(t3, (self.one_size * 13.5, self.one_size * 4))
+        self.render_result_table()
         self.main_screen.render_cursor()
+
+    def render_result_table(self):
+        f = pygame.font.Font(None, 100)
+        f_table = pygame.font.Font(None, int(self.one_size * 0.5))
+        t = f.render(self.page_titles[self.page], True, 'red')
+        self.main_screen.sc.blit(t, (self.width // 2 - t.get_width() // 2, self.one_size * 1))
+
+        limit = 10
+        page_functions = [
+            Score.get_ordered_by_score(limit),
+            Score.get_by_level_ordered_by_score(1, limit),
+            Score.get_by_level_ordered_by_score(2, limit),
+            Score.get_by_level_ordered_by_score(3, limit),
+            Score.get_by_user_ordered_by_score(global_vars.current_user.id, limit),
+            Score.get_by_user_level_ordered_by_score(global_vars.current_user.id, 1, limit),
+            Score.get_by_user_level_ordered_by_score(global_vars.current_user.id, 2, limit),
+            Score.get_by_user_level_ordered_by_score(global_vars.current_user.id, 3, limit),
+        ]
+        results = page_functions[self.page]
+
+        x = [
+            self.one_size,
+            self.one_size * 12,
+            self.one_size * 14,
+            self.one_size * 15,
+            self.one_size * 19
+        ]
+        title_y = self.one_size * 2
+        y = self.one_size * 2.5
+        dy = self.one_size * 0.5
+        for j, v in enumerate(['Игрок', 'Уровень', 'Счет', 'Начало', 'Длительность']):
+            self.main_screen.sc.blit(f_table.render(str(v), True, 'red'), (x[j], title_y))
+        for i, r in enumerate(results):
+            for j, v in enumerate([r.user_nickname, r.level, r.score_points, r.created_at,
+                                   datetime.fromisoformat(r.updated_at) - datetime.fromisoformat(r.created_at)]):
+                self.main_screen.sc.blit(f_table.render(str(v), True, 'red'), (x[j], y + i * dy))
 
     def start(self):
         fps = 60

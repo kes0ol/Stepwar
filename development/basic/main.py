@@ -1,10 +1,11 @@
+import os
 import sys
 
 import pygame
 
-import mapping
-import start_game
-from development.windows import start_window
+import development.basic.mapping as mapping
+import development.basic.start_game as start_game
+from development.windows import start_window, enter_nickname
 
 
 class Main:
@@ -12,11 +13,17 @@ class Main:
 
     def __init__(self):
         '''Инициализация класса'''
+        pygame.init()  # инициализация pygame
+        pygame.display.set_caption('StepWar')  # устновка названия
+
+        set_music(os.path.join('music', 'walking.wav'), -1, 20)  # запуск музыки
+
         self.size = pygame.display.get_desktop_sizes()[-1]  # получение размеров экрана
         self.screen = mapping.Screen(self.size, self)  # создание основного экрана
 
     def go_start_window(self):
-        '''Функция создания и запуска стартового (начального) экрана'''
+        self.nickname_window = enter_nickname.EnterNicknameWindow(self.screen, self.size, self)
+        self.nickname_window.start()
         self.start_screen = start_window.Start_window(self.screen, self.size, self)
         self.start_screen.start()
 
@@ -91,14 +98,3 @@ def set_music(path, time_play, delay):
     pygame.mixer.music.load(path)
     pygame.mixer.music.play(time_play)
     pygame.time.delay(delay)
-
-
-'''Старт программы'''
-if __name__ == '__main__':
-    pygame.init()  # инициализация pygame
-    pygame.display.set_caption('StepWar')  # устновка названия
-
-    set_music('../../music/walking.wav', -1, 20)  # запуск музыки
-
-    main_screen = Main()  # создание объекта главного класса игры
-    main_screen.go_start_window()  # старт начального экрана

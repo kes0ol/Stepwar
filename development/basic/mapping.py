@@ -1,12 +1,13 @@
+import os
+
 import pygame
 
 from development.units import swordsman, archer, castle, cavalry, dragon
 from development.different import landscapes, money
+import development.basic.start_game as start_game
 
 from development.different.global_vars import my_units_group, enemies_group, shop_group, landscape_group
 from development.different.widgets import Button
-
-import start_game
 
 
 class Screen:
@@ -42,18 +43,23 @@ class Screen:
 
         self.steps = 0  # кол-во шагов за 1 уровень
         self.score = 0  # очки
+        self.score_db = None  # DBO объект для доступа к таблице базы данных score
         self.money = 0  # монеты
         self.progress = {1}  # пройденные уровни
         self.choose_level = 1  # выбранный уровень (по умолчанию 1)
 
         self.icon_swordsman = swordsman.Swordsman(self.board.cell_size * 1.4, 1 * (self.board.cell_size * 1.2),
-                                                  self.board.cell_size * 1.2, shop_group)  # иконка рыцаря (для выбора)
+                                                  self.board.cell_size * 1.2, shop_group,
+                                                  start_game.give_damage)  # иконка рыцаря (для выбора)
         self.icon_archer = archer.Archer(self.board.cell_size * 1.4, 2 * (self.board.cell_size * 1.2),
-                                         self.board.cell_size * 1.2, shop_group)  # иконка лучника (для выбора)
+                                         self.board.cell_size * 1.2, shop_group,
+                                         start_game.give_damage)  # иконка лучника (для выбора)
         self.icon_cavalry = cavalry.Cavalry(self.board.cell_size * 1.4, 3 * (self.board.cell_size * 1.2),
-                                            self.board.cell_size * 1.2, shop_group)  # иконка кавалерии (для выбора)
+                                            self.board.cell_size * 1.2, shop_group,
+                                            start_game.give_damage)  # иконка кавалерии (для выбора)
         self.icon_dragon = dragon.Dragon(self.board.cell_size * 1.4, 4 * (self.board.cell_size * 1.2),
-                                         self.board.cell_size * 1.2, shop_group)  # иконка дракона (для выбора)
+                                         self.board.cell_size * 1.2, shop_group,
+                                         start_game.give_damage)  # иконка дракона (для выбора)
         self.icon_money = money.Money(self.width - 100, 20, self.board.cell_size, money.moneys)  # иконка монет
 
         # запись кол-ва юнитов в инвентаре
@@ -71,7 +77,7 @@ class Screen:
                 break
 
         # загрузка и настройка курсора
-        self.cursor = pygame.image.load('../../images/different/cursor.png')
+        self.cursor = pygame.image.load(os.path.join('images', 'different', 'cursor.png'))
         self.cursor.set_colorkey((255, 255, 255))
         self.cursor = pygame.transform.scale(self.cursor, (20, 20))
 
@@ -157,6 +163,7 @@ class Screen:
     def reset_progress(self):
         '''Сброс прогресса (reset)'''
         self.steps = 0
+        self.score = 0
         self.money = 0
         self.progress = {1}
         self.choose_level = 1
@@ -224,60 +231,69 @@ class Board:
             for j in range(len(self.board[i])):
                 if (i, j) == (0, 4):
                     castle.Castle(i * self.cell_size + self.left, j * self.cell_size + self.top, self.cell_size * 2,
-                                  my_units_group)
+                                  my_units_group, start_game.give_damage)
                     self.board[j][i], self.board[j][i + 1], self.board[j + 1][i], self.board[j + 1][i + 1] = 4, 4, 4, 4
 
     def set_enemys(self):
         '''Установка врагов'''
-        with open(f'../../levels/{self.level}/enemys.txt', mode='rt', encoding='utf-8') as enemys_board:
+        with open(os.path.join('levels', str(self.level), 'enemys.txt'), mode='rt', encoding='utf-8') as enemys_board:
             level_lst = [string.strip('\n').split(', ') for string in enemys_board]  # получение юнитов из файлов
             for i in range(len(level_lst)):
                 for j in range(len(level_lst[i])):
                     x, y = j * self.cell_size + self.left, i * self.cell_size + self.top
                     if level_lst[i][j] == 's':  # устновка рыцарей
-                        swordsman.Swordsman(x, y, self.cell_size, enemies_group, mirror_animation=True)
+                        swordsman.Swordsman(x, y, self.cell_size, enemies_group,
+                                            start_game.give_damage, mirror_animation=True)
                         self.board[i][j] = 2
                     elif level_lst[i][j] == 'a':  # установка лучников
-                        archer.Archer(x, y, self.cell_size, enemies_group, mirror_animation=True)
+                        archer.Archer(x, y, self.cell_size, enemies_group,
+                                      start_game.give_damage, mirror_animation=True)
                         self.board[i][j] = 2
                     elif level_lst[i][j] == 'c':  # установка кавалерии
-                        cavalry.Cavalry(x, y, self.cell_size, enemies_group, mirror_animation=True)
+                        cavalry.Cavalry(x, y, self.cell_size, enemies_group,
+                                        start_game.give_damage, mirror_animation=True)
                         self.board[i][j] = 2
                     elif level_lst[i][j] == 'd':  # установка драконов
-                        dragon.Dragon(x, y, self.cell_size, enemies_group, mirror_animation=True)
+                        dragon.Dragon(x, y, self.cell_size, enemies_group,
+                                      start_game.give_damage, mirror_animation=True)
                         self.board[i][j] = 2
                     elif level_lst[i][j] == 'X':  # установка башни (башен)
-                        castle.Castle(x, y, self.cell_size * 2, enemies_group)
+                        castle.Castle(x, y, self.cell_size * 2, enemies_group, start_game.give_damage)
                         self.board[i][j], self.board[i + 1][j] = 3, 3
                         self.board[i][j + 1], self.board[i + 1][j + 1] = 3, 3
 
     def set_landscapes(self):
         '''Установка ландшафтов'''
-        with open(f'../../levels/{self.level}/field.txt', mode='rt', encoding='utf-8') as land:
+        with open(os.path.join('levels', str(self.level), 'field.txt'), mode='rt', encoding='utf-8') as land:
             field_lst = [string.strip('\n').split(', ') for string in land]
             for i in range(len(field_lst)):
                 for j in range(len(field_lst[i])):
                     x, y = self.get_cell_coords((j, i))
 
                     if field_lst[i][j] in ['m', 'h']:  # если наземные
-                        landscapes.Landscape('grass', 'Трава', x, y, '../../images/landscapes/grass.png',
+                        landscapes.Landscape('grass', 'Трава', x, y,
+                                             os.path.join('images', 'landscapes', 'grass.png'),
                                              self.cell_size, 0, 0, landscape_group)  # установка травы
                         if field_lst[i][j] == 'm':  # установка гор
-                            landscapes.Landscape('mountains', 'Гора', x, y, '../../images/landscapes/mountains.png',
+                            landscapes.Landscape('mountains', 'Гора', x, y,
+                                                 os.path.join('images', 'landscapes', 'mountains.png'),
                                                  self.cell_size, 0, 'нельзя', landscape_group)
                             self.field[i][j] = 1
                         elif field_lst[i][j] == 'h':  # установка гор
-                            landscapes.Landscape('hill', 'Холм', x, y, '../../images/landscapes/hill.png',
+                            landscapes.Landscape('hill', 'Холм', x, y,
+                                                 os.path.join('images', 'landscapes', 'hill.png'),
                                                  self.cell_size, 15, -1, landscape_group)
                             self.field[i][j] = 2
 
                     elif field_lst[i][j] in ['r']:  # если не назменые
                         if field_lst[i][j] == 'r':  # если река
-                            landscapes.Landscape('river', 'Река', x, y, '../../images/landscapes/river.png',
+                            landscapes.Landscape('river', 'Река', x, y,
+                                                 os.path.join('images', 'landscapes', 'river.png'),
                                                  self.cell_size, 0, 0, landscape_group)
                             self.field[i][j] = 3
                     else:  # иначе установка травы
-                        landscapes.Landscape('grass', 'Трава', x, y, '../../images/landscapes/grass.png',
+                        landscapes.Landscape('grass', 'Трава', x, y,
+                                             os.path.join('images', 'landscapes', 'grass.png'),
                                              self.cell_size, 0, 0, landscape_group)
 
     def get_cell(self, mouse_pos):
@@ -303,25 +319,25 @@ class Board:
             if x <= 4 and self.board[y][x] == 0 and self.field[y][x] == 0:
                 if self.choosen_unit == 'swordsman' and swordsman.stock > 0:  # рыцарь
                     swordsman.Swordsman(x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
-                                        my_units_group)
+                                        my_units_group, start_game.give_damage)
                     swordsman.stock -= 1
                     self.board[y][x] = 1
 
                 if self.choosen_unit == 'archer' and archer.stock > 0:  # лучник
                     archer.Archer(x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
-                                  my_units_group)
+                                  my_units_group, start_game.give_damage)
                     archer.stock -= 1
                     self.board[y][x] = 1
 
                 if self.choosen_unit == 'cavalry' and cavalry.stock > 0:  # кавалерия
                     cavalry.Cavalry(x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
-                                    my_units_group)
+                                    my_units_group, start_game.give_damage)
                     cavalry.stock -= 1
                     self.board[y][x] = 1
 
                 if self.choosen_unit == 'dragon' and dragon.stock > 0:  # дракон
                     dragon.Dragon(x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
-                                  my_units_group)
+                                  my_units_group, start_game.give_damage)
                     dragon.stock -= 1
                     self.board[y][x] = 1
 
