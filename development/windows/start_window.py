@@ -1,12 +1,10 @@
-import pygame
-
 import sys
 
-from development.windows import window
+import pygame
 
 from development.different.widgets import Button
-
 from development.windows import levels, reference, score, settings, shop
+from development.windows import window
 
 
 class Start_window(window.Window):

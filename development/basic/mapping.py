@@ -2,12 +2,11 @@ import os
 
 import pygame
 
-from development.units import swordsman, archer, castle, cavalry, dragon
-from development.different import landscapes, money
 import development.basic.start_game as start_game
-
+from development.different import landscapes, money
 from development.different.global_vars import my_units_group, enemies_group, shop_group, landscape_group
 from development.different.widgets import Button
+from development.units import swordsman, archer, castle, cavalry, dragon
 
 
 class Screen:

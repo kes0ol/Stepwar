@@ -1,9 +1,8 @@
 import pygame
 
-from development.windows import window
-
 from development.different.global_vars import FILL_TYPE_BORDER
 from development.different.widgets import Button, View
+from development.windows import window
 
 
 class Settings_window(window.Window):
@@ -56,5 +55,14 @@ class Settings_window(window.Window):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 self.running = False
+
+            if event.key in [pygame.K_MINUS, pygame.K_EQUALS]:
+                if event.key == pygame.K_MINUS and self.volume - 0.2 >= 0:
+                    self.volume -= 0.2
+                if event.key == pygame.K_EQUALS and self.volume + 0.2 <= 1:
+                    self.volume += 0.2
+                self.percent_view.set_text(f'{int(self.volume * 100)}%')
+                pygame.mixer.music.set_volume(self.volume)
+
         if event.type == pygame.MOUSEBUTTONDOWN:
             self.check_click(event.pos, self.lst_buttons)

@@ -5,7 +5,6 @@ import pygame
 from development.different.animation import AnimationParams
 from development.different.global_vars import ANIMATION_IDLE, ANIMATION_ATTACK, ANIMATION_BEGIN_MOVE, \
     ANIMATION_MOVE, ANIMATION_END_MOVE, ANIMATION_DEATH, MELEE_ATTACK
-
 from development.units.unit import Unit
 
 
@@ -17,7 +16,7 @@ class Swordsman(Unit):
             ANIMATION_ATTACK: AnimationParams(sheet, 7, 1, 100, 100, 0, 100, 15),
             ANIMATION_BEGIN_MOVE: AnimationParams(sheet, 1, 1, 100, 100, 0, 0, 15),
             ANIMATION_MOVE: AnimationParams(sheet, 5, 1, 100, 100, 0, 200, 7),
-            ANIMATION_END_MOVE: AnimationParams(sheet, 1, 1, 100, 100, 0, 0, 15),
+            ANIMATION_END_MOVE: AnimationParams(sheet, 1, 1, 100, 100, 0, 0, 1),
             ANIMATION_DEATH: AnimationParams(sheet, 6, 1, 100, 100, 0, 300, 15)
         }
         super().__init__(animations, x, y, group, image_size, ANIMATION_IDLE, damage_func, mirror_animation)

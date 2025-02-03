@@ -5,11 +5,10 @@ import pygame
 
 from development.basic import mapping
 from development.basic import start_game
-
-from development.windows import start_window, enter_nickname
-from development.windows import final_window
-
 from development.different import global_vars
+from development.windows import final_window
+from development.windows import start_window, enter_nickname
+
 
 class Main:
     '''Создание основного класса игры'''
@@ -19,15 +18,17 @@ class Main:
         pygame.init()  # инициализация pygame
         pygame.display.set_caption('StepWar')  # устновка названия
 
-        set_music(os.path.join('music', 'walking.wav'), -1, 20)  # запуск музыки
-
         self.size = pygame.display.get_desktop_sizes()[-1]  # получение размеров экрана
         self.screen = mapping.Screen(self.size, self)  # создание основного экрана
+
+        set_music(os.path.join('music', 'walking.wav'), -1, 20)  # запуск музыки
+        self.go_start_window()  # старт начального экрана
 
     def go_start_window(self):
         self.nickname_window = enter_nickname.EnterNicknameWindow(self.screen, self.size, self)
         if not global_vars.current_user:
             self.nickname_window.start()
+
         self.start_screen = start_window.Start_window(self.screen, self.size, self)
         self.start_screen.start()
 

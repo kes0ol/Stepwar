@@ -1,7 +1,7 @@
-import pygame
-
 import os
 import sys
+
+import pygame
 
 
 class Window:

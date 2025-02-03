@@ -1,5 +1,5 @@
-import sqlite3
 import os.path
+import sqlite3
 
 from development.different.global_vars import DB_DIR, DB_FILENAME
 

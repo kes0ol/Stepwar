@@ -2,11 +2,10 @@ import sys
 
 import pygame
 
-from development.windows import window
-
-from development.different import global_vars
 from development.db.user_dbo import User
+from development.different import global_vars
 from development.different.widgets import Button, Edit, View
+from development.windows import window
 
 
 class EnterNicknameWindow(window.Window):

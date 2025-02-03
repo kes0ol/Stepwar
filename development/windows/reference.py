@@ -1,13 +1,11 @@
-import pygame
-
 import os
 
-from development.windows import window
+import pygame
 
 from development.different import landscapes
 from development.different.widgets import Button, View
-
 from development.units import archer, castle, swordsman, dragon, cavalry
+from development.windows import window
 
 
 class Reference_window(window.Window):
@@ -28,16 +26,20 @@ class Reference_window(window.Window):
 
         self.ref_screen = Description(self.main_screen, self.size, self.main)  # создание второго окна
 
-        t = ('''Выход на предыдущий экран (назад): Esc\nВыбор юнита в инвентаре: 1/2/3/4\nСледующий ход: Space\n\nВ главном меню:
+        t1 = ('''Выход на предыдущий экран (назад): Esc\nВыбор юнита в инвентаре: 1/2/3/4\nСледующий ход: Space\n\nВ главном меню:
         Список уровней: 1
         Магазин: 2
         Настройки: 3
-        Справка: 4\n\nВ списке уровней:
+        Справка: 4''')
+
+        t2 = ('''В списке уровней:
         Первый уровень: 1
         Второй уровень: 2
-        Третий уровень: 3''')  # задание текста справки
+        Третий уровень: 3\n\nВ настройках:
+        Понизить громкость - минус(-)
+        Повысить громкость - равно(=)''')
 
-        self.lst = t.split('\n')
+        self.lst = [text.split('\n') for text in (t1, t2)]
 
     def check_click(self, mouse_pos, lst):
         '''Функция проверка клика мышки'''
@@ -53,11 +55,13 @@ class Reference_window(window.Window):
         '''Рендер содержимого страницы'''
         y = self.one_size
 
-        for i in self.lst:
-            font = pygame.font.Font(None, round(self.one_size / 1.7))
-            text = font.render(i, True, 'black')
-            self.screen.blit(text, (self.one_size, self.one_size + y))
-            y += round(self.one_size / 1.7)
+        for index in range(len(self.lst)):
+            for i in self.lst[index]:
+                font = pygame.font.Font(None, round(self.one_size / 1.7))
+                text = font.render(i, True, 'black')
+                self.screen.blit(text, (self.width // 2 * index + self.one_size, self.one_size + y))
+                y += round(self.one_size / 1.7)
+            y = self.one_size
 
     @window.Window.start_decoration
     def start(self, event):
@@ -153,13 +157,12 @@ class Description(window.Window):
 
     @window.Window.render_decorator
     def render(self):
-        y = 50
-
         if len(self.icons_units):
             pygame.draw.rect(self.screen, (66, 44, 33), (self.one_size * 10, self.one_size,
                                                          self.one_size * 11, self.one_size * 9), 8)
             pygame.draw.rect(self.screen, (0, 0, 0), (self.one_size * 16, self.one_size * 4,
                                                       self.one_size * 4.2, self.one_size * 4.2), 8)
+            y = 50
             for i in reversed(self.stats):
                 font = pygame.font.Font(None, round(self.one_size * 0.5))
                 text = font.render(i, True, 'black')
@@ -167,6 +170,10 @@ class Description(window.Window):
                 y += 50
 
             self.icons_units.draw(self.screen)
+
+        f = pygame.font.Font(None, round(self.one_size * 1.3))
+        t = f.render('Информация', True, 'black')
+        self.main_screen.sc.blit(t, (self.one_size * 11, self.one_size * 2))
 
     @window.Window.start_decoration
     def start(self, event):

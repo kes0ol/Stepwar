@@ -1,17 +1,11 @@
-import os
 from datetime import datetime
 
 import pygame
 
-import sys
-
-from development.basic import mapping
-from development.db.score_dbo import Score
-
-from development.windows import window
-
-from development.different.widgets import Button
 import development.different.global_vars as global_vars
+from development.db.score_dbo import Score
+from development.different.widgets import Button
+from development.windows import window
 
 
 class Score_window(window.Window):
@@ -37,7 +31,7 @@ class Score_window(window.Window):
                             'Мои результаты 2 уровень',
                             'Мои результаты 3 уровень']
 
-        window.Window.set_lists(self, [self.back_button,])
+        window.Window.set_lists(self, [self.back_button, ])
 
     def check_click(self, mouse_pos, lst):
         for button in lst:
@@ -51,13 +45,9 @@ class Score_window(window.Window):
                     self.page -= 1
                     self.page %= len(self.page_titles)
 
+    @window.Window.render_decorator
     def render(self):
-        self.screen.blit(self.fon, (0, 0))
-        for button in self.lst_buttons:
-            button.render(self.screen)
-        self.main_screen.sc.blit(self.screen, (0, 0))
         self.render_result_table()
-        self.main_screen.render_cursor()
 
     def render_result_table(self):
         f = pygame.font.Font(None, 100)
@@ -95,25 +85,10 @@ class Score_window(window.Window):
                                    datetime.fromisoformat(r.updated_at) - datetime.fromisoformat(r.created_at)]):
                 self.main_screen.sc.blit(f_table.render(str(v), True, 'red'), (x[j], y + i * dy))
 
-    def start(self):
-        fps = 60
-        clock = pygame.time.Clock()
-
-        self.running = True
-        while self.running:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    self.running = False
-                    pygame.quit()
-                    sys.exit()
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        self.running = False
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    self.check_click(event.pos, self.lst_buttons)
-
-            self.screen.fill((0, 0, 0))
-            self.render()
-
-            clock.tick(fps)
-            pygame.display.flip()
+    @window.Window.start_decoration
+    def start(self, event):
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                self.running = False
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            self.check_click(event.pos, self.lst_buttons)

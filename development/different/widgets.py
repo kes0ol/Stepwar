@@ -1,5 +1,3 @@
-import sys
-
 import pygame
 
 from development.different.global_vars import FILL_TYPE_BORDER, FILL_TYPE_NONE
@@ -99,7 +97,7 @@ class Edit(RectCoord):
 
         self.rect = pygame.Rect(0, 0, self.w, self.h)
         self.set_rect_coord(self.rect, self.x, self.y, self.coord_type)
-        pygame.draw.rect(sc, self.color, self. rect, 1)
+        pygame.draw.rect(sc, self.color, self.rect, 1)
 
     def update(self):
         if self.edit_started and self.gc % self.fps_mod == 0:

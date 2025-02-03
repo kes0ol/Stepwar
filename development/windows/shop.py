@@ -1,13 +1,11 @@
-import pygame
-
 import os
 
-from development.windows import window
+import pygame
 
 from development.different import money
 from development.different.widgets import Button
-
 from development.units import archer, swordsman, dragon, cavalry
+from development.windows import window
 
 
 class Store(window.Window):

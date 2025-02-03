@@ -1,8 +1,7 @@
 import pygame
 
-from development.windows import window
-
 from development.different.widgets import Button, View
+from development.windows import window
 
 
 class Final_window(window.Window):

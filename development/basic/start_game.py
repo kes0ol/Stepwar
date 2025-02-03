@@ -1,15 +1,16 @@
-import pygame
-
 import itertools
 import random
 import sys
 
-from development.units import swordsman, archer, cavalry, dragon
-from development.db.score_dbo import Score
+import pygame
 
-from development.different.global_vars import my_units_group, enemies_group, RANGE_ATTACK, shop_group, \
-    landscape_group, action_in_progress
 import development.different.global_vars as global_vars
+from development.db.score_dbo import Score
+from development.different.global_vars import my_units_group, enemies_group, RANGE_ATTACK, shop_group, \
+    landscape_group
+from development.units import swordsman, archer, cavalry, dragon
+
+from development.different.global_vars import action_in_progress  # Эта переменная нужна!!
 
 '''Создание глобальных переменных'''
 is_win = None
@@ -472,13 +473,14 @@ def give_damage(screen, select_coords, select_cell, actor):
                     if actor in my_units_group:  # получение наград (очков и монет) за убийство
                         dct = {'swordsman': (30, 5),
                                'archer': (35, 25),
-                               'cavalry': (45, 20),
-                               'dragon': (100, 40)}
+                               'cavalry': (40, 20),
+                               'dragon': (80, 40)}
 
                         money, score = dct[unit.name]
                         money_now += money
                         screen.score += score
                 return
+
 
 def resutl_score_points(score, steps):
     return score * (20 // (steps if steps else 1))

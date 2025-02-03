@@ -1,8 +1,7 @@
 import pygame
 
-from development.windows import window
-
 from development.different.widgets import Button
+from development.windows import window
 
 
 class Levels_menu(window.Window):

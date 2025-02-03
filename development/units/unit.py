@@ -69,7 +69,7 @@ class Unit(MovableAnimatedSprite):
         animation_chain.add_step(ANIMATION_IDLE, callback, callback_args)
 
         self.start_animation_chain(animation_chain)
-        self.step = 0
+        self.step -= (abs(x // screen.board.cell_size) + abs(y // screen.board.cell_size))
 
     def make_attack(self, choose_cell, screen, callback=None, callback_args=None):
         select_x, select_y = choose_cell
