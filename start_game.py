@@ -261,7 +261,7 @@ def enemys_attack(screen, unit, now_cell):
         select_attack = random.choice(lst_steps)
 
         increment_action_in_progress()
-        unit.make_attack(unit, select_attack, screen, decrement_action_in_progress, [])
+        unit.make_attack(select_attack, screen, decrement_action_in_progress, [])
 
 
 def show_stats(screen):
@@ -336,7 +336,7 @@ def choose_attack(screen, unit, cell_coords):
                     for coords in lst_steps:
                         if coords == choose_cell:
                             increment_action_in_progress()
-                            unit.make_attack(unit, choose_cell, screen, decrement_action_in_progress, [])
+                            unit.make_attack(choose_cell, screen, decrement_action_in_progress, [])
                     return
 
             screen.sc.fill((0, 0, 0))

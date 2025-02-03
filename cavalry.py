@@ -18,7 +18,7 @@ class Cavalry(Unit):
             ANIMATION_DEATH: AnimationParams(sheet, 8, 1, 130, 130, 0, 390, 8)
         }
         super().__init__(animations, x, y, group, image_size, ANIMATION_IDLE, mirror_animation)
-        self.init_stats(3, 1, MELEE_ATTACK, 70, 25, 'cavalry', 'Кавалерия', 3)
+        self.init_stats(3, 1, MELEE_ATTACK, 70, 25, 'cavalry', 'Кавалерия', 3, 'music/cavalry_hit.wav')
 
 
 def set_view_stock(screen, coords, size):

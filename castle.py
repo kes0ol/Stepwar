@@ -13,4 +13,4 @@ class Castle(Unit):
             ANIMATION_DEATH: AnimationParams(sheet, 1, 1, 225, 225, 0, 0, 1),
         }
         super().__init__(animations, x, y, group, image_size, ANIMATION_IDLE, mirror_animation)
-        self.init_stats(0, 0, MELEE_ATTACK, 500, 0, 'castle', 'Замок', 0)
+        self.init_stats(0, 0, MELEE_ATTACK, 500, 0, 'castle', 'Замок', 0, 'music/archer_hit.wav')
