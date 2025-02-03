@@ -1,10 +1,8 @@
-import os
-
 import pygame
 
-import sys
+import os
 
-from development.basic import mapping
+from development.windows import window
 
 from development.different import money
 from development.different.widgets import Button
@@ -12,12 +10,12 @@ from development.different.widgets import Button
 from development.units import archer, swordsman, dragon, cavalry
 
 
-class Store(mapping.Window):
+class Store(window.Window):
     '''Создание класса страницы магазина'''
 
     def __init__(self, screen, size, main):
         '''Инициализация класса'''
-        super().__init__(screen, size, main)
+        super().__init__(screen, size, main, ('images', 'backgrounds', 'store.png'))
         self.screen = pygame.surface.Surface((self.width, self.height))  # создание полотна
 
         self.lst_units = [swordsman, archer, cavalry, dragon]  # список всех юнитов
@@ -38,7 +36,7 @@ class Store(mapping.Window):
                                   round(self.one_size * 1.7), self.height - 100,
                                   color=(200, 75, 75), dark_color=(150, 25, 25))  # создание кнопки Назад
 
-        self.lst_buttons = [self.back_button]  # список всех кнопок
+        window.Window.set_lists(self, [self.back_button, ])
 
         for i in range(len(self.lst_units)):
             self.buy_btn = Button('Купить', self.one_size,
@@ -46,10 +44,6 @@ class Store(mapping.Window):
                                   round(self.one_size * 9.5), color=(255, 255, 0),
                                   dark_color=(0, 255, 0))  # создание кнопок Купить
             self.lst_buttons.append(self.buy_btn)
-
-        # задание фона
-        self.fon = pygame.image.load(os.path.join('images', 'backgrounds', 'store.png'))
-        self.fon = pygame.transform.scale(self.fon, (self.size[0], self.size[1]))
 
     def render_products(self):
         '''Функция отображение карточек юнитов'''
@@ -85,35 +79,16 @@ class Store(mapping.Window):
                         self.main_screen.money -= select_button[1]
                         self.lst_units[self.lst_buttons.index(button) - 1].stock += 1
 
+    @window.Window.render_decorator
     def render(self):
         '''Рендер всего содержимого магазина'''
-        self.screen.blit(self.fon, (0, 0))
         self.render_products()
-        for button in self.lst_buttons:
-            button.render(self.screen)
-        self.main_screen.sc.blit(self.screen, (0, 0))
-        self.main_screen.render_cursor()
 
-    def start(self):
+    @window.Window.start_decoration
+    def start(self, event):
         '''Функция старта основного цикла'''
-        fps = 60
-        clock = pygame.time.Clock()
-
-        self.running = True
-        while self.running:  # старт цикла
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:  # проверка выхода
-                    self.running = False
-                    pygame.quit()
-                    sys.exit()
-                if event.type == pygame.KEYDOWN:  # при нажатии клавиш
-                    if event.key == pygame.K_ESCAPE:  # если нажат escape
-                        self.running = False
-                if event.type == pygame.MOUSEBUTTONDOWN:  # если клик мышки
-                    self.check_click(event.pos, self.lst_buttons)
-
-            self.screen.fill((0, 0, 0))
-            self.render()
-
-            clock.tick(fps)
-            pygame.display.flip()
+        if event.type == pygame.KEYDOWN:  # при нажатии клавиш
+            if event.key == pygame.K_ESCAPE:  # если нажат escape
+                self.running = False
+        if event.type == pygame.MOUSEBUTTONDOWN:  # если клик мышки
+            self.check_click(event.pos, self.lst_buttons)

@@ -1,22 +1,20 @@
-import os.path
-
 import pygame
 
 import sys
 
-from development.basic import mapping
+from development.windows import window
 
 from development.different.widgets import Button
 
 from development.windows import levels, reference, score, settings, shop
 
 
-class Start_window(mapping.Window):
+class Start_window(window.Window):
     '''Создание класса начального экрана'''
 
     def __init__(self, screen, size, main):
         '''Инициализация класса'''
-        super().__init__(screen, size, main)
+        super().__init__(screen, size, main, ('images', 'backgrounds', 'fon.PNG'))
 
         self.y_pos = self.one_size * 1.8
 
@@ -34,8 +32,8 @@ class Start_window(mapping.Window):
         self.exit_button = Button('Выйти', round(self.one_size * 1.5), self.width // 2, self.y_pos * 6,
                                   color=(255, 255, 0), dark_color=(100, 0, 0))  # кнопка выхода
 
-        self.lst_buttons = [self.setting_button, self.exit_button, self.choose_level_button,
-                            self.ref_button, self.shop_button, self.score_button]  # список всех кнопок
+        window.Window.set_lists(self, [self.setting_button, self.exit_button, self.choose_level_button,
+                                       self.ref_button, self.shop_button, self.score_button])
 
         self.settings_screen = settings.Settings_window(self.main_screen, self.size, main)  # экран настроек
         self.ref_screen = reference.Reference_window(self.main_screen, self.size, main)  # экран справки
@@ -43,9 +41,10 @@ class Start_window(mapping.Window):
         self.store = shop.Store(self.main_screen, self.size, main)  # экран магазина
         self.score = score.Score_window(self.main_screen, self.size, main)  # экран очков
 
-        # задание фона
-        self.fon = pygame.image.load(os.path.join('images', 'backgrounds', 'fon.PNG'))
-        self.fon = pygame.transform.scale(self.fon, (self.width, self.height))
+        self.dct_buttons = {pygame.K_1: self.levels_menu.start,
+                            pygame.K_2: self.store.start,
+                            pygame.K_3: self.settings_screen.start,
+                            pygame.K_4: self.ref_screen.start}
 
     def check_click(self, mouse_pos, lst):
         '''Проверка на клик по кнопкам мышкой'''
@@ -64,41 +63,20 @@ class Start_window(mapping.Window):
                 else:  # в зависимости от кнопки вызов функции
                     dct[button]()
 
+    @window.Window.render_decorator
     def render(self):
         '''Рендер стартового экрана'''
-        self.main_screen.sc.blit(self.fon, (0, 0))
-        for button in self.lst_buttons:
-            button.render(self.main_screen.sc)
-        self.main_screen.render_cursor()
+        pass
 
-    def start(self):
+    @window.Window.start_decoration
+    def start(self, event):
         '''Функция старта основного цикла стартового окна'''
-        fps = 60
-        clock = pygame.time.Clock()
-
-        dct_buttons = {pygame.K_1: self.levels_menu.start,
-                       pygame.K_2: self.store.start,
-                       pygame.K_3: self.settings_screen.start,
-                       pygame.K_4: self.ref_screen.start}
-
-        self.running = True
-        while self.running:  # страт цикла
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:  # проверка выхоад
-                    self.running = False
-                    pygame.quit()
-                    sys.exit()
-                if event.type == pygame.KEYDOWN:  # проверка нажатия клавиш
-                    if event.key == pygame.K_ESCAPE:  # если нажат escape
-                        self.running = False
-                        pygame.quit()
-                        sys.exit()
-                    if event.key in dct_buttons.keys():  # в зависимости от кнопки
-                        dct_buttons[event.key]()
-                if event.type == pygame.MOUSEBUTTONDOWN:  # при нажатии мышкой
-                    self.check_click(event.pos, self.lst_buttons)
-
-            self.main_screen.sc.fill((0, 0, 0))
-            self.render()
-            clock.tick(fps)
-            pygame.display.flip()
+        if event.type == pygame.KEYDOWN:  # проверка нажатия клавиш
+            if event.key == pygame.K_ESCAPE:  # если нажат escape
+                self.running = False
+                pygame.quit()
+                sys.exit()
+            if event.key in self.dct_buttons.keys():  # в зависимости от кнопки
+                self.dct_buttons[event.key]()
+        if event.type == pygame.MOUSEBUTTONDOWN:  # при нажатии мышкой
+            self.check_click(event.pos, self.lst_buttons)

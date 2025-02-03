@@ -373,15 +373,3 @@ class Board:
         landscape_group.empty()
 
         self.set_map()
-
-
-class Window:
-    '''Родительский класс окон'''
-
-    def __init__(self, screen, size, main):
-        '''Инициализация класа'''
-        self.size = self.width, self.height = size
-        self.main_screen = screen
-        self.main = main
-
-        self.one_size = self.main_screen.board.cell_size

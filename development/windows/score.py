@@ -8,13 +8,15 @@ import sys
 from development.basic import mapping
 from development.db.score_dbo import Score
 
+from development.windows import window
+
 from development.different.widgets import Button
 import development.different.global_vars as global_vars
 
 
-class Score_window(mapping.Window):
+class Score_window(window.Window):
     def __init__(self, screen, size, main):
-        super().__init__(screen, size, main)
+        super().__init__(screen, size, main, ('images', 'backgrounds', 'score.PNG'))
         self.volume = 1
         self.screen = pygame.surface.Surface((self.width, self.height))
 
@@ -35,10 +37,7 @@ class Score_window(mapping.Window):
                             'Мои результаты 2 уровень',
                             'Мои результаты 3 уровень']
 
-        self.lst_buttons = [self.back_button, self.next_page_button, self.pref_page_button]
-
-        self.fon = pygame.image.load(os.path.join('images', 'backgrounds', 'score.PNG'))
-        self.fon = pygame.transform.scale(self.fon, (self.size[0], self.size[1]))
+        window.Window.set_lists(self, [self.back_button,])
 
     def check_click(self, mouse_pos, lst):
         for button in lst:

@@ -3,9 +3,11 @@ import sys
 
 import pygame
 
-import development.basic.mapping as mapping
-import development.basic.start_game as start_game
+from development.basic import mapping
+from development.basic import start_game
+
 from development.windows import start_window, enter_nickname
+from development.windows import final_window
 
 
 class Main:
@@ -26,6 +28,10 @@ class Main:
         self.nickname_window.start()
         self.start_screen = start_window.Start_window(self.screen, self.size, self)
         self.start_screen.start()
+
+    def go_final_window(self):
+        self.final_screen = final_window.Final_window(self.screen, self.size, self)
+        self.final_screen.start()
 
     def start(self, level):
         '''Запуск основного цикла программы'''

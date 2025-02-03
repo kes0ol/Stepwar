@@ -1,18 +1,13 @@
-import os
-
 import pygame
 
-import sys
-
-from development.basic import mapping
+from development.windows import window
 
 from development.different.widgets import Button
 
 
-class Levels_menu(mapping.Window):
+class Levels_menu(window.Window):
     def __init__(self, screen, size, main):
-        super().__init__(screen, size, main)
-        self.screen = pygame.surface.Surface((self.width, self.height))
+        super().__init__(screen, size, main, ('images', 'backgrounds', 'menu_levels_back_ground.jpg'))
 
         self.first_level_button = Button('Уровень 1', 100, self.one_size * 4, self.height // 2,
                                          color=(40, 120, 80), dark_color=(40, 150, 80))
@@ -22,11 +17,7 @@ class Levels_menu(mapping.Window):
                                           color=(120, 80, 40), dark_color=(150, 80, 40))
         self.back_button = Button('Назад', 80, self.width // 2, self.height // 2 + 200, color=(130, 130, 130))
 
-        self.lst_buttons = [self.first_level_button, self.second_level_button, self.thirst_level_button,
-                            self.back_button]
-
-        self.fon = pygame.image.load(os.path.join('images', 'backgrounds', 'menu_levels_back_ground.jpg'))
-        self.fon = pygame.transform.scale(self.fon, (self.size[0], self.size[1]))
+        window.Window.set_lists(self, [self.back_button, ])
 
     def check_click(self, mouse_pos, lst):
         for button in lst:
@@ -44,47 +35,29 @@ class Levels_menu(mapping.Window):
                     self.running = False
                     self.main.go_start_window()
 
+    @window.Window.render_decorator
     def render(self):
-        self.screen.blit(self.fon, (0, 0))
-        self.back_button.render(self.screen)
-        if 1 in self.main_screen.progress:
-            self.first_level_button.render(self.screen)
-        if 2 in self.main_screen.progress:
-            self.second_level_button.render(self.screen)
-        if 3 in self.main_screen.progress:
-            self.thirst_level_button.render(self.screen)
-        self.main_screen.sc.blit(self.screen, (0, 0))
-        self.main_screen.render_cursor()
+        if 1 in self.main_screen.progress and self.first_level_button not in self.lst_buttons:
+            self.lst_buttons.append(self.first_level_button)
+        if 2 in self.main_screen.progress and self.second_level_button not in self.lst_buttons:
+            self.lst_buttons.append(self.second_level_button)
+        if 3 in self.main_screen.progress and self.thirst_level_button not in self.lst_buttons:
+            self.lst_buttons.append(self.thirst_level_button)
 
-    def start(self):
-        fps = 60
-        clock = pygame.time.Clock()
-
-        self.running = True
-        while self.running:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    self.running = False
-                    pygame.quit()
-                    sys.exit()
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        self.running = False
-                        self.main.go_start_window()
-                    if event.key == pygame.K_1 and 1 in self.main_screen.progress:
-                        self.running = False
-                        self.main.start('1')
-                    if event.key == pygame.K_2 and 2 in self.main_screen.progress:
-                        self.running = False
-                        self.main.start('2')
-                    if event.key == pygame.K_3 and 3 in self.main_screen.progress:
-                        self.running = False
-                        self.main.start('3')
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    self.check_click(event.pos, self.lst_buttons)
-
-            self.screen.fill((0, 0, 0))
-            self.render()
-
-            clock.tick(fps)
-            pygame.display.flip()
+    @window.Window.start_decoration
+    def start(self, event):
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                self.running = False
+                self.main.go_start_window()
+            if event.key == pygame.K_1 and 1 in self.main_screen.progress:
+                self.running = False
+                self.main.start('1')
+            if event.key == pygame.K_2 and 2 in self.main_screen.progress:
+                self.running = False
+                self.main.start('2')
+            if event.key == pygame.K_3 and 3 in self.main_screen.progress:
+                self.running = False
+                self.main.start('3')
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            self.check_click(event.pos, self.lst_buttons)
