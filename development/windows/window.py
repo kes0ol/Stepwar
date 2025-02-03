@@ -1,5 +1,6 @@
 import pygame
 
+import os
 import sys
 
 
@@ -14,7 +15,7 @@ class Window:
 
         self.screen = pygame.surface.Surface((self.width, self.height))
 
-        self.fon = pygame.image.load(fon_path)
+        self.fon = pygame.image.load(os.path.join(*fon_path))
         self.fon = pygame.transform.scale(self.fon, (self.size[0], self.size[1]))
 
         self.one_size = self.main_screen.board.cell_size

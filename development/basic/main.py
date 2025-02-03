@@ -9,6 +9,7 @@ from development.basic import start_game
 from development.windows import start_window, enter_nickname
 from development.windows import final_window
 
+from development.different import global_vars
 
 class Main:
     '''Создание основного класса игры'''
@@ -25,7 +26,8 @@ class Main:
 
     def go_start_window(self):
         self.nickname_window = enter_nickname.EnterNicknameWindow(self.screen, self.size, self)
-        self.nickname_window.start()
+        if not global_vars.current_user:
+            self.nickname_window.start()
         self.start_screen = start_window.Start_window(self.screen, self.size, self)
         self.start_screen.start()
 

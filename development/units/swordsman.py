@@ -10,13 +10,13 @@ from development.units.unit import Unit
 
 
 class Swordsman(Unit):
-    def __init__(self, x, y, image_size, group, damage_func, mirror_animation=False):
+    def __init__(self, x, y, image_size, group, damage_func=True, mirror_animation=False):
         sheet = pygame.image.load(os.path.join('images', 'team_images', 'swordsman.png'))
         animations = {
             ANIMATION_IDLE: AnimationParams(sheet, 5, 1, 100, 100, 0, 0, 10),
             ANIMATION_ATTACK: AnimationParams(sheet, 7, 1, 100, 100, 0, 100, 15),
             ANIMATION_BEGIN_MOVE: AnimationParams(sheet, 1, 1, 100, 100, 0, 0, 15),
-            ANIMATION_MOVE: AnimationParams(sheet, 5, 1, 100, 100, 0, 200, 15),
+            ANIMATION_MOVE: AnimationParams(sheet, 5, 1, 100, 100, 0, 200, 7),
             ANIMATION_END_MOVE: AnimationParams(sheet, 1, 1, 100, 100, 0, 0, 15),
             ANIMATION_DEATH: AnimationParams(sheet, 6, 1, 100, 100, 0, 300, 15)
         }

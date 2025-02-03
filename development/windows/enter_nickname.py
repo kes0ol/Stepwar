@@ -1,33 +1,29 @@
-import os
 import sys
 
 import pygame
 
-import development.basic.mapping as mapping
+from development.windows import window
 
-import development.different.global_vars as global_vars
+from development.different import global_vars
 from development.db.user_dbo import User
 from development.different.widgets import Button, Edit, View
 
 
-class EnterNicknameWindow(mapping.Window):
+class EnterNicknameWindow(window.Window):
     def __init__(self, screen, size, main):
-        super().__init__(screen, size, main)
+        super().__init__(screen, size, main, ('images', 'backgrounds', 'settings_background.jpg'))
         self.screen = pygame.surface.Surface((self.width, self.height))
 
         self.view = View('Введите Ваше имя:', self.one_size, self.width // 2, self.height // 2 - self.one_size,
-                                  color=(150, 150, 0))
+                         color=(150, 150, 0))
         self.next_button = Button('Подтвердить', self.one_size, self.width // 2, self.height // 2 + self.one_size,
                                   color=(150, 150, 0), dark_color=(100, 0, 0))
         self.exit_button = Button('Выйти', self.one_size, self.width // 2, self.height // 2 + self.one_size * 4,
                                   color=(150, 150, 0), dark_color=(100, 0, 0))
         self.edit = Edit('Username', self.one_size, self.width // 2, self.height // 2,
                          self.width - self.one_size * 8, self.one_size)
-        self.ui = [self.view, self.next_button, self.exit_button, self.edit]
-        self.fon = pygame.image.load(os.path.join('images', 'backgrounds', 'settings_background.jpg'))
-        self.fon = pygame.transform.scale(self.fon, (self.size[0], self.size[1]))
 
-        self.running = False
+        window.Window.set_lists(self, [self.next_button, self.exit_button], [self.view, self.edit])
 
     def check_click(self, mouse_pos):
         if self.next_button.check_click(mouse_pos):
@@ -48,31 +44,11 @@ class EnterNicknameWindow(mapping.Window):
         if self.edit.check_click(mouse_pos):
             self.edit.start(self)
 
+    @window.Window.render_decorator
     def render(self):
-        self.screen.blit(self.fon, (0, 0))
-        for ui in self.ui:
-            ui.render(self.screen)
-        self.main_screen.sc.blit(self.screen, (0, 0))
-        self.main_screen.render_cursor()
+        pass
 
-    def start(self):
-        if global_vars.current_user:
-            return
-        fps = 60
-        clock = pygame.time.Clock()
-
-        self.running = True
-        while self.running:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    self.running = False
-                    pygame.quit()
-                    sys.exit()
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    self.check_click(event.pos)
-
-            self.screen.fill((0, 0, 0))
-            self.render()
-
-            clock.tick(fps)
-            pygame.display.flip()
+    @window.Window.start_decoration
+    def start(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            self.check_click(event.pos)

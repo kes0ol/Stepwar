@@ -4,7 +4,7 @@ from development.different.global_vars import ANIMATION_ATTACK, ANIMATION_IDLE, 
 
 
 class Unit(MovableAnimatedSprite):
-    def __init__(self, animations, x, y, group, scale_to, default_animation, damage_func, mirror_animation=False):
+    def __init__(self, animations, x, y, group, scale_to, default_animation, damage_func=True, mirror_animation=False):
         super().__init__(animations, x, y, group, scale_to, default_animation, mirror_animation)
         self.damage_func = damage_func
         self.default_stock = 0
