@@ -4,12 +4,12 @@ import sys
 
 import pygame
 
-import development.different.global_vars as global_vars
-from development.db.score_dbo import Score
-from development.different.global_vars import my_units_group, enemies_group, RANGE_ATTACK, shop_group, \
+import internal.different.global_vars as global_vars
+from internal.db.score_dbo import Score
+from internal.different.global_vars import my_units_group, enemies_group, RANGE_ATTACK, shop_group, \
     landscape_group, UNIT_CASTLE, UNIT_ARCHER, UNIT_CAVALRY, UNIT_DRAGON, UNIT_SWORDSMAN, \
     BOARD_ENEMY_CASTLE, BOARD_MY_CASTLE
-from development.units import swordsman, archer, cavalry, dragon
+from internal.units import swordsman, archer, cavalry, dragon
 
 '''Создание глобальных переменных'''
 is_win = None
@@ -36,7 +36,8 @@ def start(screen):
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.KEYDOWN:  # при нажатии кнопки
-                if event.key == pygame.K_ESCAPE and not global_vars.action_in_progress:  # нажатие escape (назад)
+                if (event.key in [pygame.K_ESCAPE, pygame.K_RETURN]
+                        and not global_vars.action_in_progress):  # нажатие escape (назад)
                     running = False
                     screen.gameplay = False
                     return_units()
@@ -241,7 +242,8 @@ def can_move(screen):
 def enemys_move(screen):
     '''Функция обработки ходов юнитов'''
     for unit in enemies_group:
-        if unit.step == 0:  # проверка на возможность хода
+        if unit.step <= 0:  # проверка на возможность хода
+            unit.step = 0
             continue
 
         cell = screen.board.get_cell((unit.rect.x, unit.rect.y))
@@ -450,9 +452,16 @@ def death_callback(screen, dead_unit, actor):
     global is_win, money_now
     if dead_unit.name == UNIT_CASTLE:
         if actor in my_units_group:  # конец игры - победа, запуск финального окна
-            screen.progress.add(int(screen.board.level) + 1)
             money_now += 100  # деньги за башню
             screen.score += 100
+
+            ln_progress_now = len(screen.progress)  # проверка на прохождение нового уровня
+            screen.progress.add(int(screen.board.level) + 1)  # добавление пройденного уровня
+            if len(screen.progress) > ln_progress_now:  # добавление к сум. счёту (только по 1ой попытке каждого lvl)
+                screen.summary_score += screen.score
+            if screen.score > screen.best_score:  # проверка на лучший счёт
+                screen.best_score = screen.score
+
             screen.score_db.score_points = resutl_score_points(screen.score, screen.steps)
             Score.add(screen.score_db)
             if 3 in screen.progress:  # запуск финального экрана всей игры

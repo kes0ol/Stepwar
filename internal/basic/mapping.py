@@ -2,12 +2,12 @@ import os
 
 import pygame
 
-import development.basic.start_game as start_game
-from development.different import landscapes, money
-from development.different.global_vars import my_units_group, enemies_group, shop_group, landscape_group, UNIT_ARCHER, \
+import internal.basic.start_game as start_game
+from internal.different import landscapes, money
+from internal.different.global_vars import my_units_group, enemies_group, shop_group, landscape_group, UNIT_ARCHER, \
     UNIT_CAVALRY, UNIT_DRAGON, UNIT_SWORDSMAN
-from development.different.widgets import Button
-from development.units import swordsman, archer, castle, cavalry, dragon
+from internal.different.widgets import Button
+from internal.units import swordsman, archer, castle, cavalry, dragon
 
 
 class Screen:
@@ -43,6 +43,8 @@ class Screen:
 
         self.steps = 0  # кол-во шагов за 1 уровень
         self.score = 0  # очки
+        self.best_score = 0
+        self.summary_score = 0 # суммарные очки за все уровни
         self.score_db = None  # DBO объект для доступа к таблице базы данных score
         self.money = 0  # монеты
         self.progress = {1}  # пройденные уровни

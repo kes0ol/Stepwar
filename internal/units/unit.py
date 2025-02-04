@@ -1,5 +1,5 @@
-from development.different.animation import AnimationChain, MovableAnimatedSprite
-from development.different.global_vars import ANIMATION_ATTACK, ANIMATION_IDLE, ANIMATION_MOVE, \
+from internal.different.animation import AnimationChain, MovableAnimatedSprite
+from internal.different.global_vars import ANIMATION_ATTACK, ANIMATION_IDLE, ANIMATION_MOVE, \
     ANIMATION_END_MOVE, ANIMATION_BEGIN_MOVE, RANGE_ATTACK, MELEE_ATTACK, ANIMATION_DEATH, BOARD_EMPTY, FIELD_HILL, UNIT_CAVALRY, UNIT_DRAGON
 
 

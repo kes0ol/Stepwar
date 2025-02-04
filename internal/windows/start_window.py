@@ -2,9 +2,9 @@ import sys
 
 import pygame
 
-from development.different.widgets import Button
-from development.windows import levels, reference, score, settings, shop
-from development.windows import window
+from internal.different.widgets import Button
+from internal.windows import levels, reference, score, settings, shop
+from internal.windows import window
 
 
 class Start_window(window.Window):
@@ -14,20 +14,20 @@ class Start_window(window.Window):
         '''Инициализация класса'''
         super().__init__(screen, size, main, ('images', 'backgrounds', 'fon.PNG'))
 
-        self.y_pos = self.one_size * 1.8
+        self.y_pos = self.s * 1.8
 
         # создание кнопок
-        self.choose_level_button = Button('Уровни', round(self.one_size * 1.5), self.width // 2, self.y_pos,
+        self.choose_level_button = Button('Уровни', round(self.s * 1.5), self.width // 2, self.y_pos,
                                           color=(255, 255, 0), dark_color=(0, 255, 0))  # кнопка уровней
-        self.shop_button = Button('Магазин', round(self.one_size * 1.5), self.width // 2, self.y_pos * 2,
+        self.shop_button = Button('Магазин', round(self.s * 1.5), self.width // 2, self.y_pos * 2,
                                   color=(255, 255, 0), dark_color=(0, 255, 0))  # кнопка магазина
-        self.setting_button = Button('Настройки', round(self.one_size * 1.5), self.width // 2, self.y_pos * 3,
+        self.setting_button = Button('Настройки', round(self.s * 1.5), self.width // 2, self.y_pos * 3,
                                      color=(255, 255, 0), dark_color=(50, 50, 50))  # кнопка настроек
-        self.ref_button = Button('Справка', round(self.one_size * 1.5), self.width // 2, self.y_pos * 4,
+        self.ref_button = Button('Справка', round(self.s * 1.5), self.width // 2, self.y_pos * 4,
                                  color=(255, 255, 0), dark_color=(0, 255, 0))  # кнопка справок
-        self.score_button = Button('Счёт', round(self.one_size * 1.5), self.width // 2, self.y_pos * 5,
+        self.score_button = Button('Счёт', round(self.s * 1.5), self.width // 2, self.y_pos * 5,
                                    color=(255, 255, 0), dark_color=(0, 255, 0))  # кнопка счёта
-        self.exit_button = Button('Выйти', round(self.one_size * 1.5), self.width // 2, self.y_pos * 6,
+        self.exit_button = Button('Выйти', round(self.s * 1.5), self.width // 2, self.y_pos * 6,
                                   color=(255, 255, 0), dark_color=(100, 0, 0))  # кнопка выхода
 
         window.Window.set_lists(self, [self.setting_button, self.exit_button, self.choose_level_button,
@@ -74,6 +74,8 @@ class Start_window(window.Window):
                 self.running = False
                 pygame.quit()
                 sys.exit()
+            elif event.key == pygame.K_e:
+                self.main.go_final_window()
             if event.key in self.dct_buttons.keys():  # в зависимости от кнопки
                 self.dct_buttons[event.key]()
         if event.type == pygame.MOUSEBUTTONDOWN:  # при нажатии мышкой

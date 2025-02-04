@@ -3,10 +3,10 @@ from datetime import datetime
 
 import pygame
 
-import development.different.global_vars as global_vars
-from development.db.score_report import ScoreReport
-from development.different.widgets import Button
-from development.windows import window
+import internal.different.global_vars as global_vars
+from internal.db.score_report import ScoreReport
+from internal.different.widgets import Button
+from internal.windows import window
 
 
 class Score_window(window.Window):
@@ -15,11 +15,11 @@ class Score_window(window.Window):
         self.volume = 1
         self.screen = pygame.surface.Surface((self.width, self.height))
 
-        self.back_button = Button('Назад', self.one_size, self.one_size * 2, self.one_size * 11, color=(150, 0, 0),
+        self.back_button = Button('Назад', self.s, self.s * 2, self.s * 11, color=(150, 0, 0),
                                   dark_color=(100, 0, 0))
-        self.next_page_button = Button('>', self.one_size, self.one_size * 21, self.one_size * 11, color=(150, 0, 0),
+        self.next_page_button = Button('>', self.s, self.s * 21, self.s * 11, color=(150, 0, 0),
                                        dark_color=(100, 0, 0))
-        self.pref_page_button = Button('<', self.one_size, self.one_size * 20, self.one_size * 11, color=(150, 0, 0),
+        self.pref_page_button = Button('<', self.s, self.s * 20, self.s * 11, color=(150, 0, 0),
                                        dark_color=(100, 0, 0))
         self.page = 0
 
@@ -52,9 +52,9 @@ class Score_window(window.Window):
 
     def render_result_table(self):
         f = pygame.font.Font(None, 100)
-        f_table = pygame.font.Font(None, int(self.one_size * 0.5))
+        f_table = pygame.font.Font(None, int(self.s * 0.5))
         t = f.render(self.page_titles[self.page], True, 'red')
-        self.screen.blit(t, (self.width // 2 - t.get_width() // 2, self.one_size * 1))
+        self.screen.blit(t, (self.width // 2 - t.get_width() // 2, self.s * 1))
 
         limit = 10
         page_result_args = [
@@ -70,15 +70,15 @@ class Score_window(window.Window):
         results = ScoreReport.get(**page_result_args[self.page])
 
         x = [
-            self.one_size,
-            self.one_size * 12,
-            self.one_size * 14,
-            self.one_size * 15,
-            self.one_size * 19
+            self.s,
+            self.s * 12,
+            self.s * 14,
+            self.s * 15,
+            self.s * 19
         ]
-        title_y = self.one_size * 2
-        y = self.one_size * 2.5
-        dy = self.one_size * 0.5
+        title_y = self.s * 2
+        y = self.s * 2.5
+        dy = self.s * 0.5
         for j, v in enumerate(['Игрок', 'Уровень', 'Счет', 'Начало', 'Длительность']):
             self.screen.blit(f_table.render(str(v), True, 'red'), (x[j], title_y))
         for i, r in enumerate(results):
@@ -91,5 +91,12 @@ class Score_window(window.Window):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 self.running = False
+            if event.key in [pygame.K_LEFT, pygame.K_RIGHT]:
+                if event.key == pygame.K_LEFT:
+                    self.page += 1
+                    self.page %= len(self.page_titles)
+                if event.key == pygame.K_RIGHT:
+                    self.page -= 1
+                    self.page %= len(self.page_titles)
         if event.type == pygame.MOUSEBUTTONDOWN:
             self.check_click(event.pos, self.lst_buttons)

@@ -18,7 +18,7 @@ class Window:
         self.fon = pygame.image.load(os.path.join(*fon_path))
         self.fon = pygame.transform.scale(self.fon, (self.size[0], self.size[1]))
 
-        self.one_size = self.main_screen.board.cell_size
+        self.s = self.main_screen.board.cell_size
 
     def parse_text(self, text, width):
         '''Функция парсинга текста'''

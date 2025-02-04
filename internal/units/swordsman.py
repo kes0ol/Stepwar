@@ -2,11 +2,11 @@ import os
 
 import pygame
 
-from development.different.animation import AnimationParams
-from development.different.global_vars import ANIMATION_IDLE, ANIMATION_ATTACK, ANIMATION_BEGIN_MOVE, \
+from internal.different.animation import AnimationParams
+from internal.different.global_vars import ANIMATION_IDLE, ANIMATION_ATTACK, ANIMATION_BEGIN_MOVE, \
     ANIMATION_MOVE, ANIMATION_END_MOVE, ANIMATION_DEATH, MELEE_ATTACK, UNIT_SWORDSMAN
 
-from development.units.unit import Unit
+from internal.units.unit import Unit
 
 
 class Swordsman(Unit):
@@ -21,7 +21,7 @@ class Swordsman(Unit):
             ANIMATION_DEATH: AnimationParams(sheet, 6, 1, 100, 100, 0, 300, 10)
         }
         super().__init__(animations, x, y, group, image_size, ANIMATION_IDLE, death_callback, mirror_animation)
-        self.init_stats(2, 1, MELEE_ATTACK, 100, 20, UNIT_SWORDSMAN, 'Рыцарь', 5)
+        self.init_stats(2, 1, MELEE_ATTACK, 80, 20, UNIT_SWORDSMAN, 'Рыцарь', 5)
 
 
 def set_view_stock(screen, coords, size):

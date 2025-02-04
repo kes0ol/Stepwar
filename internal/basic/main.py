@@ -3,13 +3,14 @@ import sys
 
 import pygame
 
-from development.basic import mapping
-from development.basic import start_game
-from development.different import global_vars
-from development.windows import final_window
-from development.windows import start_window, enter_nickname
+from internal.basic import mapping
+from internal.basic import start_game
+from internal.different import global_vars
+from internal.windows import final_window
+from internal.windows import start_window, enter_nickname
 
-from development.different.global_vars import UNIT_ARCHER, UNIT_CAVALRY, UNIT_DRAGON, UNIT_SWORDSMAN
+from internal.different.global_vars import UNIT_ARCHER, UNIT_CAVALRY, UNIT_DRAGON, UNIT_SWORDSMAN
+
 
 class Main:
     '''Создание основного класса игры'''

@@ -1,6 +1,6 @@
 import pygame
 
-from development.different.global_vars import FILL_TYPE_BORDER, FILL_TYPE_NONE
+from internal.different.global_vars import FILL_TYPE_BORDER, FILL_TYPE_NONE
 
 
 class RectCoord:

@@ -1,7 +1,7 @@
 import os.path
 import sqlite3
 
-from development.different.global_vars import DB_DIR, DB_FILENAME
+from internal.different.global_vars import DB_DIR, DB_FILENAME
 
 
 # Создать соединение к базе данных

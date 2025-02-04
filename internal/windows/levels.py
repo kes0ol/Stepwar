@@ -1,18 +1,18 @@
 import pygame
 
-from development.different.widgets import Button
-from development.windows import window
+from internal.different.widgets import Button
+from internal.windows import window
 
 
 class Levels_menu(window.Window):
     def __init__(self, screen, size, main):
         super().__init__(screen, size, main, ('images', 'backgrounds', 'menu_levels_back_ground.jpg'))
 
-        self.first_level_button = Button('Уровень 1', 100, self.one_size * 4, self.height // 2,
+        self.first_level_button = Button('Уровень 1', 100, self.s * 4, self.height // 2,
                                          color=(40, 120, 80), dark_color=(40, 150, 80))
-        self.second_level_button = Button('Уровень 2', 100, self.one_size * 11, self.height // 2,
+        self.second_level_button = Button('Уровень 2', 100, self.s * 11, self.height // 2,
                                           color=(40, 80, 120), dark_color=(40, 80, 150))
-        self.thirst_level_button = Button('Уровень 3', 100, self.one_size * 18, self.height // 2,
+        self.thirst_level_button = Button('Уровень 3', 100, self.s * 18, self.height // 2,
                                           color=(120, 80, 40), dark_color=(150, 80, 40))
         self.back_button = Button('Назад', 80, self.width // 2, self.height // 2 + 200, color=(130, 130, 130))
 

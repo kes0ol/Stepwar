@@ -2,10 +2,10 @@ import sys
 
 import pygame
 
-from development.db.user_dbo import User
-from development.different import global_vars
-from development.different.widgets import Button, Edit, View
-from development.windows import window
+from internal.db.user_dbo import User
+from internal.different import global_vars
+from internal.different.widgets import Button, Edit, View
+from internal.windows import window
 
 
 class EnterNicknameWindow(window.Window):
@@ -13,14 +13,14 @@ class EnterNicknameWindow(window.Window):
         super().__init__(screen, size, main, ('images', 'backgrounds', 'settings_background.jpg'))
         self.screen = pygame.surface.Surface((self.width, self.height))
 
-        self.view = View('Введите Ваше имя:', self.one_size, self.width // 2, self.height // 2 - self.one_size,
+        self.view = View('Введите Ваше имя:', self.s, self.width // 2, self.height // 2 - self.s,
                          color=(150, 150, 0))
-        self.next_button = Button('Подтвердить', self.one_size, self.width // 2, self.height // 2 + self.one_size,
+        self.next_button = Button('Подтвердить', self.s, self.width // 2, self.height // 2 + self.s,
                                   color=(150, 150, 0), dark_color=(100, 0, 0))
-        self.exit_button = Button('Выйти', self.one_size, self.width // 2, self.height // 2 + self.one_size * 4,
+        self.exit_button = Button('Выйти', self.s, self.width // 2, self.height // 2 + self.s * 4,
                                   color=(150, 150, 0), dark_color=(100, 0, 0))
-        self.edit = Edit('Username', self.one_size, self.width // 2, self.height // 2,
-                         self.width - self.one_size * 8, self.one_size)
+        self.edit = Edit('Username', self.s, self.width // 2, self.height // 2,
+                         self.width - self.s * 8, self.s)
 
         window.Window.set_lists(self, [self.next_button, self.exit_button], [self.view, self.edit])
 
@@ -52,5 +52,12 @@ class EnterNicknameWindow(window.Window):
 
     @window.Window.start_decoration
     def start(self, event):
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                self.running = False
+                pygame.quit()
+                sys.exit()
+            elif event.key == pygame.K_RETURN:
+                self.running = False
         if event.type == pygame.MOUSEBUTTONDOWN:
             self.check_click(event.pos)

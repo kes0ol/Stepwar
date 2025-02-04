@@ -1,4 +1,4 @@
-from development.db.db import make_connection
+from internal.db.db import make_connection
 
 
 # Вспомогательный класс для отображения результатов

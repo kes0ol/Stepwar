@@ -2,10 +2,10 @@ import os
 
 import pygame
 
-from development.different.animation import AnimationParams
-from development.different.global_vars import ANIMATION_IDLE, MELEE_ATTACK, ANIMATION_DEATH, UNIT_CASTLE
+from internal.different.animation import AnimationParams
+from internal.different.global_vars import ANIMATION_IDLE, MELEE_ATTACK, ANIMATION_DEATH, UNIT_CASTLE
 
-from development.units.unit import Unit
+from internal.units.unit import Unit
 
 
 class Castle(Unit):
@@ -16,4 +16,4 @@ class Castle(Unit):
             ANIMATION_DEATH: AnimationParams(sheet, 1, 1, 225, 225, 0, 0, 1),
         }
         super().__init__(animations, x, y, group, image_size, ANIMATION_IDLE, death_callback, mirror_animation)
-        self.init_stats(0, 0, MELEE_ATTACK, 500, 0, UNIT_CASTLE, 'Замок', 0)
+        self.init_stats(0, 0, MELEE_ATTACK, 250, 0, UNIT_CASTLE, 'Замок', 0)

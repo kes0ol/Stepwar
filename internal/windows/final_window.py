@@ -2,8 +2,8 @@ import os.path
 
 import pygame
 
-from development.different.widgets import Button, View
-from development.windows import window
+from internal.different.widgets import Button, View
+from internal.windows import window
 
 
 class Final_window(window.Window):
@@ -13,10 +13,10 @@ class Final_window(window.Window):
         '''Инициализация класса'''
         super().__init__(screen, size, main, ('images', 'backgrounds', 'final_background.png'))
 
-        self.back_button = Button('Назад', round(self.one_size * 1.2), round(self.one_size * 1.7), self.height - 100,
+        self.back_button = Button('Назад', round(self.s * 1.2), round(self.s * 1.7), self.height - self.s,
                                   color=(200, 75, 75), dark_color=(150, 25, 25))  # кнопка выхода
 
-        self.win_view = View('Поздравляем!', self.one_size, self.width // 2, self.one_size * 5,
+        self.win_view = View('Поздравляем!', self.s, self.width // 2, self.s * 2,
                              color=(255, 255, 0))  # сообщение поздравления
 
         window.Window.set_lists(self, [self.back_button, ], [self.win_view, ])
@@ -33,7 +33,10 @@ class Final_window(window.Window):
     @window.Window.render_decorator
     def render(self):
         '''Отображение содержимого на экране'''
-        pass
+        self.render_info()
+
+    def render_info(self):
+        pass  # ОТОБРАЖЕНИЕ ФИНАЛЬНОЙ ИНФЫ В ФИНАЛЬНОМ ЭКРАНЕ
 
     @window.Window.start_decoration
     def start(self, event):

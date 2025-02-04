@@ -2,10 +2,10 @@ import os
 
 import pygame
 
-from development.different.animation import AnimationParams
-from development.different.global_vars import ANIMATION_IDLE, ANIMATION_ATTACK, ANIMATION_BEGIN_MOVE, \
+from internal.different.animation import AnimationParams
+from internal.different.global_vars import ANIMATION_IDLE, ANIMATION_ATTACK, ANIMATION_BEGIN_MOVE, \
     ANIMATION_MOVE, ANIMATION_END_MOVE, ANIMATION_DEATH, RANGE_ATTACK, UNIT_ARCHER
-from development.units.unit import Unit
+from internal.units.unit import Unit
 
 
 class Archer(Unit):
