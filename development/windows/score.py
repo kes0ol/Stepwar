@@ -54,7 +54,7 @@ class Score_window(window.Window):
         f = pygame.font.Font(None, 100)
         f_table = pygame.font.Font(None, int(self.one_size * 0.5))
         t = f.render(self.page_titles[self.page], True, 'red')
-        self.main_screen.sc.blit(t, (self.width // 2 - t.get_width() // 2, self.one_size * 1))
+        self.screen.blit(t, (self.width // 2 - t.get_width() // 2, self.one_size * 1))
 
         limit = 10
         page_result_args = [
@@ -80,11 +80,11 @@ class Score_window(window.Window):
         y = self.one_size * 2.5
         dy = self.one_size * 0.5
         for j, v in enumerate(['Игрок', 'Уровень', 'Счет', 'Начало', 'Длительность']):
-            self.main_screen.sc.blit(f_table.render(str(v), True, 'red'), (x[j], title_y))
+            self.screen.blit(f_table.render(str(v), True, 'red'), (x[j], title_y))
         for i, r in enumerate(results):
             for j, v in enumerate([r.user_nickname, r.level, r.score_points, r.created_at,
                                    datetime.fromisoformat(r.updated_at) - datetime.fromisoformat(r.created_at)]):
-                self.main_screen.sc.blit(f_table.render(str(v), True, 'red'), (x[j], y + i * dy))
+                self.screen.blit(f_table.render(str(v), True, 'red'), (x[j], y + i * dy))
 
     @window.Window.start_decoration
     def start(self, event):
