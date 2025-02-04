@@ -45,7 +45,10 @@ class EnterNicknameWindow(window.Window):
 
     @window.Window.render_decorator
     def render(self):
-        pass
+        if self.edit.edit_started:
+            self.next_button.set_enabled(False)
+        else:
+            self.next_button.set_enabled(True)
 
     @window.Window.start_decoration
     def start(self, event):

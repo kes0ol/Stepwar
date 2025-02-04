@@ -1,9 +1,10 @@
+import os
 from datetime import datetime
 
 import pygame
 
 import development.different.global_vars as global_vars
-from development.db.score_dbo import Score
+from development.db.score_report import ScoreReport
 from development.different.widgets import Button
 from development.windows import window
 
@@ -31,7 +32,7 @@ class Score_window(window.Window):
                             'Мои результаты 2 уровень',
                             'Мои результаты 3 уровень']
 
-        window.Window.set_lists(self, [self.back_button, ])
+        window.Window.set_lists(self, [self.back_button, self.next_page_button, self.pref_page_button])
 
     def check_click(self, mouse_pos, lst):
         for button in lst:
@@ -56,17 +57,17 @@ class Score_window(window.Window):
         self.main_screen.sc.blit(t, (self.width // 2 - t.get_width() // 2, self.one_size * 1))
 
         limit = 10
-        page_functions = [
-            Score.get_ordered_by_score(limit),
-            Score.get_by_level_ordered_by_score(1, limit),
-            Score.get_by_level_ordered_by_score(2, limit),
-            Score.get_by_level_ordered_by_score(3, limit),
-            Score.get_by_user_ordered_by_score(global_vars.current_user.id, limit),
-            Score.get_by_user_level_ordered_by_score(global_vars.current_user.id, 1, limit),
-            Score.get_by_user_level_ordered_by_score(global_vars.current_user.id, 2, limit),
-            Score.get_by_user_level_ordered_by_score(global_vars.current_user.id, 3, limit),
+        page_result_args = [
+            {"limit": limit},
+            {"level": 1, "limit": limit},
+            {"level": 2, "limit": limit},
+            {"level": 3, "limit": limit},
+            {"user_id": global_vars.current_user.id, "limit": limit},
+            {"user_id": global_vars.current_user.id, "level": 1, "limit": limit},
+            {"user_id": global_vars.current_user.id, "level": 2, "limit": limit},
+            {"user_id": global_vars.current_user.id, "level": 3, "limit": limit}
         ]
-        results = page_functions[self.page]
+        results = ScoreReport.get(**page_result_args[self.page])
 
         x = [
             self.one_size,

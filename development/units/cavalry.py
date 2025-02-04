@@ -4,12 +4,13 @@ import pygame
 
 from development.different.animation import AnimationParams
 from development.different.global_vars import ANIMATION_IDLE, ANIMATION_ATTACK, ANIMATION_BEGIN_MOVE, \
-    ANIMATION_MOVE, ANIMATION_END_MOVE, ANIMATION_DEATH, MELEE_ATTACK
+    ANIMATION_MOVE, ANIMATION_END_MOVE, ANIMATION_DEATH, MELEE_ATTACK, UNIT_CAVALRY
+
 from development.units.unit import Unit
 
 
 class Cavalry(Unit):
-    def __init__(self, x, y, image_size, group, damage_func=True, mirror_animation=False):
+    def __init__(self, x, y, image_size, group, death_callback, mirror_animation=False):
         sheet = pygame.image.load(os.path.join('images', 'team_images', 'cavalry.png'))
         animations = {
             ANIMATION_IDLE: AnimationParams(sheet, 9, 1, 130, 130, 0, 0, 10),
@@ -19,8 +20,8 @@ class Cavalry(Unit):
             ANIMATION_END_MOVE: AnimationParams(sheet, 1, 1, 130, 130, 0, 0, 1),
             ANIMATION_DEATH: AnimationParams(sheet, 8, 1, 130, 130, 0, 390, 8)
         }
-        super().__init__(animations, x, y, group, image_size, ANIMATION_IDLE, damage_func, mirror_animation)
-        self.init_stats(4, 1, MELEE_ATTACK, 120, 40, 'cavalry', 'Кавалерия', 0)
+        super().__init__(animations, x, y, group, image_size, ANIMATION_IDLE, death_callback, mirror_animation)
+        self.init_stats(4, 1, MELEE_ATTACK, 120, 40, UNIT_CAVALRY, 'Кавалерия', 0)
 
 
 def set_view_stock(screen, coords, size):

@@ -1,12 +1,12 @@
 from development.different.animation import AnimationChain, MovableAnimatedSprite
 from development.different.global_vars import ANIMATION_ATTACK, ANIMATION_IDLE, ANIMATION_MOVE, \
-    ANIMATION_END_MOVE, ANIMATION_BEGIN_MOVE, RANGE_ATTACK, MELEE_ATTACK, ANIMATION_DEATH
+    ANIMATION_END_MOVE, ANIMATION_BEGIN_MOVE, RANGE_ATTACK, MELEE_ATTACK, ANIMATION_DEATH, BOARD_EMPTY, FIELD_HILL
 
 
 class Unit(MovableAnimatedSprite):
-    def __init__(self, animations, x, y, group, scale_to, default_animation, damage_func=True, mirror_animation=False):
+    def __init__(self, animations, x, y, group, scale_to, default_animation, death_callback, mirror_animation=False):
         super().__init__(animations, x, y, group, scale_to, default_animation, mirror_animation)
-        self.damage_func = damage_func
+        self.death_callback = death_callback
         self.default_stock = 0
 
         self.default_step = 0
@@ -46,7 +46,7 @@ class Unit(MovableAnimatedSprite):
         select_x, select_y = choose_cell
         self.damage_plus = 0
 
-        if screen.board.field[select_y][select_x] == 2 and self.attack_type == RANGE_ATTACK:
+        if screen.board.field[select_y][select_x] == FIELD_HILL and self.attack_type == RANGE_ATTACK:
             self.damage_plus = 15
 
         screen.board.board[y_now][x_now], screen.board.board[select_y][select_x] = screen.board.board[select_y][
@@ -71,16 +71,13 @@ class Unit(MovableAnimatedSprite):
         self.start_animation_chain(animation_chain)
         self.step -= (abs(x // screen.board.cell_size) + abs(y // screen.board.cell_size))
 
-    def make_attack(self, choose_cell, screen, callback=None, callback_args=None):
-        select_x, select_y = choose_cell
+    def make_attack(self, unit, choose_cell, screen, callback=None, callback_args=None):
         animation_chain = AnimationChain()
 
-        x = select_x * screen.board.cell_size + screen.board.left
-        y = select_y * screen.board.cell_size + screen.board.top
-
+        x, _ = screen.board.get_cell_coords(choose_cell)
         mirror = x < self.rect.x
-        args = [screen, (x, y), (select_x, select_y), self]
-        animation_chain.add_step(ANIMATION_ATTACK, self.damage_func, args, mirror=mirror)
+        args = [screen, unit, choose_cell]
+        animation_chain.add_step(ANIMATION_ATTACK, self.give_damage, args, mirror=mirror)
         animation_chain.add_step(ANIMATION_IDLE, callback, callback_args)
 
         self.start_animation_chain(animation_chain)
@@ -103,6 +100,14 @@ class Unit(MovableAnimatedSprite):
 
     def get_damage(self):
         return self.damage + self.damage_plus
+
+    def give_damage(self, screen, unit, select_cell):
+        '''Нанесение дамага по юниту'''
+
+        unit.recieve_damage(self)
+        if unit.is_dead:  # удаление убитого юнита
+            screen.board.board[select_cell[1]][select_cell[0]] = BOARD_EMPTY
+            self.death_callback(screen, unit, self)
 
     def refresh(self):
         self.step = self.default_step

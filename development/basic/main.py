@@ -9,6 +9,7 @@ from development.different import global_vars
 from development.windows import final_window
 from development.windows import start_window, enter_nickname
 
+from development.different.global_vars import UNIT_ARCHER, UNIT_CAVALRY, UNIT_DRAGON, UNIT_SWORDSMAN
 
 class Main:
     '''Создание основного класса игры'''
@@ -21,19 +22,21 @@ class Main:
         self.size = pygame.display.get_desktop_sizes()[-1]  # получение размеров экрана
         self.screen = mapping.Screen(self.size, self)  # создание основного экрана
 
+        self.nickname_window = enter_nickname.EnterNicknameWindow(self.screen, self.size, self)
+        self.start_screen = start_window.Start_window(self.screen, self.size, self)
+        self.final_screen = final_window.Final_window(self.screen, self.size, self)
+
         set_music(os.path.join('music', 'walking.wav'), -1, 20)  # запуск музыки
+
+    def run(self):
         self.go_start_window()  # старт начального экрана
 
     def go_start_window(self):
-        self.nickname_window = enter_nickname.EnterNicknameWindow(self.screen, self.size, self)
         if not global_vars.current_user:
             self.nickname_window.start()
-
-        self.start_screen = start_window.Start_window(self.screen, self.size, self)
         self.start_screen.start()
 
     def go_final_window(self):
-        self.final_screen = final_window.Final_window(self.screen, self.size, self)
         self.final_screen.start()
 
     def start(self, level):
@@ -63,19 +66,19 @@ class Main:
                         self.screen.board.clear_board()
                         self.start_screen.levels_menu.start()
                     elif event.key == pygame.K_1:  # если нажата клавиша 1
-                        self.screen.choose_unit = 'swordsman'
+                        self.screen.choose_unit = UNIT_SWORDSMAN
                         self.screen.choose_unit_surface[1] = [self.screen.icon_swordsman.rect.x,
                                                               self.screen.icon_swordsman.rect.y]
                     elif event.key == pygame.K_2:  # если нажата клавиша 2
-                        self.screen.choose_unit = 'archer'
+                        self.screen.choose_unit = UNIT_ARCHER
                         self.screen.choose_unit_surface[1] = [self.screen.icon_archer.rect.x,
                                                               self.screen.icon_archer.rect.y]
                     elif event.key == pygame.K_3:  # если нажата клавиша 3
-                        self.screen.choose_unit = 'cavalry'
+                        self.screen.choose_unit = UNIT_CAVALRY
                         self.screen.choose_unit_surface[1] = [self.screen.icon_cavalry.rect.x,
                                                               self.screen.icon_cavalry.rect.y]
                     elif event.key == pygame.K_4:  # если нажата клавиша 4
-                        self.screen.choose_unit = 'dragon'
+                        self.screen.choose_unit = UNIT_DRAGON
                         self.screen.choose_unit_surface[1] = [self.screen.icon_dragon.rect.x,
                                                               self.screen.icon_dragon.rect.y]
 

@@ -4,7 +4,8 @@ import pygame
 
 import development.basic.start_game as start_game
 from development.different import landscapes, money
-from development.different.global_vars import my_units_group, enemies_group, shop_group, landscape_group
+from development.different.global_vars import my_units_group, enemies_group, shop_group, landscape_group, UNIT_ARCHER, \
+    UNIT_CAVALRY, UNIT_DRAGON, UNIT_SWORDSMAN
 from development.different.widgets import Button
 from development.units import swordsman, archer, castle, cavalry, dragon
 
@@ -17,7 +18,7 @@ class Screen:
         # задание переменных
         self.gameplay = False
         self.back_to_menu = False
-        self.choose_unit = 'swordsman'
+        self.choose_unit = UNIT_SWORDSMAN
 
         self.main = main  # объект main
 
@@ -49,16 +50,16 @@ class Screen:
 
         self.icon_swordsman = swordsman.Swordsman(self.board.cell_size * 1.4, 1 * (self.board.cell_size * 1.2),
                                                   self.board.cell_size * 1.2, shop_group,
-                                                  start_game.give_damage)  # иконка рыцаря (для выбора)
+                                                  start_game.death_callback)  # иконка рыцаря (для выбора)
         self.icon_archer = archer.Archer(self.board.cell_size * 1.4, 2 * (self.board.cell_size * 1.2),
                                          self.board.cell_size * 1.2, shop_group,
-                                         start_game.give_damage)  # иконка лучника (для выбора)
+                                         start_game.death_callback)  # иконка лучника (для выбора)
         self.icon_cavalry = cavalry.Cavalry(self.board.cell_size * 1.4, 3 * (self.board.cell_size * 1.2),
                                             self.board.cell_size * 1.2, shop_group,
-                                            start_game.give_damage)  # иконка кавалерии (для выбора)
+                                            start_game.death_callback)  # иконка кавалерии (для выбора)
         self.icon_dragon = dragon.Dragon(self.board.cell_size * 1.4, 4 * (self.board.cell_size * 1.2),
                                          self.board.cell_size * 1.2, shop_group,
-                                         start_game.give_damage)  # иконка дракона (для выбора)
+                                         start_game.death_callback)  # иконка дракона (для выбора)
         self.icon_money = money.Money(self.width - 100, 20, self.board.cell_size, money.moneys)  # иконка монет
 
         # запись кол-ва юнитов в инвентаре
@@ -145,16 +146,16 @@ class Screen:
     def choose_unit(self, mouse_pos):
         '''Функция выбора юнитов'''
         if self.icon_swordsman.rect.collidepoint(mouse_pos) and swordsman.stock > 0:  # выбор рыцаря
-            self.choose_unit = 'swordsman'
+            self.choose_unit = UNIT_SWORDSMAN
             self.choose_unit_surface[1] = [self.icon_swordsman.rect.x, self.icon_swordsman.rect.y]
         if self.icon_archer.rect.collidepoint(mouse_pos) and archer.stock > 0:  # выбор лучника
-            self.choose_unit = 'archer'
+            self.choose_unit = UNIT_ARCHER
             self.choose_unit_surface[1] = [self.icon_archer.rect.x, self.icon_archer.rect.y]
         if self.icon_cavalry.rect.collidepoint(mouse_pos) and cavalry.stock > 0:  # выбор кавалерии
-            self.choose_unit = 'cavalry'
+            self.choose_unit = UNIT_CAVALRY
             self.choose_unit_surface[1] = [self.icon_cavalry.rect.x, self.icon_cavalry.rect.y]
         if self.icon_dragon.rect.collidepoint(mouse_pos) and dragon.stock > 0:  # выбор дракона
-            self.choose_unit = 'dragon'
+            self.choose_unit = UNIT_DRAGON
             self.choose_unit_surface[1] = [self.icon_dragon.rect.x, self.icon_dragon.rect.y]
 
         return self.choose_unit
@@ -182,7 +183,7 @@ class Board:
     def __init__(self, width, height, size):
         '''Инициализация класса'''
         self.level = '1'  # уровень по умолчанию
-        self.choosen_unit = 'swordsman'  # юнит по умолчанию
+        self.choosen_unit = UNIT_SWORDSMAN  # юнит по умолчанию
 
         self.width = width  # ширина
         self.height = height  # высота
@@ -230,7 +231,7 @@ class Board:
             for j in range(len(self.board[i])):
                 if (i, j) == (0, 4):
                     castle.Castle(i * self.cell_size + self.left, j * self.cell_size + self.top, self.cell_size * 2,
-                                  my_units_group, start_game.give_damage)
+                                  my_units_group, start_game.death_callback)
                     self.board[j][i], self.board[j][i + 1], self.board[j + 1][i], self.board[j + 1][i + 1] = 4, 4, 4, 4
 
     def set_enemys(self):
@@ -242,22 +243,22 @@ class Board:
                     x, y = j * self.cell_size + self.left, i * self.cell_size + self.top
                     if level_lst[i][j] == 's':  # устновка рыцарей
                         swordsman.Swordsman(x, y, self.cell_size, enemies_group,
-                                            start_game.give_damage, mirror_animation=True)
+                                            start_game.death_callback, mirror_animation=True)
                         self.board[i][j] = 2
                     elif level_lst[i][j] == 'a':  # установка лучников
                         archer.Archer(x, y, self.cell_size, enemies_group,
-                                      start_game.give_damage, mirror_animation=True)
+                                      start_game.death_callback, mirror_animation=True)
                         self.board[i][j] = 2
                     elif level_lst[i][j] == 'c':  # установка кавалерии
                         cavalry.Cavalry(x, y, self.cell_size, enemies_group,
-                                        start_game.give_damage, mirror_animation=True)
+                                        start_game.death_callback, mirror_animation=True)
                         self.board[i][j] = 2
                     elif level_lst[i][j] == 'd':  # установка драконов
                         dragon.Dragon(x, y, self.cell_size, enemies_group,
-                                      start_game.give_damage, mirror_animation=True)
+                                      start_game.death_callback, mirror_animation=True)
                         self.board[i][j] = 2
                     elif level_lst[i][j] == 'X':  # установка башни (башен)
-                        castle.Castle(x, y, self.cell_size * 2, enemies_group, start_game.give_damage)
+                        castle.Castle(x, y, self.cell_size * 2, enemies_group, start_game.death_callback)
                         self.board[i][j], self.board[i + 1][j] = 3, 3
                         self.board[i][j + 1], self.board[i + 1][j + 1] = 3, 3
 
@@ -316,27 +317,27 @@ class Board:
         x, y = cell_coords
         if mouse_button == 1:  # при ЛКМ
             if x <= 4 and self.board[y][x] == 0 and self.field[y][x] == 0:
-                if self.choosen_unit == 'swordsman' and swordsman.stock > 0:  # рыцарь
+                if self.choosen_unit == UNIT_SWORDSMAN and swordsman.stock > 0:  # рыцарь
                     swordsman.Swordsman(x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
-                                        my_units_group, start_game.give_damage)
+                                        my_units_group, start_game.death_callback)
                     swordsman.stock -= 1
                     self.board[y][x] = 1
 
-                if self.choosen_unit == 'archer' and archer.stock > 0:  # лучник
+                if self.choosen_unit == UNIT_ARCHER and archer.stock > 0:  # лучник
                     archer.Archer(x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
-                                  my_units_group, start_game.give_damage)
+                                  my_units_group, start_game.death_callback)
                     archer.stock -= 1
                     self.board[y][x] = 1
 
-                if self.choosen_unit == 'cavalry' and cavalry.stock > 0:  # кавалерия
+                if self.choosen_unit == UNIT_CAVALRY and cavalry.stock > 0:  # кавалерия
                     cavalry.Cavalry(x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
-                                    my_units_group, start_game.give_damage)
+                                    my_units_group, start_game.death_callback)
                     cavalry.stock -= 1
                     self.board[y][x] = 1
 
-                if self.choosen_unit == 'dragon' and dragon.stock > 0:  # дракон
+                if self.choosen_unit == UNIT_DRAGON and dragon.stock > 0:  # дракон
                     dragon.Dragon(x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
-                                  my_units_group, start_game.give_damage)
+                                  my_units_group, start_game.death_callback)
                     dragon.stock -= 1
                     self.board[y][x] = 1
 
@@ -344,10 +345,10 @@ class Board:
             if self.board[y][x] == 1:
                 coords = x * self.cell_size + self.left, y * self.cell_size + self.top
 
-                dct = {'swordsman': swordsman,
-                       'archer': archer,
-                       'cavalry': cavalry,
-                       'dragon': dragon}
+                dct = {UNIT_SWORDSMAN: swordsman,
+                       UNIT_ARCHER: archer,
+                       UNIT_CAVALRY: cavalry,
+                       UNIT_DRAGON: dragon}
                 for unit in my_units_group:  # возврат юнита
                     if unit.rect.collidepoint(coords):
                         my_units_group.remove(unit)
