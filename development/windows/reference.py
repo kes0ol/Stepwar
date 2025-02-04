@@ -142,7 +142,7 @@ class Description(window.Window):
                     self.running = False
                 elif button in self.dct_units.keys():
                     self.icon_unit = self.dct_units[button](self.one_size * 16.1, self.one_size * 4.1,
-                                                            self.one_size * 4, self.icons_units)
+                                                            self.one_size * 4, self.icons_units, None)
                     self.stats = [f'Тип юнита: {self.icon_unit.title}',
                                   f'Здоровье: {self.icon_unit.hp}',
                                   f'Урон: {self.icon_unit.damage}',

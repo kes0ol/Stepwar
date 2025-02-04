@@ -33,8 +33,14 @@ class Button(RectCoord):
         self.fill_type = fill_type
         self.rect = pygame.Rect(0, 0, *self.surfaces[0].get_rect().size)
         self.set_rect_coord(self.rect, x, y, coord_type)
+        self.is_enabled = True
+
+    def set_enabled(self, is_enabled):
+        self.is_enabled = is_enabled
 
     def render(self, sc):
+        if not self.is_enabled:
+            return
         if self.fill_type == FILL_TYPE_BORDER:
             x, y = self.rect.center
             w = h = self.size_font
@@ -42,6 +48,8 @@ class Button(RectCoord):
         sc.blit(self.surfaces[self.check_click(pygame.mouse.get_pos())], self.rect)
 
     def check_click(self, mouse_pos):
+        if not self.is_enabled:
+            return False
         return self.rect.collidepoint(mouse_pos)
 
 
@@ -110,7 +118,7 @@ class Edit(RectCoord):
     def handle_event(self, event):
         if self.edit_started:
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
+                if event.key in (pygame.K_ESCAPE, pygame.K_RETURN):
                     self.cursor_show = False
                     self.edit_started = False
                 if event.key == pygame.K_LEFT:

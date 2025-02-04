@@ -1,3 +1,5 @@
+import os.path
+
 import pygame
 
 from development.different.widgets import Button, View
@@ -9,7 +11,7 @@ class Final_window(window.Window):
 
     def __init__(self, screen, size, main):
         '''Инициализация класса'''
-        super().__init__(screen, size, main, '../../images/backgrounds/final_background.png')
+        super().__init__(screen, size, main, ('images', 'backgrounds', 'final_background.png'))
 
         self.back_button = Button('Назад', round(self.one_size * 1.2), round(self.one_size * 1.7), self.height - 100,
                                   color=(200, 75, 75), dark_color=(150, 25, 25))  # кнопка выхода

@@ -7,10 +7,9 @@ import pygame
 import development.different.global_vars as global_vars
 from development.db.score_dbo import Score
 from development.different.global_vars import my_units_group, enemies_group, RANGE_ATTACK, shop_group, \
-    landscape_group
+    landscape_group, UNIT_CASTLE, UNIT_ARCHER, UNIT_CAVALRY, UNIT_DRAGON, UNIT_SWORDSMAN, \
+    BOARD_ENEMY_CASTLE, BOARD_MY_CASTLE
 from development.units import swordsman, archer, cavalry, dragon
-
-from development.different.global_vars import action_in_progress  # Эта переменная нужна!!
 
 '''Создание глобальных переменных'''
 is_win = None
@@ -37,24 +36,24 @@ def start(screen):
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.KEYDOWN:  # при нажатии кнопки
-                if event.key == pygame.K_ESCAPE and not action_in_progress:  # нажатие escape (назад)
+                if event.key == pygame.K_ESCAPE and not global_vars.action_in_progress:  # нажатие escape (назад)
                     running = False
                     screen.gameplay = False
                     return_units()
                     new_step()
                     screen.board.clear_board()
-                if event.key == pygame.K_SPACE and not action_in_progress:  # нажатие пробела (новый ход)
+                if event.key == pygame.K_SPACE and not global_vars.action_in_progress:  # нажатие пробела (новый ход)
                     screen.steps += 1
                     new_step()
                     enemys_move(screen)
 
             if event.type == pygame.MOUSEBUTTONDOWN:  # при нажатии мышкой
                 select_button = check_click(screen, event.pos)
-                if select_button == 'new_step' and not action_in_progress:  # нажатие на кнопку след. хода
+                if select_button == 'new_step' and not global_vars.action_in_progress:  # нажатие на кнопку след. хода
                     screen.steps += 1
                     new_step()
                     enemys_move(screen)
-                if select_button == 'back_to_menu' and not action_in_progress:  # нажатие на кнопку 'назад'
+                if select_button == 'back_to_menu' and not global_vars.action_in_progress:  # нажатие на кнопку 'назад'
                     running = False
                     screen.gameplay = False
                     return_units()
@@ -68,7 +67,7 @@ def start(screen):
 
                 cell_coords = screen.board.get_cell(event.pos)
                 unit = choose_unit(screen, cell_coords)
-                if not action_in_progress:
+                if not global_vars.action_in_progress:
                     if unit and event.button == 1:  # ЛКМ по персонажам
                         choose_step(screen, unit, cell_coords)
                     if unit and event.button == 3:  # ПКМ по персонажам
@@ -101,7 +100,7 @@ def end(screen):
                 sys.exit()
 
             if event.type == pygame.KEYDOWN:  # проверка на нажатие клавиш
-                if event.key == pygame.K_ESCAPE and not action_in_progress:  # при нажатии на escape
+                if event.key == pygame.K_ESCAPE and not global_vars.action_in_progress:  # при нажатии на escape
                     running = False
                     screen.gameplay = False
                     return_units()
@@ -111,7 +110,7 @@ def end(screen):
             if event.type == pygame.MOUSEBUTTONDOWN:  # при нажати мышкой
                 select_button = check_click(screen, event.pos)
 
-                if select_button == 'back_to_menu' and not action_in_progress:  # нажатие кнопки 'назад'
+                if select_button == 'back_to_menu' and not global_vars.action_in_progress:  # нажатие кнопки 'назад'
                     running = False
                     screen.gameplay = False
                     return_units()
@@ -198,12 +197,12 @@ def new_step():
 
 def return_units():
     '''Возвращение юнитов с поля боя в инвентарь при выходе/победе/поражении'''
-    dct = {'swordsman': swordsman,
-           'archer': archer,
-           'cavalry': cavalry,
-           'dragon': dragon}
+    dct = {UNIT_SWORDSMAN: swordsman,
+           UNIT_ARCHER: archer,
+           UNIT_CAVALRY: cavalry,
+           UNIT_DRAGON: dragon}
     for unit in my_units_group:
-        if unit.name != 'castle':
+        if unit.name != UNIT_CASTLE:
             dct[unit.name].stock += 1
 
 
@@ -223,7 +222,7 @@ def can_move(screen):
         cell = screen.board.get_cell((un.rect.x, un.rect.y))
         lst_steps = select_surfaces(screen.board, un, cell, False)[0]
         if (un.step > 0 and len(lst_steps) and (un.rect.x >= screen.board.left and un.rect.y >= screen.board.top)
-                and not action_in_progress and un.name != 'castle'):
+                and not global_vars.action_in_progress and un.name != UNIT_CASTLE):
             surfaces_can_move.append(
                 (pygame.surface.Surface((screen.board.cell_size, screen.board.cell_size)), (un.rect.x, un.rect.y)))
     render_surfaces(screen, surfaces_can_move, 'yellow')
@@ -233,7 +232,7 @@ def can_move(screen):
         cell = screen.board.get_cell((un.rect.x, un.rect.y))
         lst_attack = select_surfaces(screen.board, un, cell, True)[0]
         if (un.do_damage and len(lst_attack) and (un.rect.x >= screen.board.left and un.rect.y >= screen.board.top)
-                and not action_in_progress and un.name != 'castle'):
+                and not global_vars.action_in_progress and un.name != UNIT_CASTLE):
             surfaces_can_move.append(
                 (pygame.surface.Surface((screen.board.cell_size, screen.board.cell_size)), (un.rect.x, un.rect.y)))
     render_surfaces(screen, surfaces_can_move, 'orange')
@@ -253,7 +252,7 @@ def enemys_move(screen):
             choose_cell = random.choice(lst_steps)  # берем рандомный (рандом x2)
             castle_unit_coords = None
             for i in my_units_group:
-                if i.name == "castle":  # проверка на башню
+                if i.name == UNIT_CASTLE:  # проверка на башню
                     castle_unit_coords = screen.board.get_cell((i.rect.x, i.rect.y))
                     break
             for step in lst_steps:  # выбор оптимального хода по манхэттеновскому расстоянию
@@ -276,7 +275,8 @@ def enemys_attack(screen, unit, now_cell):
         select_attack = random.choice(lst_steps)
 
         increment_action_in_progress()
-        unit.make_attack(select_attack, screen, decrement_action_in_progress, [])
+        enemy = get_unit_by_cell(screen, select_attack)
+        unit.make_attack(enemy, select_attack, screen, decrement_action_in_progress, [])
 
 
 def show_stats(screen):
@@ -334,7 +334,7 @@ def choose_step(screen, unit, cell_coords):
 
             screen.sc.fill((0, 0, 0))
             screen.render()
-            render_surfaces(screen, lst_surfaces, (0, 200, 0))  # TBD Move to main render view
+            render_surfaces(screen, lst_surfaces, (0, 200, 0))
             show_stats(screen)
             screen.render_cursor()
             pygame.display.flip()
@@ -357,7 +357,8 @@ def choose_attack(screen, unit, cell_coords):
                     for coords in lst_attack:
                         if coords == choose_cell:
                             increment_action_in_progress()
-                            unit.make_attack(choose_cell, screen, decrement_action_in_progress, [])
+                            enemy = get_unit_by_cell(screen, choose_cell)
+                            unit.make_attack(enemy, choose_cell, screen, decrement_action_in_progress, [])
                     return
 
             screen.sc.fill((0, 0, 0))
@@ -370,8 +371,7 @@ def choose_attack(screen, unit, cell_coords):
 
 def increment_action_in_progress():
     '''Начало анимции (проверка)'''
-    global action_in_progress
-    action_in_progress += 1
+    global_vars.action_in_progress += 1
 
 
 class BadActionInProgressState(Exception):
@@ -381,9 +381,8 @@ class BadActionInProgressState(Exception):
 
 def decrement_action_in_progress():
     '''Конец анимации (проверка)'''
-    global action_in_progress
-    action_in_progress -= 1
-    if action_in_progress < 0:
+    global_vars.action_in_progress -= 1
+    if global_vars.action_in_progress < 0:
         raise BadActionInProgressState()
 
 
@@ -403,17 +402,16 @@ def select_surfaces(board, unit, cell, is_attack):
                             if ((board.board[cell_y + dy][cell_x + dx] == 0 and
                                  board.field[cell_y + dy][cell_x + dx] != 1)):  # проверка на занятость поля
                                 if board.field[cell_y + dy][cell_x + dx] != 3 or \
-                                        board.field[cell_y + dy][cell_x + dx] == 3 and unit.name == 'dragon':
+                                        board.field[cell_y + dy][cell_x + dx] == 3 and unit.name == UNIT_DRAGON:
                                     if (cell_x + dx, cell_y + dy) not in lst_steps:
                                         lst_steps.append((cell_x + dx, cell_y + dy))
 
                                         coords = board.get_cell_coords((cell_x + dx, cell_y + dy))
                                         surface = pygame.surface.Surface((board.cell_size, board.cell_size))
                                         lst_surfaces.append((surface, coords))
-                                    if unit.name != 'dragon':  # исключение для дракона на реке
-                                        if (board.field[cell_y + dy][cell_x + dx] == 2
-                                                and unit.name not in ('cavalry', 'dragon')):
-                                            minus += 1
+                                    if (unit.name not in (UNIT_CAVALRY, UNIT_DRAGON)
+                                            and board.field[cell_y + dy][cell_x + dx] == 2):
+                                        minus += 1
                                     if ran - minus > 0:  # запуск рекурсии (для следующего радиуса соседних клеток)
                                         add(ran - minus, (cell_x + dx, cell_y + dy))
 
@@ -439,54 +437,43 @@ def select_surfaces(board, unit, cell, is_attack):
     return lst_steps, lst_surfaces
 
 
-def give_damage(screen, select_coords, select_cell, actor):
-    '''Нанесение дамага по юниту'''
-    global is_win, money_now
-    target = 0
+def get_unit_by_cell(screen, select_cell):
+    select_coords = screen.board.get_cell_coords(select_cell)
+
     for group in [my_units_group, enemies_group]:
         for unit in group:
-            if actor in my_units_group:
-                target = 3  # индекс выбранного юнита
-            if actor in enemies_group:
-                target = 4  # индекс выбранного юнита
-            if screen.board.board[select_cell[1]][select_cell[0]] == target and unit.name == "castle":
-                unit.recieve_damage(actor)
-                if unit.is_dead:
-                    for i in range(len(screen.board.board)):
-                        for j in range(len(screen.board.board[i])):
-                            if screen.board.board[i][j] == target:
-                                screen.board.board[i][j] = 0
-                    if actor in my_units_group:  # победа, запуск финального окна
-                        screen.progress.add(int(screen.board.level) + 1)
-                        screen.score_db.score_points = resutl_score_points(screen.score, screen.steps)
-                        if 3 in screen.progress:  # запуск финального экрана всей игры
-                            screen.main.go_final_window()
-                        else:
-                            money_now += 100  # деньги за башню
-                            is_win = True  # победа
-                            Score.add(screen.score_db)
-                            end(screen)
+            if unit.rect.collidepoint(select_coords):
+                return unit
 
-                    elif actor in enemies_group:  # поражение, запуск финального окна
-                        is_win = False  # поражение
-                        end(screen)
-                    return
-            if (unit.rect.x, unit.rect.y) == select_coords:  # проверка клетки
-                unit.recieve_damage(actor)
-                if unit.is_dead:  # удаление убитого юнита
-                    screen.board.board[select_cell[1]][select_cell[0]] = 0
 
-                    if actor in my_units_group:  # получение наград (очков и монет) за убийство
-                        dct = {'swordsman': (15, 5),
-                               'archer': (25, 25),
-                               'cavalry': (35, 20),
-                               'dragon': (70, 40)}
+def death_callback(screen, dead_unit, actor):
+    global is_win, money_now
+    if dead_unit.name == UNIT_CASTLE:
+        if actor in my_units_group:  # конец игры - победа, запуск финального окна
+            screen.progress.add(int(screen.board.level) + 1)
+            money_now += 100  # деньги за башню
+            screen.score += 100
+            screen.score_db.score_points = resutl_score_points(screen.score, screen.steps)
+            Score.add(screen.score_db)
+            if 3 in screen.progress:  # запуск финального экрана всей игры
+                screen.main.go_final_window()
+            else:
+                is_win = True  # победа
+                end(screen)
 
-                        if unit.name != 'castle':
-                            money, score = dct[unit.name]
-                            money_now += money
-                            screen.score += score
-                return
+        if actor in enemies_group:  # конец игры - поражение, запуск финального окна
+            is_win = False  # поражение
+            end(screen)
+    else:
+        if actor in my_units_group:  # получение наград (очков и монет) за убийство
+            dct = {UNIT_SWORDSMAN: (30, 5),
+                   UNIT_ARCHER: (35, 25),
+                   UNIT_CAVALRY: (40, 20),
+                   UNIT_DRAGON: (80, 40)}
+
+            money, score = dct[dead_unit.name]
+            money_now += money
+            screen.score += score
 
 
 def resutl_score_points(score, steps):
