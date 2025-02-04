@@ -46,8 +46,11 @@ class Unit(MovableAnimatedSprite):
         select_x, select_y = choose_cell
         self.damage_plus = 0
 
-        if screen.board.field[select_y][select_x] == 2 and self.attack_type == RANGE_ATTACK:
-            self.damage_plus = 15
+        if screen.board.field[select_y][select_x] == 2:
+            if self.name not in ('cavalry', 'dragon'):
+                self.step -= 1
+                if self.attack_type == RANGE_ATTACK:
+                    self.damage_plus = 15
 
         screen.board.board[y_now][x_now], screen.board.board[select_y][select_x] = screen.board.board[select_y][
             select_x], screen.board.board[y_now][x_now]
@@ -69,6 +72,7 @@ class Unit(MovableAnimatedSprite):
         animation_chain.add_step(ANIMATION_IDLE, callback, callback_args)
 
         self.start_animation_chain(animation_chain)
+
         self.step -= (abs(x // screen.board.cell_size) + abs(y // screen.board.cell_size))
 
     def make_attack(self, choose_cell, screen, callback=None, callback_args=None):

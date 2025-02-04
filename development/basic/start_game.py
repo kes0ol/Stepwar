@@ -222,7 +222,7 @@ def can_move(screen):
     for un in my_units_group:  # проверка всех юнитов на возможность ходить
         cell = screen.board.get_cell((un.rect.x, un.rect.y))
         lst_steps = select_surfaces(screen.board, un, cell, False)[0]
-        if (un.step != 0 and len(lst_steps) and (un.rect.x >= screen.board.left and un.rect.y >= screen.board.top)
+        if (un.step > 0 and len(lst_steps) and (un.rect.x >= screen.board.left and un.rect.y >= screen.board.top)
                 and not action_in_progress and un.name != 'castle'):
             surfaces_can_move.append(
                 (pygame.surface.Surface((screen.board.cell_size, screen.board.cell_size)), (un.rect.x, un.rect.y)))
@@ -281,7 +281,7 @@ def enemys_attack(screen, unit, now_cell):
 
 def show_stats(screen):
     '''Отображение статистики клетки/персоанажа при наведении мышкой'''
-    stats_surface = pygame.Surface((200, 100))
+    stats_surface = pygame.Surface((200, 120))
     font = pygame.font.Font(None, 25)
     stats = []
 
@@ -292,8 +292,12 @@ def show_stats(screen):
                 f'Здоровье: {un.hp}',  # хп
                 f'Урон: {un.damage}' + (f' + {un.damage_plus}' if un.attack_type == RANGE_ATTACK else ''),  # урон
                 f'Передвижение: {un.step}',  # шаги
-                f'Дистанция атаки: {un.distance_attack}'  # дистанция атаки
-            ]
+                f'Дистанция атаки: {un.distance_attack}']  # дистанция атаки
+            if un in my_units_group:
+                if un.do_damage:
+                    stats.append(f'Может бить: Да')
+                else:
+                    stats.append(f'Может бить: Нет')
 
     if not len(stats):  # если навели не на юнита (значит на ландшафт)
         for land in landscape_group:  # запись инфы с ландшафта
@@ -334,13 +338,15 @@ def choose_step(screen, unit, cell_coords):
             show_stats(screen)
             screen.render_cursor()
             pygame.display.flip()
+    else:
+        unit.step = 0
 
 
 def choose_attack(screen, unit, cell_coords):
-    '''Выбор хода игроком (перемещение - ПКМ)'''
-    lst_steps, lst_surfaces = select_surfaces(screen.board, unit, cell_coords, True)
+    '''Выбор удара игроком (удар - ПКМ)'''
+    lst_attack, lst_surfaces = select_surfaces(screen.board, unit, cell_coords, True)
 
-    if unit.do_damage and len(lst_steps):
+    if unit.do_damage and len(lst_attack):
         while True:  # запуск мини-цикла на выбор клетки (для атаки юнитом)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:  # проверка на выход
@@ -348,7 +354,7 @@ def choose_attack(screen, unit, cell_coords):
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:  # проверка на нажатие мышкой
                     choose_cell = screen.board.get_cell(event.pos)
-                    for coords in lst_steps:
+                    for coords in lst_attack:
                         if coords == choose_cell:
                             increment_action_in_progress()
                             unit.make_attack(choose_cell, screen, decrement_action_in_progress, [])
@@ -405,7 +411,8 @@ def select_surfaces(board, unit, cell, is_attack):
                                         surface = pygame.surface.Surface((board.cell_size, board.cell_size))
                                         lst_surfaces.append((surface, coords))
                                     if unit.name != 'dragon':  # исключение для дракона на реке
-                                        if board.field[cell_y + dy][cell_x + dx] == 2:
+                                        if (board.field[cell_y + dy][cell_x + dx] == 2
+                                                and unit.name not in ('cavalry', 'dragon')):
                                             minus += 1
                                     if ran - minus > 0:  # запуск рекурсии (для следующего радиуса соседних клеток)
                                         add(ran - minus, (cell_x + dx, cell_y + dy))
@@ -436,7 +443,6 @@ def give_damage(screen, select_coords, select_cell, actor):
     '''Нанесение дамага по юниту'''
     global is_win, money_now
     target = 0
-
     for group in [my_units_group, enemies_group]:
         for unit in group:
             if actor in my_units_group:
@@ -450,7 +456,7 @@ def give_damage(screen, select_coords, select_cell, actor):
                         for j in range(len(screen.board.board[i])):
                             if screen.board.board[i][j] == target:
                                 screen.board.board[i][j] = 0
-                    if actor in my_units_group:  # конец игры - победа, запуск финального окна
+                    if actor in my_units_group:  # победа, запуск финального окна
                         screen.progress.add(int(screen.board.level) + 1)
                         screen.score_db.score_points = resutl_score_points(screen.score, screen.steps)
                         if 3 in screen.progress:  # запуск финального экрана всей игры
@@ -461,7 +467,7 @@ def give_damage(screen, select_coords, select_cell, actor):
                             Score.add(screen.score_db)
                             end(screen)
 
-                    if actor in enemies_group:  # конец игры - поражение, запуск финального окна
+                    elif actor in enemies_group:  # поражение, запуск финального окна
                         is_win = False  # поражение
                         end(screen)
                     return
@@ -471,14 +477,15 @@ def give_damage(screen, select_coords, select_cell, actor):
                     screen.board.board[select_cell[1]][select_cell[0]] = 0
 
                     if actor in my_units_group:  # получение наград (очков и монет) за убийство
-                        dct = {'swordsman': (30, 5),
-                               'archer': (35, 25),
-                               'cavalry': (40, 20),
-                               'dragon': (80, 40)}
+                        dct = {'swordsman': (15, 5),
+                               'archer': (25, 25),
+                               'cavalry': (35, 20),
+                               'dragon': (70, 40)}
 
-                        money, score = dct[unit.name]
-                        money_now += money
-                        screen.score += score
+                        if unit.name != 'castle':
+                            money, score = dct[unit.name]
+                            money_now += money
+                            screen.score += score
                 return
 
 
