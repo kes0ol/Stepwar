@@ -47,10 +47,13 @@ class Reference_window(window.Window):
 
         self.lst = [text.split('\n') for text in (t1, t2)]
 
+        self.click_sound = pygame.mixer.Sound(os.path.join(*['music', 'click.wav']))
+
     def check_click(self, mouse_pos, lst):
         '''Функция проверка клика мышки'''
         for button in lst:
             if button.check_click(mouse_pos):
+                self.click_sound.play()
                 if button == self.next_page_button:  # при нажатии на кнопку следующей страницы
                     self.ref_screen.start()
                 if button == self.back_button:  # при нажатии на кнопку Назад
@@ -142,10 +145,13 @@ class Description(window.Window):
 
         self.stats = []
 
+        self.click_sound = pygame.mixer.Sound(os.path.join(*['music', 'click.wav']))
+
     def check_click(self, mouse_pos, lst):
         self.icons_units.empty()
         for button in lst:
             if button.check_click(mouse_pos):
+                self.click_sound.play()
                 if button == self.back_button:
                     self.running = False
                 elif button in self.dct_units.keys():

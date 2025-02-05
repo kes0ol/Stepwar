@@ -43,6 +43,8 @@ class Store(window.Window):
                                   dark_color=(0, 255, 0))  # создание кнопок Купить
             self.lst_buttons.append(self.buy_btn)
 
+        self.click_sound = pygame.mixer.Sound(os.path.join(*['music', 'click.wav']))
+
     def render_products(self):
         '''Функция отображение карточек юнитов'''
         for i in range(len(self.lst_units)):  # отображение кол-ва
@@ -69,6 +71,7 @@ class Store(window.Window):
         '''Функция проверки клика мышки'''
         for button in lst:
             if button.check_click(mouse_pos):
+                self.click_sound.play()
                 if button == self.back_button:
                     self.running = False
                 else:

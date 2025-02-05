@@ -1,4 +1,5 @@
 import pygame
+import os
 
 from internal.different.global_vars import FILL_TYPE_BORDER
 from internal.different.widgets import Button, View
@@ -25,9 +26,12 @@ class Settings_window(window.Window):
         window.Window.set_lists(self, [self.plus_button, self.minus_button, self.reset_button,
                                        self.back_button], [self.volume_title, self.percent_view])
 
+        self.click_sound = pygame.mixer.Sound(os.path.join(*['music', 'click.wav']))
+
     def check_click(self, mouse_pos, lst):
         for button in lst:
             if button.check_click(mouse_pos):
+                self.click_sound.play()
                 if button == self.back_button:
                     self.running = False
                 if button == self.plus_button and self.volume + 0.2 <= 1:

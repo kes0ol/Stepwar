@@ -20,7 +20,8 @@ class Dragon(Unit):
             ANIMATION_END_MOVE: AnimationParams(sheet, 6, 1, 170, 170, 0, 680, 1),
             ANIMATION_DEATH: AnimationParams(sheet, 6, 1, 170, 170, 0, 680, 8)
         }
-        super().__init__(animations, x, y, group, image_size, ANIMATION_IDLE, death_callback, mirror_animation)
+        super().__init__(animations, x, y, group, image_size, ANIMATION_IDLE, ['music', 'dragon_hit.wav'],
+                         death_callback, mirror_animation)
         self.init_stats(4, 2, MELEE_ATTACK, 150, 30, UNIT_DRAGON, 'Дракон', 0)
 
 

@@ -1,3 +1,6 @@
+import os
+import pygame
+
 from internal.different.animation import AnimationChain, MovableAnimatedSprite
 from internal.different.global_vars import ANIMATION_ATTACK, ANIMATION_IDLE, ANIMATION_MOVE, \
     ANIMATION_END_MOVE, ANIMATION_BEGIN_MOVE, RANGE_ATTACK, MELEE_ATTACK, ANIMATION_DEATH, BOARD_EMPTY, FIELD_HILL, \
@@ -5,7 +8,8 @@ from internal.different.global_vars import ANIMATION_ATTACK, ANIMATION_IDLE, ANI
 
 
 class Unit(MovableAnimatedSprite):
-    def __init__(self, animations, x, y, group, scale_to, default_animation, death_callback, mirror_animation=False):
+    def __init__(self, animations, x, y, group, scale_to, default_animation, hit_sound, death_callback,
+                 mirror_animation=False):
         super().__init__(animations, x, y, group, scale_to, default_animation, mirror_animation)
         self.death_callback = death_callback
         self.default_stock = 0
@@ -22,6 +26,9 @@ class Unit(MovableAnimatedSprite):
         self.damage_plus = 0
         self.name = ''
         self.title = ''
+
+        self.hit_sound = pygame.mixer.Sound(os.path.join(*hit_sound))
+        self.death_sound = pygame.mixer.Sound(os.path.join('music', 'kill_hit.wav'))
 
     def __repr__(self):
         return f"[{id(self)} | {super().__repr__()}]"
@@ -85,6 +92,7 @@ class Unit(MovableAnimatedSprite):
         mirror = x < self.rect.x
         args = [screen, unit, choose_cell]
         animation_chain.add_step(ANIMATION_ATTACK, self.give_damage, args, mirror=mirror)
+        self.hit_sound.play()
         animation_chain.add_step(ANIMATION_IDLE, callback, callback_args)
 
         self.start_animation_chain(animation_chain)
@@ -95,6 +103,7 @@ class Unit(MovableAnimatedSprite):
 
         animation_chain.add_step(ANIMATION_IDLE)
         animation_chain.add_step(ANIMATION_DEATH)
+        self.death_sound.play()
         animation_chain.add_step(ANIMATION_DEATH, self.kill, [])
 
         self.start_animation_chain(animation_chain)

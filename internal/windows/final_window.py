@@ -1,4 +1,5 @@
 import pygame
+import os
 
 from internal.different.global_vars import UNIT_SWORDSMAN, UNIT_ARCHER, UNIT_CAVALRY, UNIT_DRAGON
 from internal.different.widgets import Button, View
@@ -20,10 +21,13 @@ class Final_window(window.Window):
 
         window.Window.set_lists(self, [self.back_button, ], [self.win_view, ])
 
+        self.click_sound = pygame.mixer.Sound(os.path.join(*['music', 'click.wav']))
+
     def check_click(self, mouse_pos, lst):
         '''Функция проверка клика на кнопку выхода'''
         for button in lst:
             if button.check_click(mouse_pos):
+                self.click_sound.play()
                 if button == self.back_button:
                     self.running = False
                     self.main_screen.reset_progress()

@@ -1,3 +1,4 @@
+import os
 import sys
 
 import pygame
@@ -44,6 +45,8 @@ class Start_window(window.Window):
                             pygame.K_3: self.settings_screen.start,
                             pygame.K_4: self.ref_screen.start}
 
+        self.click_sound = pygame.mixer.Sound(os.path.join(*['music', 'click.wav']))
+
     def check_click(self, mouse_pos, lst):
         '''Проверка на клик по кнопкам мышкой'''
         dct = {self.choose_level_button: self.levels_menu.start,
@@ -54,6 +57,7 @@ class Start_window(window.Window):
                }
         for button in lst:
             if button.check_click(mouse_pos):
+                self.click_sound.play()
                 if button == self.exit_button:  # если кнопка выхода
                     self.running = False
                     pygame.quit()

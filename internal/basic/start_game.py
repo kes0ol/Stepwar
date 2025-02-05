@@ -40,6 +40,9 @@ def start(screen):
                 sys.exit()
             if event.type == pygame.KEYDOWN:  # при нажатии кнопки
                 if event.key == pygame.K_ESCAPE and not global_vars.action_in_progress:  # нажатие escape (назад)
+                    pygame.mixer.music.load('music/walking.wav')
+                    pygame.mixer.music.play(-1)
+                    pygame.time.delay(20)
                     if not warning:
                         warning = True
                     else:
@@ -66,6 +69,9 @@ def start(screen):
                     new_step()
                     enemys_move(screen)
                 if select_button == 'back_to_menu' and not global_vars.action_in_progress:  # нажатие на кнопку 'назад'
+                    pygame.mixer.music.load('music/walking.wav')
+                    pygame.mixer.music.play(-1)
+                    pygame.time.delay(20)
                     if not warning:
                         warning = True
                     else:

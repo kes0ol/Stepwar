@@ -1,4 +1,4 @@
-import sys
+import sys, os
 
 import pygame
 
@@ -24,8 +24,11 @@ class EnterNicknameWindow(window.Window):
 
         window.Window.set_lists(self, [self.next_button, self.exit_button], [self.view, self.edit])
 
+        self.click_sound = pygame.mixer.Sound(os.path.join(*['music', 'click.wav']))
+
     def check_click(self, mouse_pos):
         if self.next_button.check_click(mouse_pos):
+            self.click_sound.play()
             if len(self.edit.text):
 
                 user = User.get_by_nickname(self.edit.text)

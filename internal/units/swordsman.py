@@ -20,7 +20,8 @@ class Swordsman(Unit):
             ANIMATION_END_MOVE: AnimationParams(sheet, 1, 1, 100, 100, 0, 0, 1),
             ANIMATION_DEATH: AnimationParams(sheet, 6, 1, 100, 100, 0, 300, 10)
         }
-        super().__init__(animations, x, y, group, image_size, ANIMATION_IDLE, death_callback, mirror_animation)
+        super().__init__(animations, x, y, group, image_size, ANIMATION_IDLE, ['music', 'swordsman_hit.wav'],
+                         death_callback, mirror_animation)
         self.init_stats(2, 1, MELEE_ATTACK, 80, 20, UNIT_SWORDSMAN, 'Рыцарь', 5)
 
 
