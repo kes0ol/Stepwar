@@ -13,12 +13,13 @@ from internal.units import swordsman, archer, cavalry, dragon
 
 '''Создание глобальных переменных'''
 is_win = None
+warning = False
 money_now = 0
 
 
 def start(screen):
     '''Функция старта главноого цикла геймплея'''
-    global is_win, money_now  # вызов глобальных переменных
+    global is_win, money_now, warning  # вызов глобальных переменных
 
     screen.score_db = Score(user_id=global_vars.current_user.id, level=screen.board.level, score_points=0)
     Score.add(screen.score_db)
@@ -36,14 +37,22 @@ def start(screen):
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.KEYDOWN:  # при нажатии кнопки
-                if (event.key in [pygame.K_ESCAPE, pygame.K_RETURN]
-                        and not global_vars.action_in_progress):  # нажатие escape (назад)
-                    running = False
-                    screen.gameplay = False
-                    return_units()
-                    new_step()
-                    screen.board.clear_board()
-                if event.key == pygame.K_SPACE and not global_vars.action_in_progress:  # нажатие пробела (новый ход)
+                if event.key == pygame.K_ESCAPE and not global_vars.action_in_progress:  # нажатие escape (назад)
+                    if not warning:
+                        warning = True
+                    else:
+                        warning = False
+                        running = False
+                        screen.gameplay = False
+                        return_units()
+                        new_step()
+                        screen.board.clear_board()
+                else:
+                    if warning:
+                        warning = False
+
+                if (event.key in [pygame.K_SPACE, pygame.K_RETURN]
+                        and not global_vars.action_in_progress):  # нажатие пробела (новый ход)
                     screen.steps += 1
                     new_step()
                     enemys_move(screen)
@@ -55,11 +64,18 @@ def start(screen):
                     new_step()
                     enemys_move(screen)
                 if select_button == 'back_to_menu' and not global_vars.action_in_progress:  # нажатие на кнопку 'назад'
-                    running = False
-                    screen.gameplay = False
-                    return_units()
-                    new_step()
-                    screen.board.clear_board()
+                    if not warning:
+                        warning = True
+                    else:
+                        warning = False
+                        running = False
+                        screen.gameplay = False
+                        return_units()
+                        new_step()
+                        screen.board.clear_board()
+                else:
+                    if warning:
+                        warning = False
 
                 if screen.setting_button.check_click(event.pos):  # кнопка настроек
                     screen.main.start_screen.settings_screen.start()
@@ -78,8 +94,30 @@ def start(screen):
         screen.render()
         screen.render_cursor()
         show_stats(screen)
+
+        if warning:
+            warning_window(screen)
+
         clock.tick(fps)
         pygame.display.flip()
+
+
+def warning_window(screen):
+    global warning
+    s = screen.board.cell_size
+
+    surf = pygame.surface.Surface((round(s * 14.4), round(s * 1.7)))  # создание полотна
+    text = ['Вы уверены, что хотите выйти?', '(Для подтверждения нажмите ещё раз)']
+
+    surf.fill('black')
+
+    font = pygame.font.Font(None, s)
+
+    for i in range(len(text)):  # отображение инфы
+        info = font.render(text[i], True, 'red')
+        surf.blit(info, (10, i * 40 + 20))
+
+    screen.sc.blit(surf, (s * 5, s * 5))
 
 
 def end(screen):
@@ -483,6 +521,10 @@ def death_callback(screen, dead_unit, actor):
             money, score = dct[dead_unit.name]
             money_now += money
             screen.score += score
+
+            screen.en_un_dead[dead_unit.name] += 1
+        else:
+            screen.my_un_dead[dead_unit.name] += 1
 
 
 def resutl_score_points(score, steps):

@@ -42,9 +42,21 @@ class Screen:
                                   coord_type="bottomleft")  # кнопка назад
 
         self.steps = 0  # кол-во шагов за 1 уровень
+
         self.score = 0  # очки
         self.best_score = 0
-        self.summary_score = 0 # суммарные очки за все уровни
+        self.summary_score = 0  # суммарные очки за все уровни
+
+        self.en_un_dead = {UNIT_SWORDSMAN: 0,
+                           UNIT_ARCHER: 0,
+                           UNIT_CAVALRY: 0,
+                           UNIT_DRAGON: 0}
+
+        self.my_un_dead = {UNIT_SWORDSMAN: 0,
+                         UNIT_ARCHER: 0,
+                         UNIT_CAVALRY: 0,
+                         UNIT_DRAGON: 0}
+
         self.score_db = None  # DBO объект для доступа к таблице базы данных score
         self.money = 0  # монеты
         self.progress = {1}  # пройденные уровни

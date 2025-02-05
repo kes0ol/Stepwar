@@ -1,7 +1,6 @@
-import os.path
-
 import pygame
 
+from internal.different.global_vars import UNIT_SWORDSMAN, UNIT_ARCHER, UNIT_CAVALRY, UNIT_DRAGON
 from internal.different.widgets import Button, View
 from internal.windows import window
 
@@ -36,7 +35,27 @@ class Final_window(window.Window):
         self.render_info()
 
     def render_info(self):
-        pass  # ОТОБРАЖЕНИЕ ФИНАЛЬНОЙ ИНФЫ В ФИНАЛЬНОМ ЭКРАНЕ
+        info = (('Общий счёт:', self.main.screen.summary_score),
+                     ('Лучший счёт:', self.main.screen.best_score),
+                     ('', ''),
+                     ('Всего убито юнитов:', sum(self.main.screen.en_un_dead.values())),
+                     ('Убито рыцарей:', self.main.screen.en_un_dead[UNIT_SWORDSMAN]),
+                     ('Убито лучников', self.main.screen.en_un_dead[UNIT_ARCHER]),
+                     ('Убито кавалерии:', self.main.screen.en_un_dead[UNIT_CAVALRY]),
+                     ('Убито драконов:', self.main.screen.en_un_dead[UNIT_DRAGON]),
+                     ('', ''),
+                     ('Всего потеряно юнитов:', sum(self.main.screen.my_un_dead.values())),
+                     ('Потеряно рыцарей:', self.main.screen.my_un_dead[UNIT_SWORDSMAN]),
+                     ('Потеряно лучников:', self.main.screen.my_un_dead[UNIT_ARCHER]),
+                     ('Потеряно кавалерии:', self.main.screen.my_un_dead[UNIT_CAVALRY]),
+                     ('Потеряно драконов:', self.main.screen.my_un_dead[UNIT_DRAGON]))
+
+        y = self.s * 3
+        f = pygame.font.Font(None, self.s // 2)
+        for i in info:
+            t = f.render('   '.join(list(map(str, i))), True, 'white')
+            self.screen.blit(t, (self.s * 2, y))
+            y += round(self.s / 2)
 
     @window.Window.start_decoration
     def start(self, event):
