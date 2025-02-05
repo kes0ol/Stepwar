@@ -87,9 +87,9 @@ def start(screen):
                 cell_coords = screen.board.get_cell(event.pos)
                 unit = choose_unit(screen, cell_coords)
                 if not global_vars.action_in_progress:
-                    if unit and event.button == 1:  # ЛКМ по персонажам
+                    if unit and not unit.is_dead and event.button == 1:  # ЛКМ по персонажам
                         choose_step(screen, unit, cell_coords)
-                    if unit and event.button == 3:  # ПКМ по персонажам
+                    if unit and not unit.is_dead and event.button == 3:  # ПКМ по персонажам
                         choose_attack(screen, unit, cell_coords)
 
         screen.sc.fill((0, 0, 0))
