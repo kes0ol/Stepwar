@@ -5,7 +5,8 @@ import pygame
 import internal.basic.start_game as start_game
 from internal.different import landscapes, money
 from internal.different.global_vars import my_units_group, enemies_group, shop_group, landscape_group, UNIT_ARCHER, \
-    UNIT_CAVALRY, UNIT_DRAGON, UNIT_SWORDSMAN
+    UNIT_CAVALRY, UNIT_DRAGON, UNIT_SWORDSMAN, BOARD_EMPTY, BOARD_MY_UNIT, BOARD_ENEMY, BOARD_ENEMY_CASTLE, \
+    BOARD_MY_CASTLE, FIELD_GRASS, FIELD_MOUNTAIN, FIELD_HILL, FIELD_RIVER
 from internal.different.widgets import Button
 from internal.units import swordsman, archer, castle, cavalry, dragon
 
@@ -194,8 +195,8 @@ class Board:
         self.left = self.cell_size * 4  # размер отступа слева
         self.top = round(self.cell_size * 1.5)  # размер отступа сверху
 
-        self.board = [[0] * width for _ in range(height)]  # создание двумерного списка поля юнитов
-        self.field = [[0] * width for _ in range(height)]  # создание двумерного списка поля ландшафтов
+        self.board = [[BOARD_EMPTY] * width for _ in range(height)]  # создание двумерного списка поля юнитов
+        self.field = [[FIELD_GRASS] * width for _ in range(height)]  # создание двумерного списка поля ландшафтов
 
         self.allow_area = pygame.Surface((7 * self.cell_size, self.height * self.cell_size))
         self.allow_area.set_alpha(80)
@@ -213,7 +214,7 @@ class Board:
         '''Отображение допустимого расстояния размещения юнитов от башни'''
         for i in range(len(self.board)):
             for j in range(5):
-                if self.field[i][j] == 0 and self.board[i][j] == 0:
+                if self.field[i][j] == FIELD_GRASS and self.board[i][j] == BOARD_EMPTY:
                     surface_coords_x = j * self.cell_size + self.left
                     surface_coords_y = i * self.cell_size + self.top
                     surface = pygame.surface.Surface((self.cell_size, self.cell_size))
@@ -234,7 +235,8 @@ class Board:
                 if (i, j) == (0, 4):
                     castle.Castle(i * self.cell_size + self.left, j * self.cell_size + self.top, self.cell_size * 2,
                                   my_units_group, start_game.death_callback)
-                    self.board[j][i], self.board[j][i + 1], self.board[j + 1][i], self.board[j + 1][i + 1] = 4, 4, 4, 4
+                    self.board[j][i], self.board[j][i + 1] = [BOARD_MY_CASTLE] * 2
+                    self.board[j + 1][i], self.board[j + 1][i + 1] = [BOARD_MY_CASTLE] * 2
 
     def set_enemys(self):
         '''Установка врагов'''
@@ -246,23 +248,23 @@ class Board:
                     if level_lst[i][j] == 's':  # устновка рыцарей
                         swordsman.Swordsman(x, y, self.cell_size, enemies_group,
                                             start_game.death_callback, mirror_animation=True)
-                        self.board[i][j] = 2
+                        self.board[i][j] = BOARD_ENEMY
                     elif level_lst[i][j] == 'a':  # установка лучников
                         archer.Archer(x, y, self.cell_size, enemies_group,
                                       start_game.death_callback, mirror_animation=True)
-                        self.board[i][j] = 2
+                        self.board[i][j] = BOARD_ENEMY
                     elif level_lst[i][j] == 'c':  # установка кавалерии
                         cavalry.Cavalry(x, y, self.cell_size, enemies_group,
                                         start_game.death_callback, mirror_animation=True)
-                        self.board[i][j] = 2
+                        self.board[i][j] = BOARD_ENEMY
                     elif level_lst[i][j] == 'd':  # установка драконов
                         dragon.Dragon(x, y, self.cell_size, enemies_group,
                                       start_game.death_callback, mirror_animation=True)
-                        self.board[i][j] = 2
+                        self.board[i][j] = BOARD_ENEMY
                     elif level_lst[i][j] == 'X':  # установка башни (башен)
                         castle.Castle(x, y, self.cell_size * 2, enemies_group, start_game.death_callback)
-                        self.board[i][j], self.board[i + 1][j] = 3, 3
-                        self.board[i][j + 1], self.board[i + 1][j + 1] = 3, 3
+                        self.board[i][j], self.board[i + 1][j] = [BOARD_ENEMY_CASTLE] * 2
+                        self.board[i][j + 1], self.board[i + 1][j + 1] = [BOARD_ENEMY_CASTLE] * 2
 
     def set_landscapes(self):
         '''Установка ландшафтов'''
@@ -280,19 +282,19 @@ class Board:
                             landscapes.Landscape('mountains', 'Гора', x, y,
                                                  os.path.join('images', 'landscapes', 'mountains.png'),
                                                  self.cell_size, 0, 'нельзя', landscape_group)
-                            self.field[i][j] = 1
+                            self.field[i][j] = FIELD_MOUNTAIN
                         elif field_lst[i][j] == 'h':  # установка гор
                             landscapes.Landscape('hill', 'Холм', x, y,
                                                  os.path.join('images', 'landscapes', 'hill.png'),
                                                  self.cell_size, 15, -1, landscape_group)
-                            self.field[i][j] = 2
+                            self.field[i][j] = FIELD_HILL
 
                     elif field_lst[i][j] in ['r']:  # если не назменые
                         if field_lst[i][j] == 'r':  # если река
                             landscapes.Landscape('river', 'Река', x, y,
                                                  os.path.join('images', 'landscapes', 'river.png'),
                                                  self.cell_size, 0, 0, landscape_group)
-                            self.field[i][j] = 3
+                            self.field[i][j] = FIELD_RIVER
                     else:  # иначе установка травы
                         landscapes.Landscape('grass', 'Трава', x, y,
                                              os.path.join('images', 'landscapes', 'grass.png'),
@@ -318,33 +320,33 @@ class Board:
         '''Функция размещения/возвращения юнитов на поле/с поля'''
         x, y = cell_coords
         if mouse_button == 1:  # при ЛКМ
-            if x <= 4 and self.board[y][x] == 0 and self.field[y][x] == 0:
+            if x <= 4 and self.board[y][x] == BOARD_EMPTY and self.field[y][x] == FIELD_GRASS:
                 if self.choosen_unit == UNIT_SWORDSMAN and swordsman.stock > 0:  # рыцарь
                     swordsman.Swordsman(x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
                                         my_units_group, start_game.death_callback)
                     swordsman.stock -= 1
-                    self.board[y][x] = 1
+                    self.board[y][x] = BOARD_MY_UNIT
 
                 if self.choosen_unit == UNIT_ARCHER and archer.stock > 0:  # лучник
                     archer.Archer(x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
                                   my_units_group, start_game.death_callback)
                     archer.stock -= 1
-                    self.board[y][x] = 1
+                    self.board[y][x] = BOARD_MY_UNIT
 
                 if self.choosen_unit == UNIT_CAVALRY and cavalry.stock > 0:  # кавалерия
                     cavalry.Cavalry(x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
                                     my_units_group, start_game.death_callback)
                     cavalry.stock -= 1
-                    self.board[y][x] = 1
+                    self.board[y][x] = BOARD_MY_UNIT
 
                 if self.choosen_unit == UNIT_DRAGON and dragon.stock > 0:  # дракон
                     dragon.Dragon(x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
                                   my_units_group, start_game.death_callback)
                     dragon.stock -= 1
-                    self.board[y][x] = 1
+                    self.board[y][x] = BOARD_MY_UNIT
 
         if mouse_button == 3:  # при ПКМ - возврат юнита в инвентарь
-            if self.board[y][x] == 1:
+            if self.board[y][x] == BOARD_MY_UNIT:
                 coords = x * self.cell_size + self.left, y * self.cell_size + self.top
 
                 dct = {UNIT_SWORDSMAN: swordsman,
@@ -356,7 +358,7 @@ class Board:
                         my_units_group.remove(unit)
                         dct[unit.name].stock += 1
 
-                self.board[y][x] = 0
+                self.board[y][x] = BOARD_EMPTY
 
     def get_click(self, mouse_pos, mouse_button, screen):
         '''Функция получения клетки и проверка на размещение юнита'''
@@ -367,8 +369,8 @@ class Board:
 
     def clear_board(self):
         '''Функция очистки поля'''
-        self.board = [[0] * self.width for _ in range(self.height)]
-        self.field = [[0] * self.width for _ in range(self.height)]
+        self.board = [[BOARD_EMPTY] * self.width for _ in range(self.height)]
+        self.field = [[FIELD_GRASS] * self.width for _ in range(self.height)]
 
         my_units_group.empty()
         enemies_group.empty()

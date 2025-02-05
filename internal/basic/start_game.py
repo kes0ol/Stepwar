@@ -7,8 +7,8 @@ import pygame
 import internal.different.global_vars as global_vars
 from internal.db.score_dbo import Score
 from internal.different.global_vars import my_units_group, enemies_group, RANGE_ATTACK, shop_group, \
-    landscape_group, UNIT_CASTLE, UNIT_ARCHER, UNIT_CAVALRY, UNIT_DRAGON, UNIT_SWORDSMAN, \
-    BOARD_ENEMY_CASTLE, BOARD_MY_CASTLE
+    landscape_group, UNIT_CASTLE, UNIT_ARCHER, UNIT_CAVALRY, UNIT_DRAGON, UNIT_SWORDSMAN, BOARD_EMPTY, BOARD_ENEMY, \
+    FIELD_MOUNTAIN, FIELD_HILL, FIELD_RIVER
 from internal.units import swordsman, archer, cavalry, dragon
 
 '''Создание глобальных переменных'''
@@ -25,6 +25,8 @@ def start(screen):
 
     enemys_move(screen)  # первый ход юнитов
     money_now = 0
+    screen.score = 0
+
 
     fps = 60
     clock = pygame.time.Clock()
@@ -136,7 +138,7 @@ def draw_end_surface(screen, main_surf):
     '''Отображение информации на экране окончания'''
     global money_now
     one_size = screen.board.cell_size
-    lst = []
+    lst = [(f'Заработанные монеты: {money_now}', one_size // 2)]
 
     surf = pygame.surface.Surface((one_size * 6, one_size * 2))  # создание полотна
 
@@ -144,15 +146,13 @@ def draw_end_surface(screen, main_surf):
     main_surf.fill('black')
 
     if is_win:  # инфо при победе
+        lst.append((f'Счёт: {resutl_score_points(screen.score, screen.steps)}', one_size // 2))
         font = pygame.font.Font(None, round(one_size * 1.4))
         text = font.render('Вы победили!', True, 'white')
     else:  # инфо при поражении
         font = pygame.font.Font(None, round(one_size * 1.3))
         text = font.render('Вас уничтожили!', True, 'white')
     main_surf.blit(text, (one_size // 5, one_size // 5))
-
-    lst.append((f'Заработанные монеты: {money_now}', one_size // 2))
-    lst.append((f'Счёт: {resutl_score_points(screen.score, screen.steps)}', one_size // 2))
 
     for i in range(len(lst)):  # отображение инфы
         font = pygame.font.Font(None, lst[i][1])
@@ -401,10 +401,10 @@ def select_surfaces(board, unit, cell, is_attack):
                     minus = 1
                     if abs(dx) != abs(dy):
                         if check_borders(board, cell_x, cell_y, dx, dy):  # проверка на выход за границы
-                            if ((board.board[cell_y + dy][cell_x + dx] == 0 and
-                                 board.field[cell_y + dy][cell_x + dx] != 1)):  # проверка на занятость поля
-                                if board.field[cell_y + dy][cell_x + dx] != 3 or \
-                                        board.field[cell_y + dy][cell_x + dx] == 3 and unit.name == UNIT_DRAGON:
+                            if ((board.board[cell_y + dy][cell_x + dx] == BOARD_EMPTY and
+                                 board.field[cell_y + dy][cell_x + dx] != FIELD_MOUNTAIN)):  # проверка на занятость поля
+                                if board.field[cell_y + dy][cell_x + dx] != FIELD_RIVER or \
+                                        board.field[cell_y + dy][cell_x + dx] == FIELD_RIVER and unit.name == UNIT_DRAGON:
                                     if (cell_x + dx, cell_y + dy) not in lst_steps:
                                         lst_steps.append((cell_x + dx, cell_y + dy))
 
@@ -412,7 +412,7 @@ def select_surfaces(board, unit, cell, is_attack):
                                         surface = pygame.surface.Surface((board.cell_size, board.cell_size))
                                         lst_surfaces.append((surface, coords))
                                     if (unit.name not in (UNIT_CAVALRY, UNIT_DRAGON)
-                                            and board.field[cell_y + dy][cell_x + dx] == 2):
+                                            and board.field[cell_y + dy][cell_x + dx] == FIELD_HILL):
                                         minus += 1
                                     if ran - minus > 0:  # запуск рекурсии (для следующего радиуса соседних клеток)
                                         add(ran - minus, (cell_x + dx, cell_y + dy))
@@ -447,28 +447,16 @@ def get_unit_by_cell(screen, select_cell):
             if unit.rect.collidepoint(select_coords):
                 return unit
 
+    return None
+
 
 def death_callback(screen, dead_unit, actor):
     global is_win, money_now
     if dead_unit.name == UNIT_CASTLE:
         if actor in my_units_group:  # конец игры - победа, запуск финального окна
             money_now += 100  # деньги за башню
-            screen.score += 100
-
-            ln_progress_now = len(screen.progress)  # проверка на прохождение нового уровня
-            screen.progress.add(int(screen.board.level) + 1)  # добавление пройденного уровня
-            if len(screen.progress) > ln_progress_now:  # добавление к сум. счёту (только по 1ой попытке каждого lvl)
-                screen.summary_score += screen.score
-            if screen.score > screen.best_score:  # проверка на лучший счёт
-                screen.best_score = screen.score
-
-            screen.score_db.score_points = resutl_score_points(screen.score, screen.steps)
-            Score.add(screen.score_db)
-            if 3 in screen.progress:  # запуск финального экрана всей игры
-                screen.main.go_final_window()
-            else:
-                is_win = True  # победа
-                end(screen)
+            screen.score += 100  # очки за башню
+            handle_win(screen)
 
         if actor in enemies_group:  # конец игры - поражение, запуск финального окна
             is_win = False  # поражение
@@ -483,6 +471,28 @@ def death_callback(screen, dead_unit, actor):
             money, score = dct[dead_unit.name]
             money_now += money
             screen.score += score
+
+        # конец игры - победа, запуск финального окна
+        if len([i for i in itertools.chain(*screen.board.board) if i == BOARD_ENEMY]) == 0:
+            handle_win(screen)
+
+
+def handle_win(screen):
+    global is_win
+    ln_progress_now = len(screen.progress)  # проверка на прохождение нового уровня
+    screen.progress.add(int(screen.board.level) + 1)  # добавление пройденного уровня
+    if len(screen.progress) > ln_progress_now:  # добавление к сум. счёту (только по 1ой попытке каждого lvl)
+        screen.summary_score += screen.score
+    if screen.score > screen.best_score:  # проверка на лучший счёт
+        screen.best_score = screen.score
+
+    screen.score_db.score_points = resutl_score_points(screen.score, screen.steps)
+    Score.add(screen.score_db)
+    if 3 in screen.progress:  # запуск финального экрана всей игры
+        screen.main.go_final_window()
+    else:
+        is_win = True  # победа
+        end(screen)
 
 
 def resutl_score_points(score, steps):
