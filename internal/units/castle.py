@@ -4,7 +4,6 @@ import pygame
 
 from internal.different.animation import AnimationParams
 from internal.different.global_vars import ANIMATION_IDLE, MELEE_ATTACK, ANIMATION_DEATH, UNIT_CASTLE
-
 from internal.units.unit import Unit
 
 

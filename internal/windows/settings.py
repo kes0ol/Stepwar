@@ -1,5 +1,6 @@
-import pygame
 import os
+
+import pygame
 
 from internal.different.global_vars import FILL_TYPE_BORDER
 from internal.different.widgets import Button, View

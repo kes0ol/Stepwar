@@ -9,7 +9,7 @@ from internal.different.widgets import Button
 from internal.windows import window
 
 
-class Score_window(window.Window):# класс окна счёта
+class Score_window(window.Window):  # класс окна счёта
     def __init__(self, screen, size, main):
         super().__init__(screen, size, main, ('images', 'backgrounds', 'score.PNG'))
         self.screen = pygame.surface.Surface((self.width, self.height))
@@ -31,11 +31,11 @@ class Score_window(window.Window):# класс окна счёта
                             'Мои результаты 2 уровень',
                             'Мои результаты 3 уровень']
 
-        window.Window.set_lists(self, [self.back_button, self.next_page_button, self.pref_page_button])# список кнопок
+        window.Window.set_lists(self, [self.back_button, self.next_page_button, self.pref_page_button])  # список кнопок
 
-        self.click_sound = pygame.mixer.Sound(os.path.join(*['music', 'click.wav']))# звук клика
+        self.click_sound = pygame.mixer.Sound(os.path.join(*['music', 'click.wav']))  # звук клика
 
-    def check_click(self, mouse_pos, lst):# анализ клика
+    def check_click(self, mouse_pos, lst):  # анализ клика
         for button in lst:
             if button.check_click(mouse_pos):
                 self.click_sound.play()
@@ -49,10 +49,10 @@ class Score_window(window.Window):# класс окна счёта
                     self.page %= len(self.page_titles)
 
     @window.Window.render_decorator
-    def render(self):# отрисовка
+    def render(self):  # отрисовка
         self.render_result_table()
 
-    def render_result_table(self):# отрисовка таблицы
+    def render_result_table(self):  # отрисовка таблицы
         f = pygame.font.Font(None, 100)
         f_table = pygame.font.Font(None, int(self.s * 0.5))
         t = f.render(self.page_titles[self.page], True, 'red')
@@ -89,7 +89,7 @@ class Score_window(window.Window):# класс окна счёта
                 self.screen.blit(f_table.render(str(v), True, 'red'), (x[j], y + i * dy))
 
     @window.Window.start_decoration
-    def start(self, event):# старт окна
+    def start(self, event):  # старт окна
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 self.running = False

@@ -1,4 +1,5 @@
 import os
+
 import pygame
 
 from internal.different.animation import AnimationChain, MovableAnimatedSprite
