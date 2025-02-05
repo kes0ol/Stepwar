@@ -1,6 +1,7 @@
 from internal.different.animation import AnimationChain, MovableAnimatedSprite
 from internal.different.global_vars import ANIMATION_ATTACK, ANIMATION_IDLE, ANIMATION_MOVE, \
-    ANIMATION_END_MOVE, ANIMATION_BEGIN_MOVE, RANGE_ATTACK, MELEE_ATTACK, ANIMATION_DEATH, BOARD_EMPTY, FIELD_HILL, UNIT_CAVALRY, UNIT_DRAGON
+    ANIMATION_END_MOVE, ANIMATION_BEGIN_MOVE, RANGE_ATTACK, MELEE_ATTACK, ANIMATION_DEATH, BOARD_EMPTY, FIELD_HILL, \
+    UNIT_CAVALRY, UNIT_DRAGON
 
 
 class Unit(MovableAnimatedSprite):
@@ -46,7 +47,7 @@ class Unit(MovableAnimatedSprite):
         select_x, select_y = choose_cell
         self.damage_plus = 0
 
-        if screen.board.field[select_y][select_x] == 2:
+        if screen.board.field[select_y][select_x] == FIELD_HILL:
             if self.name not in (UNIT_CAVALRY, UNIT_DRAGON):
                 self.step -= 1
                 if self.attack_type == RANGE_ATTACK:
@@ -110,7 +111,11 @@ class Unit(MovableAnimatedSprite):
 
         unit.recieve_damage(self)
         if unit.is_dead:  # удаление убитого юнита
-            screen.board.board[select_cell[1]][select_cell[0]] = BOARD_EMPTY
+            for i in range(screen.board.height):
+                for j in range(screen.board.width):
+                    if unit.rect.collidepoint(screen.board.get_cell_coords((j, i))):
+                        screen.board.board[i][j] = BOARD_EMPTY
+
             self.death_callback(screen, unit, self)
 
     def refresh(self):
