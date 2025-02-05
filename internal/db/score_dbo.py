@@ -1,4 +1,4 @@
-from sqlite3 import IntegrityError
+from sqlite3 import IntegrityError, OperationalError
 
 from internal.db.db import make_connection
 
@@ -99,6 +99,8 @@ class Score:
         cursor = connection.cursor()
         try:
             cursor.execute("DELETE FROM score WHERE created_at == updated_at")
+        except OperationalError:  # Еще не создана таблица user(первый запуск)
+            pass
         except IntegrityError as e:
             connection.rollback()
             raise e
