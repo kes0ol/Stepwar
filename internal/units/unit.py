@@ -65,10 +65,12 @@ class Unit(MovableAnimatedSprite):
         animation_chain = AnimationChain()
         animation_chain.add_step(ANIMATION_BEGIN_MOVE, mirror=mirror)
         steps = max([abs(select_x - x_now), abs(select_y - y_now)])
+
         tx = x / steps
         ty = y / steps
         for i in range(1, steps + 1):
             animation_chain.add_step(ANIMATION_MOVE, self.move, [tx, ty], mirror=mirror)
+
         animation_chain.add_step(ANIMATION_END_MOVE, self.set_position, [px, py], mirror=mirror)
         animation_chain.add_step(ANIMATION_IDLE, callback, callback_args)
 
