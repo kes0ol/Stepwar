@@ -1,5 +1,5 @@
 import pygame
-
+# файл для использования констант вместо строк
 FILL_TYPE_NONE = 0
 FILL_TYPE_BORDER = 1
 

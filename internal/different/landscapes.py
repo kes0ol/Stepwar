@@ -1,7 +1,7 @@
 import pygame
 
 
-class Landscape(pygame.sprite.Sprite):
+class Landscape(pygame.sprite.Sprite):# класс для ландшафтов
     def __init__(self, name, title, x, y, image, image_size, damage, move, group):
         super().__init__(group)
         self.image = pygame.image.load(image)

@@ -5,10 +5,10 @@ from internal.different.widgets import Button
 from internal.windows import window
 
 
-class Levels_menu(window.Window):
+class Levels_menu(window.Window):# класс для меню уровней
     def __init__(self, screen, size, main):
         super().__init__(screen, size, main, ('images', 'backgrounds', 'menu_levels_back_ground.jpg'))
-
+        # создание кнопок
         self.first_level_button = Button('Уровень 1', 100, self.s * 4, self.height // 2,
                                          color=(40, 120, 80), dark_color=(40, 150, 80))
         self.second_level_button = Button('Уровень 2', 100, self.s * 11, self.height // 2,
@@ -17,29 +17,29 @@ class Levels_menu(window.Window):
                                           color=(120, 80, 40), dark_color=(150, 80, 40))
         self.back_button = Button('Назад', 80, self.width // 2, self.height // 2 + 200, color=(130, 130, 130))
 
-        window.Window.set_lists(self, [self.back_button, ])
+        window.Window.set_lists(self, [self.back_button, ])# список кнопок
 
-        self.click_sound = pygame.mixer.Sound(os.path.join(*['music', 'click.wav']))
+        self.click_sound = pygame.mixer.Sound(os.path.join(*['music', 'click.wav']))# звук клика
 
-    def check_click(self, mouse_pos, lst):
+    def check_click(self, mouse_pos, lst):# анализ клика
         for button in lst:
             if button.check_click(mouse_pos):
                 self.click_sound.play()
                 if button == self.first_level_button and 1 in self.main_screen.progress:
                     self.running = False
-                    pygame.mixer.music.load('music/first.wav')
+                    pygame.mixer.music.load('music/first.wav')# музыка 1 уровня
                     pygame.mixer.music.play(-1)
                     pygame.time.delay(20)
                     self.main.start('1')
                 if button == self.second_level_button and 2 in self.main_screen.progress:
                     self.running = False
-                    pygame.mixer.music.load('music/second.wav')
+                    pygame.mixer.music.load('music/second.wav')# музыка 2 уровня
                     pygame.mixer.music.play(-1)
                     pygame.time.delay(20)
                     self.main.start('2')
                 if button == self.thirst_level_button and 3 in self.main_screen.progress:
                     self.running = False
-                    pygame.mixer.music.load('music/final.wav')
+                    pygame.mixer.music.load('music/final.wav')# музыка 3 уровня
                     pygame.mixer.music.play(-1)
                     pygame.time.delay(20)
                     self.main.start('3')
@@ -48,7 +48,7 @@ class Levels_menu(window.Window):
                     self.main.go_start_window()
 
     @window.Window.render_decorator
-    def render(self):
+    def render(self): # отрисовка
         if 1 in self.main_screen.progress and self.first_level_button not in self.lst_buttons:
             self.lst_buttons.append(self.first_level_button)
         if 2 in self.main_screen.progress and self.second_level_button not in self.lst_buttons:
@@ -57,7 +57,7 @@ class Levels_menu(window.Window):
             self.lst_buttons.append(self.thirst_level_button)
 
     @window.Window.start_decoration
-    def start(self, event):
+    def start(self, event):# старт окна
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 self.running = False

@@ -9,7 +9,7 @@ from internal.different.global_vars import ANIMATION_IDLE, ANIMATION_ATTACK, ANI
 from internal.units.unit import Unit
 
 
-class Cavalry(Unit):
+class Cavalry(Unit):# класс кавалерии
     def __init__(self, x, y, image_size, group, death_callback, mirror_animation=False):
         sheet = pygame.image.load(os.path.join('images', 'team_images', 'cavalry.png'))
         animations = {
@@ -21,11 +21,11 @@ class Cavalry(Unit):
             ANIMATION_DEATH: AnimationParams(sheet, 8, 1, 130, 130, 0, 390, 8)
         }
         super().__init__(animations, x, y, group, image_size, ANIMATION_IDLE, ['music', 'cavalry_hit.wav'],
-                         death_callback, mirror_animation)
+                         death_callback, mirror_animation) # анимации кавалерии
         self.init_stats(4, 1, MELEE_ATTACK, 80, 30, 'cavalry', 'Кавалерия', 0)
 
 
-def set_view_stock(screen, coords, size):
+def set_view_stock(screen, coords, size): # отображение количества лучников
     font = pygame.font.Font(None, size)
     text = font.render(f'{stock}', True, 'white')
     screen.blit(text, coords)

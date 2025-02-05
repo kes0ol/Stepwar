@@ -8,11 +8,11 @@ from internal.different.widgets import Button, Edit, View
 from internal.windows import window
 
 
-class EnterNicknameWindow(window.Window):
+class EnterNicknameWindow(window.Window):# класс для ввода имени
     def __init__(self, screen, size, main):
         super().__init__(screen, size, main, ('images', 'backgrounds', 'settings_background.jpg'))
         self.screen = pygame.surface.Surface((self.width, self.height))
-
+        # создание кнопок
         self.view = View('Введите Ваше имя:', self.s, self.width // 2, self.height // 2 - self.s,
                          color=(150, 150, 0))
         self.next_button = Button('Подтвердить', self.s, self.width // 2, self.height // 2 + self.s,
@@ -24,9 +24,9 @@ class EnterNicknameWindow(window.Window):
 
         window.Window.set_lists(self, [self.next_button, self.exit_button], [self.view, self.edit])
 
-        self.click_sound = pygame.mixer.Sound(os.path.join(*['music', 'click.wav']))
+        self.click_sound = pygame.mixer.Sound(os.path.join(*['music', 'click.wav']))# звук клика
 
-    def check_click(self, mouse_pos):
+    def check_click(self, mouse_pos): # анализ клика
         if self.next_button.check_click(mouse_pos):
             self.click_sound.play()
             if len(self.edit.text):
@@ -47,14 +47,14 @@ class EnterNicknameWindow(window.Window):
             self.edit.start(self)
 
     @window.Window.render_decorator
-    def render(self):
+    def render(self): # отрисовка
         if self.edit.edit_started:
             self.next_button.set_enabled(False)
         else:
             self.next_button.set_enabled(True)
 
     @window.Window.start_decoration
-    def start(self, event):
+    def start(self, event): # старт окна
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 self.running = False

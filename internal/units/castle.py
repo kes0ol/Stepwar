@@ -8,7 +8,7 @@ from internal.different.global_vars import ANIMATION_IDLE, MELEE_ATTACK, ANIMATI
 from internal.units.unit import Unit
 
 
-class Castle(Unit):
+class Castle(Unit):# класс замка
     def __init__(self, x, y, image_size, group, death_callback, mirror_animation=False):
         sheet = pygame.image.load(os.path.join('images', 'team_images', 'castle.png'))
         animations = {

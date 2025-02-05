@@ -7,7 +7,7 @@ from internal.different.global_vars import ANIMATION_ATTACK, ANIMATION_IDLE, ANI
     UNIT_CAVALRY, UNIT_DRAGON
 
 
-class Unit(MovableAnimatedSprite):
+class Unit(MovableAnimatedSprite): # класс юнитов
     def __init__(self, animations, x, y, group, scale_to, default_animation, hit_sound, death_callback,
                  mirror_animation=False):
         super().__init__(animations, x, y, group, scale_to, default_animation, mirror_animation)
@@ -33,7 +33,7 @@ class Unit(MovableAnimatedSprite):
     def __repr__(self):
         return f"[{id(self)} | {super().__repr__()}]"
 
-    def init_stats(self, step, distance_attack, attack_type, hp, damage, name, title, stock):
+    def init_stats(self, step, distance_attack, attack_type, hp, damage, name, title, stock):# статистика юнитов
         self.default_step = step
         self.step = step
         self.distance_attack = distance_attack
@@ -49,7 +49,7 @@ class Unit(MovableAnimatedSprite):
         self.move_tick()
         self.gc_tick()
 
-    def make_step(self, cell_coords, choose_cell, screen, callback=None, callback_args=None):
+    def make_step(self, cell_coords, choose_cell, screen, callback=None, callback_args=None):# передвижение
         x_now, y_now = cell_coords
         select_x, select_y = choose_cell
         self.damage_plus = 0
@@ -85,7 +85,7 @@ class Unit(MovableAnimatedSprite):
 
         self.step -= (abs(x // screen.board.cell_size) + abs(y // screen.board.cell_size))
 
-    def make_attack(self, unit, choose_cell, screen, callback=None, callback_args=None):
+    def make_attack(self, unit, choose_cell, screen, callback=None, callback_args=None):# атака
         animation_chain = AnimationChain()
 
         x, _ = screen.board.get_cell_coords(choose_cell)
@@ -98,7 +98,7 @@ class Unit(MovableAnimatedSprite):
         self.start_animation_chain(animation_chain)
         self.do_damage = False
 
-    def make_death(self):
+    def make_death(self):# смерть
         animation_chain = AnimationChain()
 
         animation_chain.add_step(ANIMATION_IDLE)
@@ -108,16 +108,16 @@ class Unit(MovableAnimatedSprite):
 
         self.start_animation_chain(animation_chain)
 
-    def recieve_damage(self, actor):
+    def recieve_damage(self, actor):# проверка на смерть
         self.hp -= actor.get_damage()
         if self.hp <= 0:
             self.is_dead = True
             self.make_death()
 
-    def get_damage(self):
+    def get_damage(self):# получение урона
         return self.damage + self.damage_plus
 
-    def give_damage(self, screen, unit, select_cell):
+    def give_damage(self, screen, unit, select_cell):# нанесение урона
         '''Нанесение дамага по юниту'''
 
         unit.recieve_damage(self)
