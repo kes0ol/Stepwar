@@ -2,6 +2,7 @@ import os
 
 import pygame
 
+from internal.different import global_vars
 from internal.different.animation import AnimationChain, MovableAnimatedSprite
 from internal.different.global_vars import ANIMATION_ATTACK, ANIMATION_IDLE, ANIMATION_MOVE, \
     ANIMATION_END_MOVE, ANIMATION_BEGIN_MOVE, RANGE_ATTACK, MELEE_ATTACK, ANIMATION_DEATH, BOARD_EMPTY, FIELD_HILL, \
@@ -108,14 +109,19 @@ class Unit(MovableAnimatedSprite):
 
     def make_death(self):
         '''Запуск анимации смерти юнита'''
+        global_vars.action_in_progress += 1
         animation_chain = AnimationChain()
 
         animation_chain.add_step(ANIMATION_IDLE)
         animation_chain.add_step(ANIMATION_DEATH)
         self.death_sound.play()
-        animation_chain.add_step(ANIMATION_DEATH, self.kill, [])
+        animation_chain.add_step(ANIMATION_DEATH, self.kill_callback, [])
 
         self.start_animation_chain(animation_chain)
+
+    def kill_callback(self):
+        self.kill()
+        global_vars.action_in_progress -= 1
 
     def recieve_damage(self, actor):
         '''Функция для получения урона от атакующего юнита'''

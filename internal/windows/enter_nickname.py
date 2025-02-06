@@ -68,6 +68,14 @@ class EnterNicknameWindow(window.Window):
                 pygame.quit()
                 sys.exit()
             elif event.key == pygame.K_RETURN:
-                self.running = False
+                if len(self.edit.text):
+                    user = User.get_by_nickname(self.edit.text)
+                    if user:
+                        global_vars.current_user = user
+                    else:
+                        global_vars.current_user = User(nickname=self.edit.text)
+                        User.add(global_vars.current_user)
+
+                    self.running = False
         if event.type == pygame.MOUSEBUTTONDOWN:
             self.check_click(event.pos)
