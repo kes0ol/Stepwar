@@ -48,7 +48,9 @@ class Start_window(window.Window):
         self.dct_buttons = {pygame.K_1: self.levels_menu.start,
                             pygame.K_2: self.store.start,
                             pygame.K_3: self.settings_screen.start,
-                            pygame.K_4: self.ref_screen.start}
+                            pygame.K_4: self.ref_screen.start,
+                            pygame.K_5: self.score.start,
+                            pygame.K_6: self.about_creators.start}
 
         self.click_sound = pygame.mixer.Sound(os.path.join(*['music', 'click.wav']))# звук клика
 
