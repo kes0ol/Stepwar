@@ -20,9 +20,9 @@ class Store(window.Window):
 
         # загрузка всех карточек юнитов в список
         self.lst_products = []
-        for i in [(os.path.join('images', 'team_images', 'swordsman.png'), 30, (0, 0), (100, 100)),
-                  (os.path.join('images', 'team_images', 'archer.png'), 40, (0, 0), (100, 100)),
-                  (os.path.join('images', 'team_images', 'cavalry.png'), 60, (0, 0), (130, 130)),
+        for i in [(os.path.join('images', 'team_images', 'swordsman.png'), 35, (0, 0), (100, 100)),
+                  (os.path.join('images', 'team_images', 'archer.png'), 50, (0, 0), (100, 100)),
+                  (os.path.join('images', 'team_images', 'cavalry.png'), 70, (0, 0), (130, 130)),
                   (os.path.join('images', 'team_images', 'dragon.png'), 120, (0, 0), (125, 125))]:
             im, cost, ltop, sz = i
             image = pygame.image.load(im)

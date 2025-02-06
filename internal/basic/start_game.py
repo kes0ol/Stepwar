@@ -103,12 +103,12 @@ def start(screen):
 
         screen.sc.fill((0, 0, 0))
         screen.render()
-        screen.render_cursor()
         show_stats(screen)
 
         if warning:
             warning_window(screen)
 
+        screen.render_cursor()
         clock.tick(FPS)
         pygame.display.flip()
 
@@ -539,7 +539,7 @@ def handle_win(screen):
 
     screen.score_db.score_points = resutl_score_points(screen.score, screen.steps)
     Score.add(screen.score_db)
-    if 3 in screen.progress:  # запуск финального экрана всей игры
+    if 4 in screen.progress:  # запуск финального экрана всей игры
         screen.main.go_final_window()
     else:
         is_win = True  # победа
