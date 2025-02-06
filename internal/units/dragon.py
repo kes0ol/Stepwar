@@ -23,7 +23,7 @@ class Dragon(Unit):
         }
         super().__init__(animations, x, y, group, image_size, ANIMATION_IDLE, ['music', 'dragon_hit.wav'],
                          death_callback, mirror_animation) # анимации дракона
-        self.init_stats(4, 20, MELEE_ATTACK, 1500, 3000, UNIT_DRAGON, 'Дракон', 6)
+        self.init_stats(4, 2, MELEE_ATTACK, 150, 30, UNIT_DRAGON, 'Дракон', 0)
 
 
 def set_view_stock(screen, coords, size): # отображение количества лучников
