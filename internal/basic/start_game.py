@@ -288,7 +288,7 @@ def can_move(screen):
 def enemys_move(screen):
     '''Функция обработки ходов юнитов'''
     for unit in enemies_group:
-        if unit.step <= 0:  # проверка на возможность хода
+        if unit.step <= 0 or unit.is_dead:  # проверка на возможность хода
             unit.step = 0
             continue
 
