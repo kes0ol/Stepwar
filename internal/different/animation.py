@@ -6,7 +6,10 @@ from internal.different.global_vars import ANIMATION_IDLE
 
 
 class AnimationParams:
+    '''Создание класса параметров анимаций'''
+
     def __init__(self, sheet, columns, rows, w, h, ltop_x, ltop_y, fps_mod):
+        '''Инициализация класса'''
         self.sheet = sheet
         self.columns = columns
         self.rows = rows
@@ -16,7 +19,10 @@ class AnimationParams:
 
 
 class AnimationStep:
+    '''Структурный Класс для шагов анимации'''
+
     def __init__(self, animation, action, action_args, mirror):
+        '''Инициализация класса'''
         self.animation = animation
         self.action = action
         self.action_args = action_args
@@ -24,19 +30,26 @@ class AnimationStep:
 
 
 class AnimationChain:
+    '''Класс цепочки анимаций'''
+    '''Инициализация класса'''
     def __init__(self):
         self.steps = []
 
     def add_step(self, animation, action=None, action_args=None, mirror=False):
+        '''Добавление шага'''
         self.steps.append(AnimationStep(animation, action, action_args, mirror))
 
     def __iter__(self):
+        '''Генератор для итерирования по шагам'''
         for i in reversed(self.steps):
             yield i
 
 
 class AnimatedSprite(pygame.sprite.Sprite):
+    '''Класс для анимации'''
+
     def __init__(self, animations, x, y, group, scale_to, default_animation, mirror_animation=False):
+        '''Инициализация класса'''
         super().__init__(group)
         self.scale_to = scale_to
         self.rect = pygame.Rect(0, 0, scale_to, scale_to)
@@ -55,6 +68,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
         self.gc = 0 + random.randint(0, 10)
 
     def cut_sheet(self, sheet, columns, rows, w, h, ltop_x, ltop_y, mirror):
+        '''Фунция для разрезания картинки на кадры'''
         frames = []
         for j in range(rows):
             for i in range(columns):
@@ -68,6 +82,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
         return frames
 
     def next_frame(self):
+        '''Переключение кадра анимации'''
         if self.gc % self.animations[self.current_animation].fps_mod == 0:
             self.frame_idx += 1
             if self.frame_idx == len(self.frames[self.current_animation]) and self.callback is not None:
@@ -78,9 +93,11 @@ class AnimatedSprite(pygame.sprite.Sprite):
                 self.image = pygame.transform.flip(self.image, True, False)
 
     def gc_tick(self):
+        '''Увеличение clock tick для данного класса'''
         self.gc += 1
 
     def set_animation(self, animation, callback=None, mirror_current_animation=False):
+        '''Меняет тип анимации'''
         self.current_animation = animation
         self.mirror_current_animation = mirror_current_animation
         self.frame_idx = 0
@@ -88,7 +105,11 @@ class AnimatedSprite(pygame.sprite.Sprite):
         self.gc = 0
 
     def start_animation_chain(self, animation_chain):
+        '''Фунция для запуска цепочки анимаций'''
+
         def generate_callback(unit, animation, callback, action=None, action_args=None, mirror_animation=False):
+            '''Генерирует функцию возврата и связывает с последующим шагом'''
+
             def f():
                 unit.set_animation(animation, callback, mirror_animation)
                 if action is not None and action_args is not None:
@@ -104,7 +125,10 @@ class AnimatedSprite(pygame.sprite.Sprite):
 
 
 class MovableAnimatedSprite(AnimatedSprite):
+    '''Класс расширяющий animated sprite, добавляюший фунционал перемещения спрайта'''
+
     def __init__(self, animations, x, y, group, scale_to, default_animation, mirror_animation=False):
+        '''Инициализация класса'''
         super().__init__(animations, x, y, group, scale_to, default_animation, mirror_animation)
         self.derired_position = None
         self.dx = 0
@@ -115,6 +139,7 @@ class MovableAnimatedSprite(AnimatedSprite):
         self.current_tick = 0
 
     def move(self, x, y):
+        '''Функция для задания изменения позиции спрайта на экране'''
         fps_mod = self.animations[self.current_animation].fps_mod
         frames_cnt = len(self.frames[self.current_animation])
         self.ticks_count = fps_mod * frames_cnt
@@ -125,6 +150,7 @@ class MovableAnimatedSprite(AnimatedSprite):
         self.current_tick = 0
 
     def move_tick(self):
+        '''Функция для изменения шага перемещения'''
         if self.current_tick < self.ticks_count:
             self.ax += self.dx
             self.ay += self.dy
@@ -133,5 +159,6 @@ class MovableAnimatedSprite(AnimatedSprite):
             self.current_tick += 1
 
     def set_position(self, x, y):
+        '''Функция для мгновенного изменения позиции спрайта'''
         self.rect.x = x
         self.rect.y = y

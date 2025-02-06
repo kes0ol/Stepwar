@@ -15,7 +15,7 @@ class Start_window(window.Window):
         '''Инициализация класса'''
         super().__init__(screen, size, main, ('images', 'backgrounds', 'fon.PNG'))
 
-        self.y_pos = self.s * 1.8
+        self.y_pos = self.s * 1.5
 
         # создание кнопок
         self.choose_level_button = Button('Уровни', round(self.s * 1.5), self.width // 2, self.y_pos,
@@ -28,10 +28,11 @@ class Start_window(window.Window):
                                  color=(255, 255, 0), dark_color=(0, 255, 0))  # кнопка справок
         self.score_button = Button('Счёт', round(self.s * 1.5), self.width // 2, self.y_pos * 5,
                                    color=(255, 255, 0), dark_color=(0, 255, 0))  # кнопка счёта
-        self.exit_button = Button('Выйти', round(self.s * 1.5), self.width // 2, self.y_pos * 6,
+        self.about_creators_button = Button('Об авторах', round(self.s * 1.2), self.width // 2, self.y_pos * 6,
+                                            color=(255, 255, 0), dark_color=(100, 0, 0))
+        self.exit_button = Button('Выйти', round(self.s * 1.5), self.width // 2, self.y_pos * 7,
                                   color=(255, 255, 0), dark_color=(100, 0, 0))  # кнопка выхода
-        self.about_creators_button = Button('Об авторах', round(self.s * 1.2), self.width // 8, self.y_pos,
-                                  color=(255, 255, 0), dark_color=(100, 0, 0))
+
 
         window.Window.set_lists(self, [self.setting_button, self.exit_button, self.choose_level_button,
                                        self.ref_button, self.shop_button, self.score_button,

@@ -8,8 +8,10 @@ from internal.different.global_vars import ANIMATION_IDLE, ANIMATION_ATTACK, ANI
 from internal.units.unit import Unit
 
 
-class Archer(Unit): # класс лучника
+class Archer(Unit):
+    '''Создание класса лучника'''
     def __init__(self, x, y, image_size, group, death_callback, mirror_animation=False):
+        '''Инициализация класса'''
         sheet = pygame.image.load(os.path.join('images', 'team_images', 'archer.png'))
         animations = {
             ANIMATION_IDLE: AnimationParams(sheet, 4, 1, 100, 100, 0, 0, 10),

@@ -8,8 +8,10 @@ from internal.different.global_vars import ANIMATION_IDLE, MELEE_ATTACK, ANIMATI
 from internal.units.unit import Unit
 
 
-class Castle(Unit):# класс замка
+class Castle(Unit):
+    '''Создание класса замка'''
     def __init__(self, x, y, image_size, group, death_callback, mirror_animation=False):
+        '''Инициализация класса'''
         sheet = pygame.image.load(os.path.join('images', 'team_images', 'castle.png'))
         animations = {
             ANIMATION_IDLE: AnimationParams(sheet, 1, 1, 225, 225, 0, 0, -1),

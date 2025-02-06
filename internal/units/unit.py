@@ -7,9 +7,11 @@ from internal.different.global_vars import ANIMATION_ATTACK, ANIMATION_IDLE, ANI
     UNIT_CAVALRY, UNIT_DRAGON
 
 
-class Unit(MovableAnimatedSprite): # класс юнитов
+class Unit(MovableAnimatedSprite):
+    '''Класс юнитов'''
     def __init__(self, animations, x, y, group, scale_to, default_animation, hit_sound, death_callback,
                  mirror_animation=False):
+        '''Инициализация класса'''
         super().__init__(animations, x, y, group, scale_to, default_animation, mirror_animation)
         self.death_callback = death_callback
         self.default_stock = 0
@@ -31,9 +33,11 @@ class Unit(MovableAnimatedSprite): # класс юнитов
         self.death_sound = pygame.mixer.Sound(os.path.join('music', 'kill_hit.wav'))
 
     def __repr__(self):
+        '''Функция для отображения информации о классе'''
         return f"[{id(self)} | {super().__repr__()}]"
 
-    def init_stats(self, step, distance_attack, attack_type, hp, damage, name, title, stock):# статистика юнитов
+    def init_stats(self, step, distance_attack, attack_type, hp, damage, name, title, stock):
+        '''Характеристики юнитов'''
         self.default_step = step
         self.step = step
         self.distance_attack = distance_attack
@@ -45,11 +49,13 @@ class Unit(MovableAnimatedSprite): # класс юнитов
         self.default_stock = stock
 
     def update(self, *args, **kwargs):
+        '''Функция для изменения кадра анимации и его положения на экране'''
         self.next_frame()
         self.move_tick()
         self.gc_tick()
 
-    def make_step(self, cell_coords, choose_cell, screen, callback=None, callback_args=None):# передвижение
+    def make_step(self, cell_coords, choose_cell, screen, callback=None, callback_args=None):
+        '''Функция для перехода на другую клетку'''
         x_now, y_now = cell_coords
         select_x, select_y = choose_cell
         self.damage_plus = 0
@@ -85,12 +91,13 @@ class Unit(MovableAnimatedSprite): # класс юнитов
 
         self.step -= (abs(x // screen.board.cell_size) + abs(y // screen.board.cell_size))
 
-    def make_attack(self, unit, choose_cell, screen, callback=None, callback_args=None):# атака
+    def make_attack(self, unit, choose_cell, screen, callback=None, callback_args=None):
+        '''Функция для атаки'''
         animation_chain = AnimationChain()
 
         x, _ = screen.board.get_cell_coords(choose_cell)
         mirror = x < self.rect.x
-        args = [screen, unit, choose_cell]
+        args = [screen, unit]
         animation_chain.add_step(ANIMATION_ATTACK, self.give_damage, args, mirror=mirror)
         self.hit_sound.play()
         animation_chain.add_step(ANIMATION_IDLE, callback, callback_args)
@@ -98,7 +105,8 @@ class Unit(MovableAnimatedSprite): # класс юнитов
         self.start_animation_chain(animation_chain)
         self.do_damage = False
 
-    def make_death(self):# смерть
+    def make_death(self):
+        '''Запуск анимации смерти юнита'''
         animation_chain = AnimationChain()
 
         animation_chain.add_step(ANIMATION_IDLE)
@@ -108,18 +116,19 @@ class Unit(MovableAnimatedSprite): # класс юнитов
 
         self.start_animation_chain(animation_chain)
 
-    def recieve_damage(self, actor):# проверка на смерть
+    def recieve_damage(self, actor):
+        '''Функция для получения урона от атакующего юнита'''
         self.hp -= actor.get_damage()
         if self.hp <= 0:
             self.is_dead = True
             self.make_death()
 
-    def get_damage(self):# получение урона
+    def get_damage(self):
+        '''Возвращение текущего урона'''
         return self.damage + self.damage_plus
 
-    def give_damage(self, screen, unit, select_cell):# нанесение урона
-        '''Нанесение дамага по юниту'''
-
+    def give_damage(self, screen, unit):
+        '''Нанесение урона по юниту'''
         unit.recieve_damage(self)
         if unit.is_dead:  # удаление убитого юнита
             for i in range(screen.board.height):
@@ -130,5 +139,6 @@ class Unit(MovableAnimatedSprite): # класс юнитов
             self.death_callback(screen, unit, self)
 
     def refresh(self):
+        '''Восстановить ходы на следующем ходе'''
         self.step = self.default_step
         self.do_damage = True

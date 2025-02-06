@@ -9,8 +9,10 @@ from internal.different.global_vars import ANIMATION_IDLE, ANIMATION_ATTACK, ANI
 from internal.units.unit import Unit
 
 
-class Cavalry(Unit):# класс кавалерии
+class Cavalry(Unit):
+    '''Создание класса кавалерии'''
     def __init__(self, x, y, image_size, group, death_callback, mirror_animation=False):
+        '''Инициализация класса'''
         sheet = pygame.image.load(os.path.join('images', 'team_images', 'cavalry.png'))
         animations = {
             ANIMATION_IDLE: AnimationParams(sheet, 9, 1, 130, 130, 0, 0, 10),

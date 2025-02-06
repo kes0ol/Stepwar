@@ -7,7 +7,9 @@ from internal.windows import window
 
 
 class Settings_window(window.Window):# класс окна настроек
+    '''Создание класса настроек'''
     def __init__(self, screen, size, main):
+        '''Инициализация класса'''
         super().__init__(screen, size, main, ('images', 'backgrounds', 'settings_background.jpg'))
         self.volume = 1 # начальная громкость
         # создание кнопок
@@ -27,7 +29,8 @@ class Settings_window(window.Window):# класс окна настроек
 
         self.click_sound = pygame.mixer.Sound(os.path.join(*['music', 'click.wav']))# звук клика
 
-    def check_click(self, mouse_pos, lst):# анализ клика
+    def check_click(self, mouse_pos, lst):
+        '''Проверка на клик по кнопкам мышкой'''
         for button in lst:
             if button.check_click(mouse_pos):
                 self.click_sound.play()
@@ -50,11 +53,12 @@ class Settings_window(window.Window):# класс окна настроек
                     self.main.go_start_window()
 
     @window.Window.render_decorator
-    def render(self):# отрисовка стартового окна
-        pass
+    def render(self):
+        '''Рендер настроек'''
 
     @window.Window.start_decoration
-    def start(self, event):# старт окна
+    def start(self, event):
+        '''Функция начала основного цикла окна настроек'''
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 self.running = False

@@ -3,7 +3,9 @@ import pygame
 from internal.different.global_vars import FILL_TYPE_BORDER, FILL_TYPE_NONE
 
 
-class RectCoord: # вспомогательный класс для работы с координатами экрана
+class RectCoord:
+    '''Создание класса для работы с координатами экрана'''
+
     @staticmethod
     def set_rect_coord(rect, x, y, coord_type):
         if coord_type == "center":
@@ -20,9 +22,12 @@ class RectCoord: # вспомогательный класс для работы
             rect.center = (x, y)
 
 
-class Button(RectCoord): # класс для кнопок
+class Button(RectCoord):
+    '''Создание класса для кнопок'''
+
     def __init__(self, text, font_size, x, y, color=(0, 200, 0), dark_color=(0, 150, 0), fill_type=FILL_TYPE_NONE,
                  coord_type="center"):
+        '''Инициализация класса'''
         self.size_font = font_size
         self.font = pygame.font.Font(None, font_size)
         self.surfaces = [self.font.render(text, True, color), self.font.render(text, True, dark_color)]
@@ -38,7 +43,8 @@ class Button(RectCoord): # класс для кнопок
     def set_enabled(self, is_enabled):
         self.is_enabled = is_enabled
 
-    def render(self, sc): # отрисовка
+    def render(self, sc):
+        '''Рендер'''
         if not self.is_enabled:
             return
         if self.fill_type == FILL_TYPE_BORDER:
@@ -47,14 +53,18 @@ class Button(RectCoord): # класс для кнопок
             pygame.draw.rect(sc, self.color, (x - w / 2, y - h / 2, w, h), 1)
         sc.blit(self.surfaces[self.check_click(pygame.mouse.get_pos())], self.rect)
 
-    def check_click(self, mouse_pos): #нажатие
+    def check_click(self, mouse_pos):
+        '''Проверка на клик по кнопкам мышкой'''
         if not self.is_enabled:
             return False
         return self.rect.collidepoint(mouse_pos)
 
 
 class View(RectCoord):
+    '''Создание класса вида'''
+
     def __init__(self, text, font_size, x, y, color=(0, 200, 0), coord_type="center"):
+        '''Инициализация класса'''
         self.font = pygame.font.Font(None, font_size)
         self.x = x
         self.y = y
@@ -63,16 +73,21 @@ class View(RectCoord):
         self.set_text(text)
 
     def set_text(self, text):
+        '''Функция для установки текста'''
         self.surface = self.font.render(text, True, self.color)
         self.rect = pygame.Rect(0, 0, *self.surface.get_rect().size)
         self.set_rect_coord(self.rect, self.x, self.y, self.coord_type)
 
     def render(self, sc):
+        '''Рендер'''
         sc.blit(self.surface, self.rect)
 
 
 class Edit(RectCoord):
+    '''Создание класса Изменений'''
+
     def __init__(self, text, font_size, x, y, w, h, color=(0, 200, 0), coord_type="center", fps_mod=20):
+        '''Функция для установки текста'''
         self.fps_mod = fps_mod
         self.cursor_show = False
         self.cursor_pos = 0
@@ -91,6 +106,7 @@ class Edit(RectCoord):
         self.cursor_pos = len(text)
 
     def render(self, sc):
+        '''Рендер'''
         if self.edit_started:
             if self.cursor_show:
                 text = self.text[:self.cursor_pos] + "|" + self.text[self.cursor_pos:]
@@ -108,11 +124,13 @@ class Edit(RectCoord):
         pygame.draw.rect(sc, self.color, self.rect, 1)
 
     def update(self):
+        '''Функция изменений'''
         if self.edit_started and self.gc % self.fps_mod == 0:
             self.cursor_show ^= 1
         self.gc += 1
 
     def check_click(self, mouse_pos):
+        '''Проверка на клик по кнопкам мышкой'''
         return self.rect.collidepoint(mouse_pos)
 
     def handle_event(self, event):
@@ -143,6 +161,7 @@ class Edit(RectCoord):
             self.edit_started ^= self.check_click(event.pos)
 
     def start(self, window):
+        '''Функция начала основного цикла для виджетов'''
         fps = 60
         clock = pygame.time.Clock()
 

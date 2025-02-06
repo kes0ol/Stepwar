@@ -9,8 +9,10 @@ from internal.different.global_vars import ANIMATION_ATTACK, ANIMATION_IDLE, ANI
 from internal.units.unit import Unit
 
 
-class Dragon(Unit):# класс дракона
+class Dragon(Unit):
+    '''Создание класса дракона'''
     def __init__(self, x, y, image_size, group, death_callback, mirror_animation=False):
+        '''Инициализация класса'''
         sheet = pygame.image.load(os.path.join('images', 'team_images', 'dragon.png'))
         animations = {
             ANIMATION_IDLE: AnimationParams(sheet, 4, 1, 125, 125, 0, 0, 10),
