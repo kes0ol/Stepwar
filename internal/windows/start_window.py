@@ -4,7 +4,7 @@ import sys
 import pygame
 
 from internal.different.widgets import Button
-from internal.windows import levels, reference, score, settings, shop
+from internal.windows import levels, reference, score, settings, shop, about_creators
 from internal.windows import window
 
 
@@ -30,15 +30,19 @@ class Start_window(window.Window):
                                    color=(255, 255, 0), dark_color=(0, 255, 0))  # кнопка счёта
         self.exit_button = Button('Выйти', round(self.s * 1.5), self.width // 2, self.y_pos * 6,
                                   color=(255, 255, 0), dark_color=(100, 0, 0))  # кнопка выхода
+        self.about_creators_button = Button('Об авторах', round(self.s * 1.2), self.width // 8, self.y_pos,
+                                  color=(255, 255, 0), dark_color=(100, 0, 0))
 
         window.Window.set_lists(self, [self.setting_button, self.exit_button, self.choose_level_button,
-                                       self.ref_button, self.shop_button, self.score_button])
+                                       self.ref_button, self.shop_button, self.score_button,
+                                       self.about_creators_button])
 
         self.settings_screen = settings.Settings_window(self.main_screen, self.size, main)  # экран настроек
         self.ref_screen = reference.Reference_window(self.main_screen, self.size, main)  # экран справки
         self.levels_menu = levels.Levels_menu(self.main_screen, self.size, main)  # экран уровней
         self.store = shop.Store(self.main_screen, self.size, main)  # экран магазина
         self.score = score.Score_window(self.main_screen, self.size, main)  # экран очков
+        self.about_creators = about_creators.About_Creators(self.main_screen, self.size, main) #экран о создателях
 
         self.dct_buttons = {pygame.K_1: self.levels_menu.start,
                             pygame.K_2: self.store.start,
@@ -54,6 +58,7 @@ class Start_window(window.Window):
                self.ref_button: self.ref_screen.start,
                self.shop_button: self.store.start,
                self.score_button: self.score.start,
+               self.about_creators_button: self.about_creators.start
                }
         for button in lst:
             if button.check_click(mouse_pos):
