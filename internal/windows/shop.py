@@ -20,9 +20,9 @@ class Store(window.Window):
 
         # загрузка всех карточек юнитов в список
         self.lst_products = []
-        for i in [(os.path.join('images', 'team_images', 'swordsman.png'), 30, (0, 0), (100, 100)),
-                  (os.path.join('images', 'team_images', 'archer.png'), 40, (0, 0), (100, 100)),
-                  (os.path.join('images', 'team_images', 'cavalry.png'), 60, (0, 0), (130, 130)),
+        for i in [(os.path.join('images', 'team_images', 'swordsman.png'), 35, (0, 0), (100, 100)),
+                  (os.path.join('images', 'team_images', 'archer.png'), 50, (0, 0), (100, 100)),
+                  (os.path.join('images', 'team_images', 'cavalry.png'), 70, (0, 0), (130, 130)),
                   (os.path.join('images', 'team_images', 'dragon.png'), 120, (0, 0), (125, 125))]:
             im, cost, ltop, sz = i
             image = pygame.image.load(im)
@@ -47,25 +47,26 @@ class Store(window.Window):
 
     def render_products(self):
         '''Функция отображение карточек юнитов'''
+        font = pygame.font.Font(None, round(self.s * 1.2))
+
         for i in range(len(self.lst_units)):  # отображение кол-ва
             self.lst_units[i].set_view_stock(self.screen, (
                 i * round(self.s * 4.5) + round(self.s * 4.35), round(self.s)), self.s)
 
         for index in range(len(self.lst_products)):  # отображение самой карточки с кнопкой Купить
-            image, cost = self.lst_products[index]
-            surf = pygame.surface.Surface((round(self.s * 4), round(self.s * 6)))
+            image, cost = self.lst_products[index]  # получение данных
+            surf = pygame.surface.Surface((round(self.s * 4), round(self.s * 6)))  # создание полотна
 
-            font = pygame.font.Font(None, round(self.s * 1.2))
-            text = font.render(str(cost), True, 'yellow')
+            text = font.render(str(cost), True, 'yellow')  # рендер текста
 
-            surf.blit(image, (self.s // 2, 0))
-            surf.blit(text, (round(self.s * 1.45), round(self.s * 3.5)))
-
-            money.moneys.draw(self.screen)
-            self.main_screen.icon_money.render(self.screen, self.main_screen.money)
+            surf.blit(image, (self.s // 2, 0))  # отображение картинки
+            surf.blit(text, (round(self.s * 1.45), round(self.s * 3.5)))  # отображение текста
 
             self.screen.blit(surf, (
-                index * round(self.s * 4.5) + round(self.s * 2.5), round(self.s * 2.5)))
+                index * round(self.s * 4.5) + round(self.s * 2.5), round(self.s * 2.5)))  # отображение карточки
+
+        money.moneys.draw(self.screen)  # отображение денег
+        self.main_screen.icon_money.render(self.screen, self.main_screen.money)
 
     def check_click(self, mouse_pos, lst):
         '''Функция проверки клика мышки'''

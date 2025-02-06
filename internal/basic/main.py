@@ -1,14 +1,14 @@
-import sys, os
+import os
+import sys
 
 import pygame
 
 from internal.basic import mapping
 from internal.basic import start_game
 from internal.different import global_vars
+from internal.different.global_vars import UNIT_ARCHER, UNIT_CAVALRY, UNIT_DRAGON, UNIT_SWORDSMAN, FPS
 from internal.windows import final_window
 from internal.windows import start_window, enter_nickname
-
-from internal.different.global_vars import UNIT_ARCHER, UNIT_CAVALRY, UNIT_DRAGON, UNIT_SWORDSMAN
 
 
 class Main:
@@ -29,14 +29,17 @@ class Main:
         set_music(os.path.join('music', 'walking.wav'), -1, 20)  # запуск музыки
 
     def run(self):
+        '''Функция запуска всей игры'''
         self.go_start_window()  # старт начального экрана
 
     def go_start_window(self):
+        '''Функция запуска начального экрана'''
         if not global_vars.current_user:
             self.nickname_window.start()
         self.start_screen.start()
 
     def go_final_window(self):
+        '''Функция запуска финального экрана'''
         self.final_screen.start()
 
     def start(self, level):
@@ -45,10 +48,14 @@ class Main:
         self.screen.gameplay = False
         self.screen.back_to_menu = False
 
+        choose_unit = {pygame.K_1: (UNIT_SWORDSMAN, self.screen.icon_swordsman),
+                       pygame.K_2: (UNIT_ARCHER, self.screen.icon_archer),
+                       pygame.K_3: (UNIT_CAVALRY, self.screen.icon_cavalry),
+                       pygame.K_4: (UNIT_DRAGON, self.screen.icon_dragon)}
+
         self.screen.board.level = level
         self.screen.board.clear_board()  # очистка поля
 
-        fps = 60
         clock = pygame.time.Clock()
 
         self.running = True
@@ -65,31 +72,19 @@ class Main:
                         start_game.return_units()
                         self.screen.board.clear_board()
                         self.start_screen.levels_menu.start()
-                    elif event.key == pygame.K_1:  # если нажата клавиша 1
-                        self.screen.choose_unit = UNIT_SWORDSMAN
-                        self.screen.choose_unit_surface[1] = [self.screen.icon_swordsman.rect.x,
-                                                              self.screen.icon_swordsman.rect.y]
-                    elif event.key == pygame.K_2:  # если нажата клавиша 2
-                        self.screen.choose_unit = UNIT_ARCHER
-                        self.screen.choose_unit_surface[1] = [self.screen.icon_archer.rect.x,
-                                                              self.screen.icon_archer.rect.y]
-                    elif event.key == pygame.K_3:  # если нажата клавиша 3
-                        self.screen.choose_unit = UNIT_CAVALRY
-                        self.screen.choose_unit_surface[1] = [self.screen.icon_cavalry.rect.x,
-                                                              self.screen.icon_cavalry.rect.y]
-                    elif event.key == pygame.K_4:  # если нажата клавиша 4
-                        self.screen.choose_unit = UNIT_DRAGON
-                        self.screen.choose_unit_surface[1] = [self.screen.icon_dragon.rect.x,
-                                                              self.screen.icon_dragon.rect.y]
+                    elif event.key in choose_unit.keys():
+                        self.screen.choose_unit = choose_unit[event.key][0]  # запись выбранного юнита
+                        self.screen.choose_unit_surface[1] = [choose_unit[event.key][1].rect.x,  # запись его коорд
+                                                              choose_unit[event.key][1].rect.y]
 
-                if event.type == pygame.MOUSEBUTTONDOWN:  # при нажатии на кнопки мышки
+                elif event.type == pygame.MOUSEBUTTONDOWN:  # при нажатии на кнопки мышки
                     self.screen.get_click(event.pos, event.button)
 
             if self.screen.back_to_menu:  # вернуться назад
                 self.start_screen.start()
                 self.screen.back_to_menu = False
 
-            if self.screen.gameplay:  # начать геймплей
+            elif self.screen.gameplay:  # начать геймплей
                 start_game.start(self.screen)
                 self.start_screen.levels_menu.start()
 
@@ -98,7 +93,7 @@ class Main:
             self.screen.render_cursor()
             start_game.show_stats(self.screen)
             self.screen.render_cursor()
-            clock.tick(fps)
+            clock.tick(FPS)
             pygame.display.flip()
 
         pygame.quit()

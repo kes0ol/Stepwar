@@ -1,33 +1,35 @@
-import pygame
 import os
+
+import pygame
 
 from internal.different.global_vars import FILL_TYPE_BORDER
 from internal.different.widgets import Button, View
 from internal.windows import window
 
 
-class Settings_window(window.Window):# класс окна настроек
+class Settings_window(window.Window):
     '''Создание класса настроек'''
     def __init__(self, screen, size, main):
         '''Инициализация класса'''
         super().__init__(screen, size, main, ('images', 'backgrounds', 'settings_background.jpg'))
-        self.volume = 1 # начальная громкость
+        self.volume = 1  # начальная громкость
         # создание кнопок
         self.volume_title = View('Громкость', self.s, self.width // 2, self.s, color=(255, 255, 0))
+        self.percent_view = View(f'{self.volume * 100}%', self.s, self.width // 2, self.s * 3,
+                                 color=(255, 255, 0))
         self.plus_button = Button('+', self.s * 2, self.width // 2 + self.s * 3, self.s * 3,
                                   color=(0, 255, 0), dark_color=(0, 100, 0), fill_type=FILL_TYPE_BORDER)
         self.minus_button = Button('-', self.s * 2, self.width // 2 - self.s * 3, self.s * 3,
                                    color=(255, 0, 0), dark_color=(100, 0, 0), fill_type=FILL_TYPE_BORDER)
-        self.percent_view = View(f'{self.volume * 100}%', self.s, self.width // 2, self.s * 3,
-                                 color=(255, 255, 0))
         self.reset_button = Button('Сбросить прогрес', self.s, self.s * 18, self.s * 11,
                                    color=(255, 255, 0), dark_color=(100, 100, 0))
         self.back_button = Button('Назад', self.s, self.s * 2, self.s * 11, color=(150, 0, 0),
                                   dark_color=(100, 0, 0))
-        window.Window.set_lists(self, [self.plus_button, self.minus_button, self.reset_button,
-                                       self.back_button], [self.volume_title, self.percent_view])# список кнопок
 
-        self.click_sound = pygame.mixer.Sound(os.path.join(*['music', 'click.wav']))# звук клика
+        window.Window.set_lists(self, [self.plus_button, self.minus_button, self.reset_button,
+                                       self.back_button], [self.volume_title, self.percent_view])  # список кнопок
+
+        self.click_sound = pygame.mixer.Sound(os.path.join(*['music', 'click.wav']))  # звук клика
 
     def check_click(self, mouse_pos, lst):
         '''Проверка на клик по кнопкам мышкой'''
@@ -55,6 +57,7 @@ class Settings_window(window.Window):# класс окна настроек
     @window.Window.render_decorator
     def render(self):
         '''Рендер настроек'''
+        pass
 
     @window.Window.start_decoration
     def start(self, event):

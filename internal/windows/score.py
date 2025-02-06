@@ -95,7 +95,7 @@ class Score_window(window.Window):
                 self.screen.blit(f_table.render(str(v), True, 'red'), (x[j], y + i * dy))
 
     @window.Window.start_decoration
-    def start(self, event):  # старт окна
+    def start(self, event):
         '''Функция начала основного цикла окна счёта'''
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:

@@ -52,7 +52,7 @@ class Start_window(window.Window):
                             pygame.K_5: self.score.start,
                             pygame.K_6: self.about_creators.start}
 
-        self.click_sound = pygame.mixer.Sound(os.path.join(*['music', 'click.wav']))# звук клика
+        self.click_sound = pygame.mixer.Sound(os.path.join(*['music', 'click.wav']))  # звук клика
 
     def check_click(self, mouse_pos, lst):
         '''Проверка на клик по кнопкам мышкой'''

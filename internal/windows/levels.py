@@ -1,5 +1,6 @@
-import pygame
 import os
+
+import pygame
 
 from internal.different.widgets import Button
 from internal.windows import window

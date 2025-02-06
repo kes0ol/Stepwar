@@ -8,7 +8,7 @@ import internal.different.global_vars as global_vars
 from internal.db.score_dbo import Score
 from internal.different.global_vars import my_units_group, enemies_group, RANGE_ATTACK, shop_group, \
     landscape_group, UNIT_CASTLE, UNIT_ARCHER, UNIT_CAVALRY, UNIT_DRAGON, UNIT_SWORDSMAN, BOARD_EMPTY, BOARD_ENEMY, \
-    FIELD_MOUNTAIN, FIELD_HILL, FIELD_RIVER
+    FIELD_MOUNTAIN, FIELD_HILL, FIELD_RIVER, FPS
 from internal.units import swordsman, archer, cavalry, dragon
 
 '''Создание глобальных переменных'''
@@ -28,8 +28,6 @@ def start(screen):
     money_now = 0
     screen.score = 0
 
-
-    fps = 60
     clock = pygame.time.Clock()
     running = True
     '''Старт цикла'''
@@ -40,20 +38,23 @@ def start(screen):
                 sys.exit()
             if event.type == pygame.KEYDOWN:  # при нажатии кнопки
                 if event.key == pygame.K_ESCAPE and not global_vars.action_in_progress:  # нажатие escape (назад)
-                    pygame.mixer.music.load('music/walking.wav')
-                    pygame.mixer.music.play(-1)
-                    pygame.time.delay(20)
-                    if not warning:
+
+                    if not warning:  # проверка на появление окна предупреждения
                         warning = True
-                    else:
+                    else:  # если нажата второй раз
                         warning = False
                         running = False
                         screen.gameplay = False
+
                         return_units()
                         new_step()
                         screen.board.clear_board()
+
+                        pygame.mixer.music.load('music/walking.wav')  # запуск музыки начального экрана при выходе
+                        pygame.mixer.music.play(-1)
+                        pygame.time.delay(20)
                 else:
-                    if warning:
+                    if warning:  # если окно всплыло, но игрок передумал
                         warning = False
 
                 if (event.key in [pygame.K_SPACE, pygame.K_RETURN]
@@ -69,20 +70,22 @@ def start(screen):
                     new_step()
                     enemys_move(screen)
                 if select_button == 'back_to_menu' and not global_vars.action_in_progress:  # нажатие на кнопку 'назад'
-                    pygame.mixer.music.load('music/walking.wav')
-                    pygame.mixer.music.play(-1)
-                    pygame.time.delay(20)
-                    if not warning:
+                    if not warning:  # проверка на появление окна предупреждения
                         warning = True
-                    else:
+                    else:  # если нажата второй раз
                         warning = False
                         running = False
                         screen.gameplay = False
+
                         return_units()
                         new_step()
                         screen.board.clear_board()
+
+                        pygame.mixer.music.load('music/walking.wav')  # запуск музыки начального экрана при выходе
+                        pygame.mixer.music.play(-1)
+                        pygame.time.delay(20)
                 else:
-                    if warning:
+                    if warning:  # если окно всплыло, но игрок передумал
                         warning = False
 
                 if screen.setting_button.check_click(event.pos):  # кнопка настроек
@@ -100,13 +103,13 @@ def start(screen):
 
         screen.sc.fill((0, 0, 0))
         screen.render()
-        screen.render_cursor()
         show_stats(screen)
 
         if warning:
             warning_window(screen)
 
-        clock.tick(fps)
+        screen.render_cursor()
+        clock.tick(FPS)
         pygame.display.flip()
 
 
@@ -135,7 +138,6 @@ def end(screen):
     screen.money += money_now
     surf = pygame.Surface((screen.board.cell_size * 8, screen.board.cell_size * 4))
 
-    fps = 60
     clock = pygame.time.Clock()
 
     running = True
@@ -174,7 +176,7 @@ def end(screen):
         show_stats(screen)
         draw_end_surface(screen, surf)
         screen.render_cursor()
-        clock.tick(fps)
+        clock.tick(FPS)
         pygame.display.flip()
 
 
@@ -446,9 +448,11 @@ def select_surfaces(board, unit, cell, is_attack):
                     if abs(dx) != abs(dy):
                         if check_borders(board, cell_x, cell_y, dx, dy):  # проверка на выход за границы
                             if ((board.board[cell_y + dy][cell_x + dx] == BOARD_EMPTY and
-                                 board.field[cell_y + dy][cell_x + dx] != FIELD_MOUNTAIN)):  # проверка на занятость поля
+                                 board.field[cell_y + dy][
+                                     cell_x + dx] != FIELD_MOUNTAIN)):  # проверка на занятость поля
                                 if board.field[cell_y + dy][cell_x + dx] != FIELD_RIVER or \
-                                        board.field[cell_y + dy][cell_x + dx] == FIELD_RIVER and unit.name == UNIT_DRAGON:
+                                        board.field[cell_y + dy][
+                                            cell_x + dx] == FIELD_RIVER and unit.name == UNIT_DRAGON:
                                     if (cell_x + dx, cell_y + dy) not in lst_steps:
                                         lst_steps.append((cell_x + dx, cell_y + dy))
 
@@ -535,7 +539,7 @@ def handle_win(screen):
 
     screen.score_db.score_points = resutl_score_points(screen.score, screen.steps)
     Score.add(screen.score_db)
-    if 3 in screen.progress:  # запуск финального экрана всей игры
+    if 4 in screen.progress:  # запуск финального экрана всей игры
         screen.main.go_final_window()
     else:
         is_win = True  # победа

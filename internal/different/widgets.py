@@ -1,6 +1,6 @@
 import pygame
 
-from internal.different.global_vars import FILL_TYPE_BORDER, FILL_TYPE_NONE
+from internal.different.global_vars import FILL_TYPE_BORDER, FILL_TYPE_NONE, FPS
 
 
 class RectCoord:
@@ -130,7 +130,7 @@ class Edit(RectCoord):
         self.gc += 1
 
     def check_click(self, mouse_pos):
-        '''Проверка на клик по кнопкам мышкой'''
+        '''Проверка на клик мышкой'''
         return self.rect.collidepoint(mouse_pos)
 
     def handle_event(self, event):
@@ -173,5 +173,5 @@ class Edit(RectCoord):
             window.render()
             self.update()
 
-            clock.tick(fps)
+            clock.tick(FPS)
             pygame.display.flip()

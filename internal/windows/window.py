@@ -3,6 +3,8 @@ import sys
 
 import pygame
 
+from internal.different.global_vars import FPS
+
 
 class Window:
     '''Родительский класс окон'''
@@ -68,7 +70,6 @@ class Window:
         def wrapper(*args):
             self = args[0]
 
-            fps = 60
             clock = pygame.time.Clock()
 
             self.running = True
@@ -84,7 +85,7 @@ class Window:
                 self.screen.fill((0, 0, 0))
                 self.render()
 
-                clock.tick(fps)
+                clock.tick(FPS)
                 pygame.display.flip()
 
         return wrapper

@@ -1,5 +1,6 @@
-import pygame
 import os
+
+import pygame
 
 from internal.different.global_vars import UNIT_SWORDSMAN, UNIT_ARCHER, UNIT_CAVALRY, UNIT_DRAGON
 from internal.different.widgets import Button, View
@@ -23,21 +24,6 @@ class Final_window(window.Window):
 
         self.click_sound = pygame.mixer.Sound(os.path.join(*['music', 'click.wav']))
 
-    def check_click(self, mouse_pos, lst):
-        '''Функция проверка клика на кнопку выхода'''
-        for button in lst:
-            if button.check_click(mouse_pos):
-                self.click_sound.play()
-                if button == self.back_button:
-                    self.running = False
-                    self.main_screen.reset_progress()
-                    self.main.go_start_window()
-
-    @window.Window.render_decorator
-    def render(self):
-        '''Отображение содержимого на экране'''
-        self.render_info()
-
     def render_info(self):
         info = (('Общий счёт:', self.main.screen.summary_score),
                 ('Лучший счёт:', self.main.screen.best_score),
@@ -60,6 +46,21 @@ class Final_window(window.Window):
             t = f.render('   '.join(list(map(str, i))), True, 'white')
             self.screen.blit(t, (self.s * 2, y))
             y += round(self.s / 2)
+
+    def check_click(self, mouse_pos, lst):
+        '''Функция проверка клика на кнопку выхода'''
+        for button in lst:
+            if button.check_click(mouse_pos):
+                self.click_sound.play()
+                if button == self.back_button:
+                    self.running = False
+                    self.main_screen.reset_progress()
+                    self.main.go_start_window()
+
+    @window.Window.render_decorator
+    def render(self):
+        '''Отображение содержимого на экране'''
+        self.render_info()
 
     @window.Window.start_decoration
     def start(self, event):

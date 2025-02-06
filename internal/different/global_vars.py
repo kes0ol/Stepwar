@@ -1,6 +1,6 @@
 import pygame
 
-'''Файл для констант, которые нужно использовать вместо текста'''
+'''Файл для констант'''
 FILL_TYPE_NONE = 0
 FILL_TYPE_BORDER = 1
 
@@ -38,6 +38,8 @@ FIELD_GRASS = 0
 FIELD_MOUNTAIN = 1
 FIELD_HILL = 2
 FIELD_RIVER = 3
+
+FPS = 60
 
 my_units_group = pygame.sprite.Group()
 enemies_group = pygame.sprite.Group()
