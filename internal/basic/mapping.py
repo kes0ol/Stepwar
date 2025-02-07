@@ -45,18 +45,20 @@ class Screen:
         self.steps = 0  # кол-во шагов за 1 уровень
 
         self.score = 0  # очки
-        self.best_score = 0
+        self.best_score = 0  # лучший счёт
         self.summary_score = 0  # суммарные очки за все уровни
 
+        # список умерших юнитов врага
         self.en_un_dead = {UNIT_SWORDSMAN: 0,
                            UNIT_ARCHER: 0,
                            UNIT_CAVALRY: 0,
                            UNIT_DRAGON: 0}
 
+        # список умерших юнитов игрока
         self.my_un_dead = {UNIT_SWORDSMAN: 0,
-                         UNIT_ARCHER: 0,
-                         UNIT_CAVALRY: 0,
-                         UNIT_DRAGON: 0}
+                           UNIT_ARCHER: 0,
+                           UNIT_CAVALRY: 0,
+                           UNIT_DRAGON: 0}
 
         self.score_db = None  # DBO объект для доступа к таблице базы данных score
         self.money = 0  # монеты
@@ -92,7 +94,7 @@ class Screen:
                 break
 
         # загрузка и настройка курсора
-        self.cursor = pygame.image.load(os.path.join('images', 'different', 'cursor.png'))
+        self.cursor = pygame.image.load(os.path.join('images', 'different', 'cursor.jpg'))
         self.cursor.set_colorkey((255, 255, 255))
         self.cursor = pygame.transform.scale(self.cursor, (20, 20))
 
@@ -101,7 +103,7 @@ class Screen:
         self.board.get_click(mouse_pos, mouse_button, self)
         if not self.gameplay and self.button_start_game.check_click(mouse_pos):  # при нажатии Начать игру
             self.gameplay = True
-        if not self.back_to_menu and self.back_button.check_click(mouse_pos):  # при нажатии Назад
+        if not self.back_to_menu and self.back_button.check_click(mouse_pos):  # при нажатии escape
             self.back_to_menu = True
             start_game.return_units()
             self.board.clear_board()  # очистка поля
@@ -184,6 +186,7 @@ class Screen:
         self.choose_level = 1
 
         self.board.clear_board()  # очистка доски
+        self.main.start_screen.levels_menu.lst_buttons = [self.main.start_screen.levels_menu.back_button, ]
 
         # возвращение базового кол-ва юнитов
         swordsman.stock = self.icon_swordsman.default_stock
@@ -288,32 +291,32 @@ class Board:
 
                     if field_lst[i][j] in ['m', 'h']:  # если наземные
                         landscapes.Landscape('grass', 'Трава', x, y,
-                                             os.path.join('images', 'landscapes', 'grass.png'),
+                                             os.path.join('images', 'landscapes', 'grass.jpg'),
                                              self.cell_size, 0, 0, landscape_group)  # установка травы
                         if field_lst[i][j] == 'm':  # установка гор
                             landscapes.Landscape('mountains', 'Гора', x, y,
-                                                 os.path.join('images', 'landscapes', 'mountains.png'),
+                                                 os.path.join('images', 'landscapes', 'mountains.jpg'),
                                                  self.cell_size, 0, 'нельзя', landscape_group)
                             self.field[i][j] = FIELD_MOUNTAIN
-                        elif field_lst[i][j] == 'h':  # установка гор
+                        elif field_lst[i][j] == 'h':  # установка холмов
                             landscapes.Landscape('hill', 'Холм', x, y,
-                                                 os.path.join('images', 'landscapes', 'hill.png'),
+                                                 os.path.join('images', 'landscapes', 'hill.jpg'),
                                                  self.cell_size, 15, -1, landscape_group)
                             self.field[i][j] = FIELD_HILL
 
-                    elif field_lst[i][j] in ['r']:  # если не назменые
+                    elif field_lst[i][j] in ['r']:  # если не наземные
                         if field_lst[i][j] == 'r':  # если река
                             landscapes.Landscape('river', 'Река', x, y,
-                                                 os.path.join('images', 'landscapes', 'river.png'),
+                                                 os.path.join('images', 'landscapes', 'river.jpg'),
                                                  self.cell_size, 0, 0, landscape_group)
                             self.field[i][j] = FIELD_RIVER
                     else:  # иначе установка травы
                         landscapes.Landscape('grass', 'Трава', x, y,
-                                             os.path.join('images', 'landscapes', 'grass.png'),
+                                             os.path.join('images', 'landscapes', 'grass.jpg'),
                                              self.cell_size, 0, 0, landscape_group)
 
     def get_cell(self, mouse_pos):
-        '''Фцнкция получения клетки по координатам мышки'''
+        '''Функция получения клетки по координатам мышки'''
         xmax = self.left + self.width * self.cell_size
         ymax = self.top + self.height * self.cell_size
         if not (self.left <= mouse_pos[0] <= xmax and self.top <= mouse_pos[1] <= ymax):
@@ -324,7 +327,7 @@ class Board:
         return n_x, n_y
 
     def get_cell_coords(self, cell):
-        '''Функция получения координатов по клетке'''
+        '''Функция получения координат по клетке'''
         x, y = cell
         return x * self.cell_size + self.left, y * self.cell_size + self.top
 

@@ -13,7 +13,7 @@ class Start_window(window.Window):
 
     def __init__(self, screen, size, main):
         '''Инициализация класса'''
-        super().__init__(screen, size, main, ('images', 'backgrounds', 'fon.PNG'))
+        super().__init__(screen, size, main, ('images', 'backgrounds', 'fon.jpg'))
 
         self.y_pos = self.s * 1.5
 
@@ -28,11 +28,10 @@ class Start_window(window.Window):
                                  color=(255, 255, 0), dark_color=(0, 255, 0))  # кнопка справок
         self.score_button = Button('Счёт', round(self.s * 1.5), self.width // 2, self.y_pos * 5,
                                    color=(255, 255, 0), dark_color=(0, 255, 0))  # кнопка счёта
-        self.about_creators_button = Button('Об авторах', round(self.s * 1.2), self.width // 2, self.y_pos * 6,
+        self.about_creators_button = Button('О нас', round(self.s * 1.5), self.width // 2, self.y_pos * 6,
                                             color=(255, 255, 0), dark_color=(100, 0, 0))
         self.exit_button = Button('Выйти', round(self.s * 1.5), self.width // 2, self.y_pos * 7,
                                   color=(255, 255, 0), dark_color=(100, 0, 0))  # кнопка выхода
-
 
         window.Window.set_lists(self, [self.setting_button, self.exit_button, self.choose_level_button,
                                        self.ref_button, self.shop_button, self.score_button,
@@ -43,9 +42,9 @@ class Start_window(window.Window):
         self.levels_menu = levels.Levels_menu(self.main_screen, self.size, main)  # экран уровней
         self.store = shop.Store(self.main_screen, self.size, main)  # экран магазина
         self.score = score.Score_window(self.main_screen, self.size, main)  # экран очков
-        self.about_creators = about_creators.About_Creators(self.main_screen, self.size, main) #экран о создателях
+        self.about_creators = about_creators.About_Creators(self.main_screen, self.size, main)  # экран о создателях
 
-        self.dct_buttons = {pygame.K_1: self.levels_menu.start,
+        self.dct_buttons = {pygame.K_1: self.levels_menu.start,  # отношение клавиш к кнопкам
                             pygame.K_2: self.store.start,
                             pygame.K_3: self.settings_screen.start,
                             pygame.K_4: self.ref_screen.start,
@@ -80,7 +79,7 @@ class Start_window(window.Window):
 
     @window.Window.start_decoration
     def start(self, event):
-        '''Функция старта основного цикла стартового окна'''
+        '''Функция проверок на нажатие'''
         if event.type == pygame.KEYDOWN:  # проверка нажатия клавиш
             if event.key == pygame.K_ESCAPE:  # если нажат escape
                 self.running = False

@@ -38,7 +38,7 @@ class Unit(MovableAnimatedSprite):
         '''Функция для отображения информации о классе'''
         return f"[{id(self)} | {super().__repr__()}]"
 
-    def init_stats(self, step, distance_attack, attack_type, hp, damage, name, title, stock):
+    def init_stats(self, step, distance_attack, attack_type, hp, damage, name, title, stock=0):
         '''Характеристики юнитов'''
         self.default_step = step
         self.step = step

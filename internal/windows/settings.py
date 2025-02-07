@@ -61,7 +61,7 @@ class Settings_window(window.Window):
 
     @window.Window.start_decoration
     def start(self, event):
-        '''Функция начала основного цикла окна настроек'''
+        '''Функция проверок на нажатие'''
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 self.running = False

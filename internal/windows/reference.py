@@ -87,7 +87,10 @@ class Reference_window(window.Window):
 
 
 class Description(window.Window):
+    '''Класс второго окна информации с карточками юнитов/ландшафтов'''
+
     def __init__(self, screen, size, main):
+        '''Инициализация класса'''
         super().__init__(screen, size, main, ('images', 'backgrounds', 'ref_background.jpg'))
         self.back_button = Button('<-', round(self.s * 2.4), self.s,
                                   self.height - self.s, color=(100, 0, 0),
@@ -126,30 +129,35 @@ class Description(window.Window):
                                        self.dragon_button, self.castle_button, self.grass_button, self.rock_button,
                                        self.hill_button, self.river_button])
 
-        self.dct_units = {self.swordsman_button: swordsman.Swordsman,
+        self.dct_units = {self.swordsman_button: swordsman.Swordsman,  # отношение кнопок к юнитам
                           self.archer_button: archer.Archer,
                           self.cavalry_button: cavalry.Cavalry,
                           self.dragon_button: dragon.Dragon,
                           self.castle_button: castle.Castle}
 
-        self.dct_lands = {self.grass_button: ('grass', 'Трава', self.s * 16.1, self.s * 4.1,
-                                              os.path.join('images', 'landscapes', 'grass.png'),
-                                              self.s * 4, 0, 0, self.icons_units),
-                          self.rock_button: ('mountains', 'Гора', self.s * 16.1, self.s * 4.1,
-                                             os.path.join('images', 'landscapes', 'mountains.png'),
-                                             self.s * 4, 0, 'нельзя', self.icons_units),
-                          self.hill_button: ('../../hill', 'Холм', self.s * 16.1, self.s * 4.1,
-                                             os.path.join('images', 'landscapes', 'hill.png'),
-                                             self.s * 4, 15, -1, self.icons_units),
-                          self.river_button: ('../../river', 'Река', self.s * 16.1, self.s * 4.1,
-                                              os.path.join('images', 'landscapes', 'river.png'),
-                                              self.s * 4, 0, 'Частично', self.icons_units)}
+        self.dct_lands = {
+            self.grass_button: ('grass', 'Трава', self.s * 16.1, self.s * 4.1,  # отношение кнопок к ландшафтам
+                                os.path.join('images', 'landscapes', 'grass.jpg'),
+                                self.s * 4, 0, 0, self.icons_units),
+
+            self.rock_button: ('mountains', 'Гора', self.s * 16.1, self.s * 4.1,
+                               os.path.join('images', 'landscapes', 'mountains.jpg'),
+                               self.s * 4, 0, 'нельзя', self.icons_units),
+
+            self.hill_button: ('../../hill', 'Холм', self.s * 16.1, self.s * 4.1,
+                               os.path.join('images', 'landscapes', 'hill.jpg'),
+                               self.s * 4, 15, -1, self.icons_units),
+
+            self.river_button: ('../../river', 'Река', self.s * 16.1, self.s * 4.1,
+                                os.path.join('images', 'landscapes', 'river.jpg'),
+                                self.s * 4, 0, 'Частично', self.icons_units)}
 
         self.stats = []
 
         self.click_sound = pygame.mixer.Sound(os.path.join(*['music', 'click.wav']))
 
     def check_click(self, mouse_pos, lst):
+        '''Проверка на клик'''
         self.icons_units.empty()
         for button in lst:
             if button.check_click(mouse_pos):
@@ -173,11 +181,15 @@ class Description(window.Window):
 
     @window.Window.render_decorator
     def render(self):
+        '''Рендер'''
         if len(self.icons_units):
+            # отрисовка прямоугольников
             pygame.draw.rect(self.screen, (66, 44, 33), (self.s * 10, self.s,
                                                          self.s * 11, self.s * 9), 8)
             pygame.draw.rect(self.screen, (0, 0, 0), (self.s * 16, self.s * 4,
                                                       self.s * 4.2, self.s * 4.2), 8)
+
+            # отрисовка статистики
             y = 50
             for i in reversed(self.stats):
                 font = pygame.font.Font(None, round(self.s * 0.5))
@@ -185,14 +197,16 @@ class Description(window.Window):
                 self.screen.blit(text, (self.s * 11, self.s * 8 - y))
                 y += 50
 
-            self.icons_units.draw(self.screen)
+            self.icons_units.draw(self.screen)  # отображение картинки юнита
 
+        # отображение надписи 'Информация' на карточке
         f = pygame.font.Font(None, round(self.s * 1.3))
         t = f.render('Информация', True, 'black')
         self.main_screen.sc.blit(t, (self.s * 11, self.s * 2))
 
     @window.Window.start_decoration
     def start(self, event):
+        '''Функция проверок на нажатие'''
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 self.running = False

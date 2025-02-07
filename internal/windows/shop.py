@@ -13,7 +13,7 @@ class Store(window.Window):
 
     def __init__(self, screen, size, main):
         '''Инициализация класса'''
-        super().__init__(screen, size, main, ('images', 'backgrounds', 'store.png'))
+        super().__init__(screen, size, main, ('images', 'backgrounds', 'store.jpg'))
         self.screen = pygame.surface.Surface((self.width, self.height))  # создание полотна
 
         self.lst_units = [swordsman, archer, cavalry, dragon]  # список всех юнитов
@@ -88,7 +88,7 @@ class Store(window.Window):
 
     @window.Window.start_decoration
     def start(self, event):
-        '''Функция старта основного цикла'''
+        '''Функция проверок на нажатие'''
         if event.type == pygame.KEYDOWN:  # при нажатии клавиш
             if event.key == pygame.K_ESCAPE:  # если нажат escape
                 self.running = False

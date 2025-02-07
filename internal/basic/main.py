@@ -17,11 +17,12 @@ class Main:
     def __init__(self):
         '''Инициализация класса'''
         pygame.init()  # инициализация pygame
-        pygame.display.set_caption('StepWar')  # устновка названия
+        pygame.display.set_caption('StepWar')  # установка названия
 
         self.size = pygame.display.get_desktop_sizes()[-1]  # получение размеров экрана
         self.screen = mapping.Screen(self.size, self)  # создание основного экрана
 
+        # установка окна ввода никнэйма
         self.nickname_window = enter_nickname.EnterNicknameWindow(self.screen, self.size, self)
         self.start_screen = start_window.Start_window(self.screen, self.size, self)
         self.final_screen = final_window.Final_window(self.screen, self.size, self)
@@ -44,6 +45,7 @@ class Main:
 
     def start(self, level):
         '''Запуск основного цикла программы'''
+        # снос переменных
         self.start_screen.running = False
         self.screen.gameplay = False
         self.screen.back_to_menu = False
@@ -53,7 +55,7 @@ class Main:
                        pygame.K_3: (UNIT_CAVALRY, self.screen.icon_cavalry),
                        pygame.K_4: (UNIT_DRAGON, self.screen.icon_dragon)}
 
-        self.screen.board.level = level
+        self.screen.board.level = level # загрузка левела
         self.screen.board.clear_board()  # очистка поля
 
         clock = pygame.time.Clock()
@@ -68,6 +70,7 @@ class Main:
 
                 if event.type == pygame.KEYDOWN:  # при нажатии на клавиши
                     if event.key == pygame.K_ESCAPE:  # если нажат escape
+                        # выход в меню, очистка поля
                         self.screen.back_to_menu = True
                         start_game.return_units()
                         self.screen.board.clear_board()
@@ -88,6 +91,7 @@ class Main:
                 start_game.start(self.screen)
                 self.start_screen.levels_menu.start()
 
+            # отображение ресурсов на экране
             self.screen.sc.fill((0, 0, 0))
             self.screen.render()
             self.screen.render_cursor()
@@ -96,6 +100,7 @@ class Main:
             clock.tick(FPS)
             pygame.display.flip()
 
+        # выход из игры
         pygame.quit()
         sys.exit()
 

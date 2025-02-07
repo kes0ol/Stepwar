@@ -49,6 +49,7 @@ class Window:
         '''Декоратор функции рендера экрана'''
 
         def wrapper(*args):
+            '''Функция изменения вводной фукнции'''
             self = args[0]
             self.screen.blit(self.fon, (0, 0))
 
@@ -68,6 +69,7 @@ class Window:
         '''Декоратор функции старта цикла экрана'''
 
         def wrapper(*args):
+            '''Функция изменения вводной фукнции'''
             self = args[0]
 
             clock = pygame.time.Clock()

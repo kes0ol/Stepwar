@@ -1,5 +1,6 @@
-import pygame
 import os
+
+import pygame
 
 from internal.different.widgets import Button
 from internal.windows import window
@@ -10,7 +11,7 @@ class About_Creators(window.Window):
 
     def __init__(self, screen, size, main):
         '''Инициализация класса'''
-        super().__init__(screen, size, main, ('images', 'backgrounds', 'about_creators.PNG'))
+        super().__init__(screen, size, main, ('images', 'backgrounds', 'about_creators.jpg'))
         # создание кнопки
 
         self.back_button = Button('Назад', 80, self.width // 2, self.height // 2 + 200, color=(130, 130, 130))

@@ -1,10 +1,11 @@
 from internal.db.db import make_connection
 
 
-# Вспомогательный класс для отображения результатов
 class ScoreReport:
-    # Инициализация класса
+    '''Вспомогательный класс для отображения результатов'''
+
     def __init__(self, id=None, user_nickname=None, level=None, score_points=None, created_at=None, updated_at=None):
+        '''Инициализация класса'''
         self.id = id  # Идентификатор записи
         self.user_nickname = user_nickname  # Идентификатор записи в таблице users
         self.level = level  # Номер уровня
@@ -12,9 +13,9 @@ class ScoreReport:
         self.created_at = created_at  # Время создания записи
         self.updated_at = updated_at  # Время изменения записи
 
-    # Статический метод для получения записи таблиц score и user по user_id и level в виде экземпляров класса
     @staticmethod
     def get(user_id=None, level=None, limit=None):
+        '''Статический метод для получения записи таблиц score и user по user_id и level в виде экземпляров класса'''
         args = []
         where_str = []
         limit_str = ""

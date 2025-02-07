@@ -14,7 +14,7 @@ class Score_window(window.Window):
 
     def __init__(self, screen, size, main):
         '''Инициализация класса'''
-        super().__init__(screen, size, main, ('images', 'backgrounds', 'score.PNG'))
+        super().__init__(screen, size, main, ('images', 'backgrounds', 'score.jpg'))
         self.screen = pygame.surface.Surface((self.width, self.height))
         # создание кнопок
         self.back_button = Button('Назад', self.s, self.s * 2, self.s * 11, color=(150, 0, 0),
@@ -61,11 +61,11 @@ class Score_window(window.Window):
         '''Рендер таблицы'''
         f = pygame.font.Font(None, 100)
         f_table = pygame.font.Font(None, int(self.s * 0.5))
-        t = f.render(self.page_titles[self.page], True, 'red')
+        t = f.render(self.page_titles[self.page], True, 'black')
         self.screen.blit(t, (self.width // 2 - t.get_width() // 2, self.s * 1))
 
         limit = 10
-        page_result_args = [
+        page_result_args = [  # данные блицы
             {"limit": limit},
             {"level": 1, "limit": limit},
             {"level": 2, "limit": limit},
@@ -84,19 +84,19 @@ class Score_window(window.Window):
             self.s * 15,
             self.s * 19
         ]
-        title_y = self.s * 2
-        y = self.s * 2.5
+        title_y = self.s * 2.5
+        y = self.s * 3
         dy = self.s * 0.5
         for j, v in enumerate(['Игрок', 'Уровень', 'Счет', 'Начало', 'Длительность']):
-            self.screen.blit(f_table.render(str(v), True, 'red'), (x[j], title_y))
+            self.screen.blit(f_table.render(str(v), True, 'black'), (x[j], title_y))
         for i, r in enumerate(results):
             for j, v in enumerate([r.user_nickname, r.level, r.score_points, r.created_at,
                                    datetime.fromisoformat(r.updated_at) - datetime.fromisoformat(r.created_at)]):
-                self.screen.blit(f_table.render(str(v), True, 'red'), (x[j], y + i * dy))
+                self.screen.blit(f_table.render(str(v), True, 'black'), (x[j], y + i * dy))
 
     @window.Window.start_decoration
     def start(self, event):
-        '''Функция начала основного цикла окна счёта'''
+        '''Функция проверок на нажатие'''
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 self.running = False

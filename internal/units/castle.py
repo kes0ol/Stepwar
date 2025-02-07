@@ -18,4 +18,4 @@ class Castle(Unit):
         }
         super().__init__(animations, x, y, group, image_size, ANIMATION_IDLE,
                          ['music', 'kill_hit.wav'], death_callback, mirror_animation)
-        self.init_stats(0, 0, MELEE_ATTACK, 250, 0, UNIT_CASTLE, 'Замок', 0)
+        self.init_stats(0, 0, MELEE_ATTACK, 250, 0, UNIT_CASTLE, 'Замок')

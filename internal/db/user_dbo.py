@@ -3,22 +3,23 @@ from sqlite3 import IntegrityError
 from internal.db.db import make_connection
 
 
-# Вспомогательный класс для доступа к таблице user
 class User:
-    # Инициализация класса
+    '''Вспомогательный класс для доступа к таблице user'''
+
     def __init__(self, id=None, nickname=None, created_at=None, updated_at=None):
+        '''Инициализация класса'''
         self.id = id  # Идентификатор записи
         self.nickname = nickname  # Nickname пользователя
         self.created_at = created_at  # Время создания записи
         self.updated_at = updated_at  # Время изменения записи
 
-    # Отображение класса при печате
     def __repr__(self):
+        '''Отображение класса при печате'''
         return f"User {self.id} {self.nickname}"
 
-    # Статический метод создания таблицы в базе данных
     @staticmethod
     def init_db():
+        '''Статический метод создания таблицы в базе данных'''
         make_connection().cursor().execute(
             """CREATE TABLE IF NOT EXISTS user (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -28,9 +29,9 @@ class User:
             UNIQUE(nickname)
             )""")
 
-    # Статический метод для получения записей таблицы в виде списка экземпляров класса
     @staticmethod
     def get():
+        '''Статический метод для получения записей таблицы в виде списка экземпляров класса'''
         records = []
         cursor = make_connection().cursor()
         cursor.execute("SELECT u.id, u.nickname, u.created_at, u.updated_at FROM user u ORDER BY u.id")
@@ -38,9 +39,9 @@ class User:
             records.append(User(*i))
         return records
 
-    # Статический метод для получения записи таблицы с фильтрацией по start в виде списка экземплярa класса
     @staticmethod
     def get_by_nickname(nickname):
+        '''Статический метод для получения записи таблицы с фильтрацией по start в виде списка экземплярa класса'''
         cursor = make_connection().cursor()
         cursor.execute(
             """SELECT u.id, u.nickname, u.created_at, u.updated_at 
@@ -51,9 +52,9 @@ class User:
             return User(*result[0])
         return None
 
-    # Статический метод для получения записи таблицы по id в виде экземпляра класса
     @staticmethod
     def get_by_id(id):
+        '''Статический метод для получения записи таблицы по id в виде экземпляра класса'''
         cursor = make_connection().cursor()
         cursor.execute(
             """SELECT u.id, u.nickname, u.created_at, u.updated_at 
@@ -64,9 +65,9 @@ class User:
             return User(*result[0])
         return None
 
-    # Статический метод для добавления экземпляра класса в таблицу или изменения, если такая запись уже существует
     @staticmethod
     def add(user):
+        '''Статический метод для добавления экземпляра класса в таблицу или изменения, если такая запись уже существует'''
         connection = make_connection()
         cursor = connection.cursor()
         try:
@@ -86,9 +87,9 @@ class User:
             raise e
         connection.commit()
 
-    # Статический метод для удаления экземпляра класса из таблицы
     @staticmethod
     def remove(user):
+        '''Статический метод для удаления экземпляра класса из таблицы'''
         connection = make_connection()
         cursor = connection.cursor()
         try:
@@ -99,5 +100,5 @@ class User:
         connection.commit()
 
 
-# Создать таблицу в момент импорта
+# Создание таблицы в момент импорта
 User.init_db()

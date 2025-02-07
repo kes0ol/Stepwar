@@ -12,7 +12,7 @@ class Final_window(window.Window):
 
     def __init__(self, screen, size, main):
         '''Инициализация класса'''
-        super().__init__(screen, size, main, ('images', 'backgrounds', 'final_background.png'))
+        super().__init__(screen, size, main, ('images', 'backgrounds', 'final_background.jpg'))
 
         self.back_button = Button('Назад', round(self.s * 1.2), round(self.s * 1.7), self.height - self.s,
                                   color=(200, 75, 75), dark_color=(150, 25, 25))  # кнопка выхода

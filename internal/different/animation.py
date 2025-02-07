@@ -31,8 +31,9 @@ class AnimationStep:
 
 class AnimationChain:
     '''Класс цепочки анимаций'''
-    '''Инициализация класса'''
+
     def __init__(self):
+        '''Инициализация класса'''
         self.steps = []
 
     def add_step(self, animation, action=None, action_args=None, mirror=False):

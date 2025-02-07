@@ -41,6 +41,7 @@ class Button(RectCoord):
         self.is_enabled = True
 
     def set_enabled(self, is_enabled):
+        '''Установка видимости'''
         self.is_enabled = is_enabled
 
     def render(self, sc):
@@ -134,6 +135,7 @@ class Edit(RectCoord):
         return self.rect.collidepoint(mouse_pos)
 
     def handle_event(self, event):
+        '''Функция проверок нажатия'''
         if self.edit_started:
             if event.type == pygame.KEYDOWN:
                 if event.key in (pygame.K_ESCAPE, pygame.K_RETURN):
@@ -162,7 +164,6 @@ class Edit(RectCoord):
 
     def start(self, window):
         '''Функция начала основного цикла для виджетов'''
-        fps = 60
         clock = pygame.time.Clock()
 
         self.edit_started = True

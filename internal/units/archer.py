@@ -4,12 +4,13 @@ import pygame
 
 from internal.different.animation import AnimationParams
 from internal.different.global_vars import ANIMATION_IDLE, ANIMATION_ATTACK, ANIMATION_BEGIN_MOVE, \
-    ANIMATION_MOVE, ANIMATION_END_MOVE, ANIMATION_DEATH, RANGE_ATTACK, UNIT_ARCHER
+    ANIMATION_MOVE, ANIMATION_END_MOVE, ANIMATION_DEATH, RANGE_ATTACK, UNIT_ARCHER, QUANTITY_ARCHER
 from internal.units.unit import Unit
 
 
 class Archer(Unit):
     '''Создание класса лучника'''
+
     def __init__(self, x, y, image_size, group, death_callback, mirror_animation=False):
         '''Инициализация класса'''
         sheet = pygame.image.load(os.path.join('images', 'team_images', 'archer.png'))
@@ -23,7 +24,7 @@ class Archer(Unit):
         }  # анимации лучника
         super().__init__(animations, x, y, group, image_size, ANIMATION_IDLE, ['music', 'archer_hit.wav'],
                          death_callback, mirror_animation)
-        self.init_stats(1, 3, RANGE_ATTACK, 40, 30, UNIT_ARCHER, 'Лучник', 2)
+        self.init_stats(1, 3, RANGE_ATTACK, 40, 25, UNIT_ARCHER, 'Лучник', QUANTITY_ARCHER)
 
 
 def set_view_stock(screen, coords, size):

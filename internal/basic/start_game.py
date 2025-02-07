@@ -18,7 +18,7 @@ money_now = 0
 
 
 def start(screen):
-    '''Функция старта главноого цикла геймплея'''
+    '''Функция старта главного цикла геймплея'''
     global is_win, money_now, warning  # вызов глобальных переменных
 
     screen.score_db = Score(user_id=global_vars.current_user.id, level=screen.board.level, score_points=0)
@@ -77,11 +77,13 @@ def start(screen):
                         running = False
                         screen.gameplay = False
 
+                        # возвращение юнитов, очистка доски
                         return_units()
                         new_step()
                         screen.board.clear_board()
 
-                        pygame.mixer.music.load('music/walking.wav')  # запуск музыки начального экрана при выходе
+                        # запуск музыки начального экрана при выходе
+                        pygame.mixer.music.load('music/walking.wav')
                         pygame.mixer.music.play(-1)
                         pygame.time.delay(20)
                 else:
@@ -114,13 +116,14 @@ def start(screen):
 
 
 def warning_window(screen):
+    '''Функция окна предупреждения при выходе'''
     global warning
-    s = screen.board.cell_size
+    s = screen.board.cell_size  # размер
 
     surf = pygame.surface.Surface((round(s * 14.4), round(s * 1.7)))  # создание полотна
-    text = ['Вы уверены, что хотите выйти?', '(Для подтверждения нажмите ещё раз)']
+    text = ['Вы уверены, что хотите выйти?', '(Для подтверждения нажмите ещё раз)']  # текст окна
 
-    surf.fill('black')
+    surf.fill('black')  # заливка фона черным
 
     font = pygame.font.Font(None, s)
 
@@ -128,12 +131,12 @@ def warning_window(screen):
         info = font.render(text[i], True, 'red')
         surf.blit(info, (10, i * 40 + 20))
 
-    screen.sc.blit(surf, (s * 5, s * 5))
+    screen.sc.blit(surf, (s * 5, s * 5))  # отображение полотна
 
 
 def end(screen):
-    '''Финальное окно со счётом и зараотанными монетами'''
-    global money_now
+    '''Финальное окно со счётом и заработанными монетами'''
+    global money_now, is_win
 
     screen.money += money_now
     surf = pygame.Surface((screen.board.cell_size * 8, screen.board.cell_size * 4))
@@ -152,19 +155,27 @@ def end(screen):
                 if event.key == pygame.K_ESCAPE and not global_vars.action_in_progress:  # при нажатии на escape
                     running = False
                     screen.gameplay = False
-                    return_units()
-                    new_step()
-                    screen.board.clear_board()
+                    if is_win:
+                        return_units()
+                        new_step()
+                        screen.board.clear_board()
+                    else:
+                        screen.reset_progress()
+                        screen.main.go_start_window()
 
-            if event.type == pygame.MOUSEBUTTONDOWN:  # при нажати мышкой
+            if event.type == pygame.MOUSEBUTTONDOWN:  # при нажатии мышкой
                 select_button = check_click(screen, event.pos)
 
                 if select_button == 'back_to_menu' and not global_vars.action_in_progress:  # нажатие кнопки 'назад'
                     running = False
                     screen.gameplay = False
-                    return_units()
-                    new_step()
-                    screen.board.clear_board()
+                    if is_win:
+                        return_units()
+                        new_step()
+                        screen.board.clear_board()
+                    else:
+                        screen.reset_progress()
+                        screen.main.go_start_window()
 
                 if screen.setting_button.check_click(event.pos):  # нажатие кнопки настроек
                     screen.main.start_screen.settings_screen.start()
@@ -184,6 +195,7 @@ def draw_end_surface(screen, main_surf):
     '''Отображение информации на экране окончания'''
     global money_now
     one_size = screen.board.cell_size
+
     lst = [(f'Заработанные монеты: {money_now}', one_size // 2)]
 
     surf = pygame.surface.Surface((one_size * 6, one_size * 2))  # создание полотна
@@ -205,6 +217,7 @@ def draw_end_surface(screen, main_surf):
         text = font.render(lst[i][0], True, 'black')
         surf.blit(text, (10, i * 50 + 20))
 
+    # отображение полотен
     main_surf.blit(surf, (one_size, one_size * 1.5))
     screen.sc.blit(main_surf, (one_size * 8, one_size * 4))
 
@@ -292,8 +305,8 @@ def enemys_move(screen):
             unit.step = 0
             continue
 
-        cell = screen.board.get_cell((unit.rect.x, unit.rect.y))
-        lst_steps, _ = select_surfaces(screen.board, unit, cell, False)
+        cell = screen.board.get_cell((unit.rect.x, unit.rect.y))  # получение координат клетки
+        lst_steps, _ = select_surfaces(screen.board, unit, cell, False)  # получение списка шагов
 
         if len(lst_steps):  # если есть возможные ходы
             random.shuffle(lst_steps)  # перемешиваем ходы
@@ -317,10 +330,11 @@ def enemys_move(screen):
 def enemys_attack(screen, unit, now_cell):
     '''Функция атаки вражеских юнитов'''
     decrement_action_in_progress()
-    lst_steps, _ = select_surfaces(screen.board, unit, now_cell, True)
 
-    if len(lst_steps):  # если есть кого атаковать
-        select_attack = random.choice(lst_steps)
+    lst_attack, _ = select_surfaces(screen.board, unit, now_cell, True)
+
+    if len(lst_attack):  # если есть кого атаковать
+        select_attack = random.choice(lst_attack)
 
         increment_action_in_progress()
         enemy = get_unit_by_cell(screen, select_attack)
@@ -333,7 +347,7 @@ def show_stats(screen):
     font = pygame.font.Font(None, 25)
     stats = []
 
-    for un in itertools.chain(enemies_group, my_units_group, shop_group):  # запись инфы с юнита
+    for un in itertools.chain(enemies_group, my_units_group, shop_group):  # запись информации с юнита
         if un.rect.collidepoint(pygame.mouse.get_pos()):
             stats = [
                 f'Тип юнита: {un.title}',  # название
@@ -373,7 +387,7 @@ def choose_step(screen, unit, cell_coords):
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:  # проверка на нажатие мышкой
-                    choose_cell = screen.board.get_cell(event.pos)  # получение координатов выбранной клетки
+                    choose_cell = screen.board.get_cell(event.pos)  # получение координат выбранной клетки
                     for coords in lst_steps:
                         if coords == choose_cell:  # перемещение юнита в выбранную клетку
                             increment_action_in_progress()
@@ -435,10 +449,10 @@ def decrement_action_in_progress():
 
 
 def select_surfaces(board, unit, cell, is_attack):
-    '''Функция выбора и отображения выбранных клетов (подсветка)'''
+    '''Функция выбора и отображения выбранных клеток (подсветка)'''
     lst_surfaces = []
     lst_steps = []
-    if not is_attack:  # если перемещние (не атака)
+    if not is_attack:  # если перемещение (не атака)
         def add(ran, cell_coords):  # создание рекурсивной функции (умное перемещение)
             cell_x, cell_y = cell_coords
 
