@@ -42,6 +42,7 @@ class Main:
 
     def go_final_window(self):
         '''Функция запуска финального экрана'''
+        start_game.set_music('music/win.mp3', -1, 20)
         self.final_screen.start()
 
     def start(self, level):

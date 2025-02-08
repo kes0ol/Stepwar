@@ -66,7 +66,6 @@ class Final_window(window.Window):
     @window.Window.start_decoration
     def start(self, event):
         '''Функция старта основного цикла программы'''
-        set_music('music/win.mp3', -1, 20)
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 self.running = False

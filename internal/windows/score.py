@@ -25,14 +25,14 @@ class Score_window(window.Window):
                                        dark_color=(100, 0, 0))
         self.page = 0
         # титулы страниц
-        self.page_titles = ['Все результаты',
-                            'Все результаты 1 уровень',
-                            'Все результаты 2 уровень',
-                            'Все результаты 3 уровень',
-                            'Мои результаты',
-                            'Мои результаты 1 уровень',
-                            'Мои результаты 2 уровень',
-                            'Мои результаты 3 уровень']
+        self.page_titles = ['Лучшие результаты',
+                            'Лучшие результаты 1 уровень',
+                            'Лучшие результаты 2 уровень',
+                            'Лучшие результаты 3 уровень',
+                            'Мои лучшие результаты',
+                            'Мои лучшие результаты 1 уровень',
+                            'Мои лучшие результаты 2 уровень',
+                            'Мои лучшие результаты 3 уровень']
 
         window.Window.set_lists(self, [self.back_button, self.next_page_button, self.pref_page_button])  # список кнопок
 
@@ -102,10 +102,9 @@ class Score_window(window.Window):
                 self.running = False
             if event.key in [pygame.K_LEFT, pygame.K_RIGHT]:
                 if event.key == pygame.K_LEFT:
-                    self.page += 1
-                    self.page %= len(self.page_titles)
-                if event.key == pygame.K_RIGHT:
                     self.page -= 1
-                    self.page %= len(self.page_titles)
+                if event.key == pygame.K_RIGHT:
+                    self.page += 1
+                self.page %= len(self.page_titles)
         if event.type == pygame.MOUSEBUTTONDOWN:
             self.check_click(event.pos, self.lst_buttons)
