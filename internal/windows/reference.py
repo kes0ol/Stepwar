@@ -33,8 +33,8 @@ class Reference_window(window.Window):
         Справка: 4
         Счет: 5
         Об авторах: 6\n\nВ уровне:
-        Передвижение юнитом: ЛКМ
-        Атаковать юнитом: ПКМ''')
+        Поставить юнита/Передвижение юнитом: ЛКМ
+        Удалить юнита/Атаковать юнитом: ПКМ''')
 
         t2 = ('''В списке уровней:
         Первый уровень: 1
@@ -142,11 +142,11 @@ class Description(window.Window):
 
             self.rock_button: ('mountains', 'Гора', self.s * 16.1, self.s * 4.1,
                                os.path.join('images', 'landscapes', 'mountains.jpg'),
-                               self.s * 4, 0, 'нельзя', self.icons_units),
+                               self.s * 4, 0, 'Нельзя', self.icons_units),
 
             self.hill_button: ('../../hill', 'Холм', self.s * 16.1, self.s * 4.1,
                                os.path.join('images', 'landscapes', 'hill.jpg'),
-                               self.s * 4, 15, -1, self.icons_units),
+                               self.s * 4, 15, 'Замедляет', self.icons_units),
 
             self.river_button: ('../../river', 'Река', self.s * 16.1, self.s * 4.1,
                                 os.path.join('images', 'landscapes', 'river.jpg'),
@@ -183,11 +183,17 @@ class Description(window.Window):
     def render(self):
         '''Рендер'''
         if len(self.icons_units):
+
             # отрисовка прямоугольников
             pygame.draw.rect(self.screen, (66, 44, 33), (self.s * 10, self.s,
                                                          self.s * 11, self.s * 9), 8)
             pygame.draw.rect(self.screen, (0, 0, 0), (self.s * 16, self.s * 4,
                                                       self.s * 4.2, self.s * 4.2), 8)
+
+            # отображение надписи 'Информация' на карточке
+            f = pygame.font.Font(None, round(self.s * 1.3))
+            t = f.render('Информация', True, 'black')
+            self.screen.blit(t, (self.s * 11, self.s * 2))
 
             # отрисовка статистики
             y = 50
@@ -198,11 +204,6 @@ class Description(window.Window):
                 y += 50
 
             self.icons_units.draw(self.screen)  # отображение картинки юнита
-
-        # отображение надписи 'Информация' на карточке
-        f = pygame.font.Font(None, round(self.s * 1.3))
-        t = f.render('Информация', True, 'black')
-        self.main_screen.sc.blit(t, (self.s * 11, self.s * 2))
 
     @window.Window.start_decoration
     def start(self, event):

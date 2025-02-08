@@ -50,9 +50,8 @@ def start(screen):
                         new_step()
                         screen.board.clear_board()
 
-                        pygame.mixer.music.load('music/walking.wav')  # запуск музыки начального экрана при выходе
-                        pygame.mixer.music.play(-1)
-                        pygame.time.delay(20)
+                        # запуск музыки начального экрана при выходе
+                        set_music('music/walking.wav', -1, 20)
                 else:
                     if warning:  # если окно всплыло, но игрок передумал
                         warning = False
@@ -83,9 +82,7 @@ def start(screen):
                         screen.board.clear_board()
 
                         # запуск музыки начального экрана при выходе
-                        pygame.mixer.music.load('music/walking.wav')
-                        pygame.mixer.music.play(-1)
-                        pygame.time.delay(20)
+                        set_music('music/walking.wav', -1, 20)
                 else:
                     if warning:  # если окно всплыло, но игрок передумал
                         warning = False
@@ -155,6 +152,7 @@ def end(screen):
                 if event.key == pygame.K_ESCAPE and not global_vars.action_in_progress:  # при нажатии на escape
                     running = False
                     screen.gameplay = False
+                    set_music('music/walking.wav', -1, 20)
                     if is_win:
                         return_units()
                         new_step()
@@ -169,6 +167,7 @@ def end(screen):
                 if select_button == 'back_to_menu' and not global_vars.action_in_progress:  # нажатие кнопки 'назад'
                     running = False
                     screen.gameplay = False
+                    set_music('music/walking.wav', -1, 20)
                     if is_win:
                         return_units()
                         new_step()
@@ -208,6 +207,7 @@ def draw_end_surface(screen, main_surf):
         font = pygame.font.Font(None, round(one_size * 1.4))
         text = font.render('Вы победили!', True, 'white')
     else:  # инфо при поражении
+        lst.append(('Счёт: 0', one_size // 2))
         font = pygame.font.Font(None, round(one_size * 1.3))
         text = font.render('Вас уничтожили!', True, 'white')
     main_surf.blit(text, (one_size // 5, one_size // 5))
@@ -316,7 +316,7 @@ def enemys_move(screen):
                 if i.name == UNIT_CASTLE:  # проверка на башню
                     castle_unit_coords = screen.board.get_cell((i.rect.x, i.rect.y))
                     break
-            for step in lst_steps:  # выбор оптимального хода по манхэттеновскому расстоянию
+            for step in lst_steps:  # выбор оптимального хода по манхеттенскому расстоянию
                 if abs(step[0] - castle_unit_coords[0]) <= abs(choose_cell[0] - castle_unit_coords[0]):
                     choose_cell = step
 
@@ -370,7 +370,7 @@ def show_stats(screen):
                     f'Передвижение: {land.move}'  # шаги
                 ]
 
-    for i in range(len(stats)):  # отобржение инфы о юните/клетки
+    for i in range(len(stats)):  # отображение инфы о юните/клетки
         text = font.render(stats[i], True, (255, 255, 255))
         stats_surface.blit(text, (0, i * 20, 100, 100))
     screen.sc.blit(stats_surface, (screen.board.left // 2 - 100, screen.height // 2))  # отображение полотна
@@ -562,3 +562,10 @@ def handle_win(screen):
 
 def resutl_score_points(score, steps):
     return score * (20 // (steps if steps else 1))
+
+
+def set_music(path, time_play, delay):
+    '''Функция задания музыки'''
+    pygame.mixer.music.load(path)
+    pygame.mixer.music.play(time_play)
+    pygame.time.delay(delay)

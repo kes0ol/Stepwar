@@ -2,6 +2,7 @@ import os
 
 import pygame
 
+from internal.basic.start_game import set_music
 from internal.different.widgets import Button
 from internal.windows import window
 
@@ -32,21 +33,15 @@ class Levels_menu(window.Window):
                 self.click_sound.play()
                 if button == self.first_level_button and 1 in self.main_screen.progress:
                     self.running = False
-                    pygame.mixer.music.load('music/first.wav')  # музыка 1 уровня
-                    pygame.mixer.music.play(-1)
-                    pygame.time.delay(20)
+                    set_music('music/first.wav', -1, 20)
                     self.main.start('1')
                 if button == self.second_level_button and 2 in self.main_screen.progress:
                     self.running = False
-                    pygame.mixer.music.load('music/second.wav')  # музыка 2 уровня
-                    pygame.mixer.music.play(-1)
-                    pygame.time.delay(20)
+                    set_music('music/second.wav', -1, 20)
                     self.main.start('2')
                 if button == self.thirst_level_button and 3 in self.main_screen.progress:
                     self.running = False
-                    pygame.mixer.music.load('music/final.wav')  # музыка 3 уровня
-                    pygame.mixer.music.play(-1)
-                    pygame.time.delay(20)
+                    set_music('music/final.wav', -1, 20)
                     self.main.start('3')
                 if button == self.back_button:
                     self.running = False
@@ -71,12 +66,15 @@ class Levels_menu(window.Window):
                 self.main.go_start_window()
             if event.key == pygame.K_1 and 1 in self.main_screen.progress:
                 self.running = False
+                set_music('music/first.wav', -1, 20)
                 self.main.start('1')
             if event.key == pygame.K_2 and 2 in self.main_screen.progress:
                 self.running = False
+                set_music('music/second.wav', -1, 20)
                 self.main.start('2')
             if event.key == pygame.K_3 and 3 in self.main_screen.progress:
                 self.running = False
+                set_music('music/final.wav', -1, 20)
                 self.main.start('3')
         if event.type == pygame.MOUSEBUTTONDOWN:
             self.check_click(event.pos, self.lst_buttons)

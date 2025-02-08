@@ -27,7 +27,7 @@ class Main:
         self.start_screen = start_window.Start_window(self.screen, self.size, self)
         self.final_screen = final_window.Final_window(self.screen, self.size, self)
 
-        set_music(os.path.join('music', 'walking.wav'), -1, 20)  # запуск музыки
+        start_game.set_music(os.path.join('music', 'walking.wav'), -1, 20)  # запуск музыки
 
     def run(self):
         '''Функция запуска всей игры'''
@@ -35,6 +35,7 @@ class Main:
 
     def go_start_window(self):
         '''Функция запуска начального экрана'''
+        start_game.set_music('music/walking.wav', -1, 20)
         if not global_vars.current_user:
             self.nickname_window.start()
         self.start_screen.start()
@@ -55,7 +56,7 @@ class Main:
                        pygame.K_3: (UNIT_CAVALRY, self.screen.icon_cavalry),
                        pygame.K_4: (UNIT_DRAGON, self.screen.icon_dragon)}
 
-        self.screen.board.level = level # загрузка левела
+        self.screen.board.level = level  # загрузка левела
         self.screen.board.clear_board()  # очистка поля
 
         clock = pygame.time.Clock()
@@ -72,6 +73,7 @@ class Main:
                     if event.key == pygame.K_ESCAPE:  # если нажат escape
                         # выход в меню, очистка поля
                         self.screen.back_to_menu = True
+                        start_game.set_music('music/walking.wav', -1, 20)
                         start_game.return_units()
                         self.screen.board.clear_board()
                         self.start_screen.levels_menu.start()
@@ -103,10 +105,3 @@ class Main:
         # выход из игры
         pygame.quit()
         sys.exit()
-
-
-def set_music(path, time_play, delay):
-    '''Функция задания музыки'''
-    pygame.mixer.music.load(path)
-    pygame.mixer.music.play(time_play)
-    pygame.time.delay(delay)
