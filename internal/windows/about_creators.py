@@ -18,7 +18,7 @@ class About_Creators(window.Window):
 
         window.Window.set_lists(self, [self.back_button, ])  # список кнопок
 
-        self.txt = ['git: "https://github.com/kes0ol/Stepwar"', 'Создатели: Кобышев Лев & Саломатин Андрей']
+        self.txt = ['git: "https://github.com/kes0ol/Stepwar"', 'Создатели: Кобышев Лев']
 
         self.click_sound = pygame.mixer.Sound(os.path.join(*['music', 'click.wav']))  # звук клика
 
