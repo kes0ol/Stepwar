@@ -20,10 +20,10 @@ class Store(window.Window):
 
         # загрузка всех карточек юнитов в список
         self.lst_products = []
-        for i in [(os.path.join('images', 'team_images', 'swordsman.png'), 35, (0, 0), (100, 100)),
-                  (os.path.join('images', 'team_images', 'archer.png'), 50, (0, 0), (100, 100)),
-                  (os.path.join('images', 'team_images', 'cavalry.png'), 70, (0, 0), (130, 130)),
-                  (os.path.join('images', 'team_images', 'dragon.png'), 120, (0, 0), (125, 125))]:
+        for i in [(os.path.join('images', 'team_images', 'swordsman.jpg'), 35, (0, 0), (100, 100)),
+                  (os.path.join('images', 'team_images', 'archer.jpg'), 50, (0, 0), (100, 100)),
+                  (os.path.join('images', 'team_images', 'cavalry.jpg'), 70, (0, 0), (130, 130)),
+                  (os.path.join('images', 'team_images', 'dragon.jpg'), 120, (0, 0), (125, 125))]:
             im, cost, ltop, sz = i
             image = pygame.image.load(im)
             image = image.subsurface(pygame.Rect(ltop, sz))

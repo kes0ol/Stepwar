@@ -13,7 +13,7 @@ class Dragon(Unit):
 
     def __init__(self, x, y, image_size, group, death_callback, mirror_animation=False):
         '''Инициализация класса'''
-        sheet = pygame.image.load(os.path.join('images', 'team_images', 'dragon.png'))
+        sheet = pygame.image.load(os.path.join('images', 'team_images', 'dragon.jpg'))
         animations = {
             ANIMATION_IDLE: AnimationParams(sheet, 4, 1, 125, 125, 0, 0, 10),
             ANIMATION_ATTACK: AnimationParams(sheet, 7, 1, 170, 170, 0, 170, 8),

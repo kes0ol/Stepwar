@@ -13,7 +13,7 @@ class Swordsman(Unit):
 
     def __init__(self, x, y, image_size, group, death_callback, mirror_animation=False):
         '''Инициализация класса'''
-        sheet = pygame.image.load(os.path.join('images', 'team_images', 'swordsman.png'))
+        sheet = pygame.image.load(os.path.join('images', 'team_images', 'swordsman.jpg'))
         animations = {
             ANIMATION_IDLE: AnimationParams(sheet, 5, 1, 100, 100, 0, 0, 10),
             ANIMATION_ATTACK: AnimationParams(sheet, 7, 1, 100, 100, 0, 100, 5),

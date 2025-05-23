@@ -11,7 +11,7 @@ class Castle(Unit):
     '''Создание класса замка'''
     def __init__(self, x, y, image_size, group, death_callback, mirror_animation=False):
         '''Инициализация класса'''
-        sheet = pygame.image.load(os.path.join('images', 'team_images', 'castle.png'))
+        sheet = pygame.image.load(os.path.join('images', 'team_images', 'castle.jpg'))
         animations = {
             ANIMATION_IDLE: AnimationParams(sheet, 1, 1, 225, 225, 0, 0, -1),
             ANIMATION_DEATH: AnimationParams(sheet, 1, 1, 225, 225, 0, 0, 1),
