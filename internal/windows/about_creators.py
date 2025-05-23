@@ -18,7 +18,7 @@ class About_Creators(window.Window):
 
         window.Window.set_lists(self, [self.back_button, ])  # список кнопок
 
-        self.txt = ['git: "https://github.com/kes0ol/Stepwar"', 'Создатели: Кобышев Лев & Саломатин Андрей']
+        self.txt = ['git: "https://github.com/kes0ol/Stepwar"', 'Создатели: Кобышев Лев']
 
         self.click_sound = pygame.mixer.Sound(os.path.join(*['music', 'click.wav']))  # звук клика
 
@@ -38,7 +38,7 @@ class About_Creators(window.Window):
         for i in self.txt:
             font = pygame.font.Font(None, round(self.s * 0.5))
             text = font.render(i, True, 'black')
-            self.screen.blit(text, (self.s * 9 - y, self.s * 8 - y))
+            self.screen.blit(text, (self.s * 7 + y, self.s * 8 - y))
             y += 50
 
     @window.Window.start_decoration
