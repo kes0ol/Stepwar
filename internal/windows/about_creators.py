@@ -6,7 +6,7 @@ from internal.different.widgets import Button
 from internal.windows import window
 
 
-class About_Creators(window.Window):
+class AboutCreators(window.Window):
     '''Создание класса об авторах'''
 
     def __init__(self, screen, size, main):

@@ -9,7 +9,7 @@ from internal.different.widgets import Button
 from internal.windows import window
 
 
-class Score_window(window.Window):
+class ScoreWindow(window.Window):
     '''Создание класса для счёта'''
 
     def __init__(self, screen, size, main):

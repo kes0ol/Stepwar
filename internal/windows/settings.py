@@ -7,7 +7,7 @@ from internal.different.widgets import Button, View
 from internal.windows import window
 
 
-class Settings_window(window.Window):
+class SettingsWindow(window.Window):
     '''Создание класса настроек'''
     def __init__(self, screen, size, main):
         '''Инициализация класса'''
@@ -21,7 +21,7 @@ class Settings_window(window.Window):
                                   color=(0, 255, 0), dark_color=(0, 100, 0), fill_type=FILL_TYPE_BORDER)
         self.minus_button = Button('-', self.s * 2, self.width // 2 - self.s * 3, self.s * 3,
                                    color=(255, 0, 0), dark_color=(100, 0, 0), fill_type=FILL_TYPE_BORDER)
-        self.reset_button = Button('Сбросить прогрес', self.s, self.s * 18, self.s * 11,
+        self.reset_button = Button('Сбросить прогресс', self.s, self.s * 18, self.s * 11,
                                    color=(255, 255, 0), dark_color=(100, 100, 0))
         self.back_button = Button('Назад', self.s, self.s * 2, self.s * 11, color=(150, 0, 0),
                                   dark_color=(100, 0, 0))

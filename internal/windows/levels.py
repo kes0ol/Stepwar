@@ -7,7 +7,7 @@ from internal.different.widgets import Button
 from internal.windows import window
 
 
-class Levels_menu(window.Window):
+class LevelsMenu(window.Window):
     '''Создание класса меню уровней'''
 
     def __init__(self, screen, size, main):

@@ -25,7 +25,7 @@ class Main:
         # установка окна ввода никнэйма
         self.nickname_window = enter_nickname.EnterNicknameWindow(self.screen, self.size, self)
         self.start_screen = start_window.Start_window(self.screen, self.size, self)
-        self.final_screen = final_window.Final_window(self.screen, self.size, self)
+        self.final_screen = final_window.FinalWindow(self.screen, self.size, self)
 
         start_game.set_music(os.path.join('music', 'walking.wav'), -1, 20)  # запуск музыки
 

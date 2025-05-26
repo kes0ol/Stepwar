@@ -37,12 +37,12 @@ class Start_window(window.Window):
                                        self.ref_button, self.shop_button, self.score_button,
                                        self.about_creators_button])
 
-        self.settings_screen = settings.Settings_window(self.main_screen, self.size, main)  # экран настроек
+        self.settings_screen = settings.SettingsWindow(self.main_screen, self.size, main)  # экран настроек
         self.ref_screen = reference.Reference_window(self.main_screen, self.size, main)  # экран справки
-        self.levels_menu = levels.Levels_menu(self.main_screen, self.size, main)  # экран уровней
+        self.levels_menu = levels.LevelsMenu(self.main_screen, self.size, main)  # экран уровней
         self.store = shop.Store(self.main_screen, self.size, main)  # экран магазина
-        self.score = score.Score_window(self.main_screen, self.size, main)  # экран очков
-        self.about_creators = about_creators.About_Creators(self.main_screen, self.size, main)  # экран о создателях
+        self.score = score.ScoreWindow(self.main_screen, self.size, main)  # экран очков
+        self.about_creators = about_creators.AboutCreators(self.main_screen, self.size, main)  # экран о создателях
 
         self.dct_buttons = {pygame.K_1: self.levels_menu.start,  # отношение клавиш к кнопкам
                             pygame.K_2: self.store.start,

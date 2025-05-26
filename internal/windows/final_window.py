@@ -8,7 +8,7 @@ from internal.different.widgets import Button, View
 from internal.windows import window
 
 
-class Final_window(window.Window):
+class FinalWindow(window.Window):
     '''Создание класса финального экрана'''
 
     def __init__(self, screen, size, main):
